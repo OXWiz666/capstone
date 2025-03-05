@@ -1,37 +1,12 @@
-import tailwindcss from '@tailwindcss/vite'
-import { defineConfig } from 'vite'
-
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-    purge: [
-        './resources/**/*.blade.php',
-        './resources/**/*.js',
-        './resources/**/*.vue',
-        
-    ],
-
-    theme: {
-        extend: {
-          colors: {
-            slate: {
-              950: '#0f172a',
-            },
-          },
-        },
-      },
-      
-    darkMode: false, // or 'media' or 'class'
-    theme: {
-        extend: {},
-    },
-    variants: {
-        extend: {},
-    },
-    plugins: [
-        tailwindcss()
-    ],
+  content: [
+    "./resources/**/*.blade.php",
+    "./resources/**/*.js",
+    "./resources/**/*.vue",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
 }
-export default defineConfig({
-    plugins: [
-        tailwindcss(),
-    ],
-  })
