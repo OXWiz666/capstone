@@ -22,12 +22,12 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('Login.register-form');
+        return view('Auth.register');
     }
 
     public function showForgotPasswordForm()
     {
-        return view('Login.forgot-password-form');
+        return view('auth.forgot');
     }
 
     public function login(Request $request)
@@ -115,7 +115,7 @@ class AuthController extends Controller
             // Step 3: Reset password
             // Handle password reset logic (e.g., update the user's password in the database)
         }
-    
+
         // Handle the logic for resetting the password
         // For example, update the user's password in the database
         // You can use the Auth facade or your User model to update the password
