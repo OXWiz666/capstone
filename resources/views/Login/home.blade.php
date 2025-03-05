@@ -6,14 +6,14 @@
     <title>Barangay Calumpang Health Center</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-900 text-white">
     <div class="min-h-screen flex flex-col md:flex-row overflow-hidden">
         <!-- Left side - Background image and branding for larger screens -->
         <div class="hidden md:flex md:w-1/2 bg-primary-900 relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-900/70">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-900/95 to-primary-900/85">
                 <div
-                    class="absolute inset-0 opacity-20"
-                    style="background-image: url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); background-size: cover; background-position: center;"
+                    class="absolute inset-0 opacity-40"
+                    style="background-image: url('https://i.ibb.co/wFSCZYdV/471634916-609791331562667-4920390300131702624-n.jpg'); background-size: cover; background-position: center; filter: blur(8px);"
                 ></div>
             </div>
 
@@ -26,7 +26,7 @@
                     />
                     <h1 class="text-4xl font-bold mb-4">Barangay Calumpang</h1>
                     <h2 class="text-2xl font-semibold mb-6">
-                        Health Center Management System
+                        Rural Health Unit
                     </h2>
                     <p class="text-lg max-w-md mx-auto">
                         Providing efficient healthcare services to our community through
@@ -42,19 +42,24 @@
             </div>
         </div>
 
+        
+
+        
         <!-- Right side - Authentication container -->
-        <div class="flex-1 flex items-center justify-center p-4 md:p-8 bg-gray-50">
+        <div class="flex-1 flex items-center justify-center p-4 md:p-8 bg-gray-100 text-gray-900">
             @include('Login.auth-container', [
-                'logoUrl' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=barangay-calumpang',
-                'healthCenterName' => 'Barangay Calumpang Health Center',
+            'logoUrl' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=barangay-calumpang',
+            'healthCenterName' => 'Barangay Calumpang Health Center',
             ])
         </div>
 
         <!-- Mobile-only footer -->
-        <div class="md:hidden text-center p-4 text-xs text-gray-500 bg-gray-50">
+        <div class="md:hidden text-center p-4 text-xs text-gray-400 bg-gray-800">
             <p>© {{ date('Y') }} Barangay Calumpang Health Center</p>
             <p class="mt-1">All rights reserved</p>
         </div>
+
+
     </div>
 </body>
 </html>

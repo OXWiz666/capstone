@@ -1,3 +1,4 @@
+<!-- filepath: /c:/Users/alpha/Downloads/CAPSTONE TANAN/bhcmsc/resources/views/Login/auth-container.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,16 +16,18 @@
                 <img
                     src="{{ $logoUrl }}"
                     alt="Health Center Logo"
-                    class="w-24 h-24 mb-4 rounded-full border-4 border-blue-500 shadow-md"
+                    class="w-24 h-24 mb-4 rounded-full border-4 border-black shadow-md"
                 />
             @else
-                <div class="w-24 h-24 mb-4 rounded-full bg-blue-500 flex items-center justify-center shadow-md">
+                <div class="w-24 h-24 mb-4 rounded-full bg-black flex items-center justify-center shadow-md">
                     👤
                 </div>
             @endif
             <h1 class="text-2xl font-bold text-center text-gray-900">
                 {{ $healthCenterName }}
             </h1>
+            <p class="text-sm text-gray-600 mt-2 text-center tempo-49950e4d-e3e3-5aa9-a0b7-e9f92def9034" tempoelementid="tempo-49950e4d-e3e3-5aa9-a0b7-e9f92def9034">
+                Rural Health Unit</p>
         </div>
 
         <!-- Auth Forms -->
