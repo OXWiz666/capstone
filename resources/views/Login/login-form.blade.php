@@ -53,22 +53,23 @@
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <div class="relative">
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Enter your password"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        >
-                        <button
-                            type="button"
-                            class="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-gray-500 hover:text-gray-700"
-                            x-data="{ showPassword: false }"
-                            @click="showPassword = !showPassword"
-                        >
-                            <span x-show="!showPassword">👁️</span>
-                            <span x-show="showPassword">👁️‍🗨️</span>
-                        </button>
+                        <div x-data="{ showPassword: false }">
+                            <input
+                                :type="showPassword ? 'text' : 'password'"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >
+                            <button
+                                type="button"
+                                class="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-gray-500 hover:text-gray-700"
+                                @click="showPassword = !showPassword"
+                            >
+                                <span x-show="!showPassword">👁️</span>
+                                <span x-show="showPassword">👁️‍🗨️</span>
+                            </button>
+                        </div>
                     </div>
                     @error('password')
                         <p class="text-sm text-red-600">{{ $message }}</p>

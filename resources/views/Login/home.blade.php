@@ -51,6 +51,7 @@
             'logoUrl' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=barangay-calumpang',
             'healthCenterName' => 'Barangay Calumpang Health Center',
             ])
+            
         </div>
 
         <!-- Mobile-only footer -->

@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 Route::get('/login', [AuthController::class, 'showAuthContainer'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit'); 
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
 
 // Home Routes
