@@ -44,15 +44,9 @@
         </div>
 
 
-        {{-- {{$slot}} --}}
-
         <!-- Right side - Authentication container -->
         <div class="flex-1 flex items-center justify-center p-4 md:p-8 bg-gray-100 text-gray-900">
            @yield('content')
-            {{-- @include('Login.auth-container', [
-            'logoUrl' => 'https://api.dicebear.com/7.x/avataaars/svg?seed=barangay-calumpang',
-            'healthCenterName' => 'Barangay Calumpang Health Center',
-            ]) --}}
         </div>
 
         <!-- Mobile-only footer -->
