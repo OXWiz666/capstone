@@ -6,6 +6,9 @@
     <title>Barangay Calumpang Health Center</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="//unpkg.com/alpinejs" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @stack('styles')
 </head>
 <body class="bg-gray-900 text-white">
     <div class="min-h-screen flex flex-col md:flex-row overflow-hidden">
@@ -57,5 +60,16 @@
 
 
     </div>
+    <script>
+        window.alert_toast = function(title,text,icon = 'success'){
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon
+            });
+        }
+        
+    </script>
+    @stack('scripts')
 </body>
 </html>

@@ -256,7 +256,7 @@
 
                 <!-- Submit Button -->
                 <div class="mt-8">
-                    <a href="{{ Route('') }}"
+                    <button type="submit"
                         class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <svg class="h-5 w-5 text-gray-400 group-hover:text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -264,7 +264,7 @@
                             </svg>
                         </span>
                         Register
-                    </a>
+                    </button>
                 </div>
 
                 <!-- Login Link -->
@@ -280,3 +280,24 @@
         </div>
     </div>
 @endsection
+
+<!-- function(title,text,icon = 'success') -->
+@push('scripts')
+    @if ($errors->any())
+        <script>
+            alert_toast('Error!','{{$errors->first()}}','error')
+        </script>
+    @endif
+
+    @if(session()->has('success'))
+        <script>
+            alert_toast('Success!',"{{session()->get('success')}}",'success')
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            alert_toast('Error!',"{{session()->get('error')}}",'success')
+        </script>
+    @endif
+@endpush

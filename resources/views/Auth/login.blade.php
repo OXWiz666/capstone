@@ -93,3 +93,24 @@
         </div>
     </div>
 @endsection
+
+<!-- function(title,text,icon = 'success') -->
+@push('scripts')
+    @if ($errors->any())
+        <script>
+            alert_toast('Error!','{{$errors->first()}}','error')
+        </script>
+    @endif
+
+    @if(session()->has('success'))
+        <script>
+            alert_toast('Success!',"{{session()->get('success')}}",'success')
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            alert_toast('Error!',"{{session()->get('error')}}",'success')
+        </script>
+    @endif
+@endpush

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\roles;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
 
@@ -63,7 +64,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $rules = [
+        $validate = $request->validate([
             'name' => 'required|min:2',
             'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:10',
@@ -71,12 +72,20 @@ class AuthController extends Controller
             'password' => 'required|min:8',
             'confirmPassword' => 'required|same:password',
             'securityQuestion' => 'required',
-            'securityAnswer' => 'required',
-        ];
+            'securityAnswer' => 'required'
+        ]);
 
         $newUser = new User();
-        $newUser->
+        $newUser->fullname = $request->name;
+        $newUser->email = $request->email;
+        $newUser->password = Hash::make($request->password);
+        $newUser->contactno = $request->contactNumber;
+        $newUser->roleID = $request->position;
+        $newUser->questionID = $request->securityQuestion;
+        $newUser->answer = $request->securityAnswer;
+        $newUser->save();
 
+        return redirect()->route('login')->with('success','Registered Successfully!');
     }
 
 
