@@ -10,7 +10,7 @@
 <body>
     @include('landing.header')
     
-    <div class="w-full min-h-screen pt-20">
+    <div class="w-full min-h-screen pt-25">
         @include('landing.HeroSection', 
         [
             'title' => 'Welcome to Barangay Calumpang Health Center',
