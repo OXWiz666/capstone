@@ -1,4 +1,5 @@
 {
+    
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
@@ -12,7 +13,9 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "laravel/ui": "^4.6"
+        "laravel/ui": "^4.6",
+        "carbon/carbon": "^2.0"
+
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -35,6 +38,7 @@
             "Tests\\": "tests/"
         }
     },
+
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -58,6 +62,7 @@
             "dont-discover": []
         }
     },
+    
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -69,4 +74,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
+    
 }
