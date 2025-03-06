@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+    
     public function showAuthContainer()
     {
         return view('Login.auth-container', [
@@ -38,16 +40,18 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Attempt to log the user in
-        if (auth()->attempt($credentials)) {
-            // Authentication passed, redirect to intended page or dashboard
-            return redirect()->intended('dashboard')->with('success', 'You are logged in!');
-        }
+        
 
-        // Authentication failed, redirect back with error message
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput();
+        // Attempt to log the user in
+        // if (auth()->attempt($credentials)) {
+        //     // Authentication passed, redirect to intended page or dashboard
+        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+        // }
+
+        // // Authentication failed, redirect back with error message
+        // return back()->withErrors([
+        //     'email' => 'The provided credentials do not match our records.',
+        // ])->withInput();
     }
 
     public function register(Request $request)

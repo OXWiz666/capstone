@@ -2,13 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\Controller;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
-class GuestMiddleware
+
+class GuestOrPatient
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class GuestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::check()){
+        if(!Auth::check() || (Auth::check() && Auth::user()->roleID == 5)){
             return $next($request);
         }
         return app(AuthController::class)->getRedirectRoute();
