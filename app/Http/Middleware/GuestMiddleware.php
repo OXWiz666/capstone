@@ -2,13 +2,14 @@
 
 namespace App\Http\Middleware;
 
+// use App\Http\Controllers\Controller;
 use App\Http\Controllers\Controller;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-
-class GuestMiddleware
+use App\Http\Controllers\AuthController;
+class GuestMiddleware extends Controller
 {
     /**
      * Handle an incoming request.
@@ -20,6 +21,6 @@ class GuestMiddleware
         if(!Auth::check()){
             return $next($request);
         }
-        return app(Controller::class)->getRedirectRoute();
+        return app(AuthController::class)->getRedirectRoute();
     }
 }

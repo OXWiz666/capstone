@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Controller;
 
-class GuestOrPatientMiddleware
+class GuestOrPatient extends Controller
 {
     /**
      * Handle an incoming request.
@@ -17,7 +18,7 @@ class GuestOrPatientMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::check() || (Auth::check() && Auth::user()->usertypeID == 2)){ //
+        if(!Auth::check() || (Auth::check() && Auth::user()->roleID == 5)){
             return $next($request);
         }
         return app(AuthController::class)->getRedirectRoute();

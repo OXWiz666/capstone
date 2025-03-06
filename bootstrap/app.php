@@ -5,6 +5,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
+
+use App\Http\Middleware\GuestOrPatient;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -15,14 +18,18 @@ return Application::configure(basePath: dirname(__DIR__))
         //
 
 
+        // $middleware->alias([
+        //     'Guest' => GuestMiddleware::class
+        //     // 'admin' => AdminMiddleware::class,
+        //     // 'customer' => CustomerMiddleware::class,
+        //     // 'adminstaff' => AdminStaffMiddleware::class,
+        //     // 'GuestOrCustomer' => GuestOrCustomerMiddleware::class,
+        //     // 'Guest' => GuestMiddleware::class,
+        //     // 'sanctum' => EnsureFrontendRequestsAreStateful::class, // Add Sanctum Middleware Alias
+        // ]);
         $middleware->alias([
-            'Guest' => GuestMiddleware::class
-            // 'admin' => AdminMiddleware::class,
-            // 'customer' => CustomerMiddleware::class,
-            // 'adminstaff' => AdminStaffMiddleware::class,
-            // 'GuestOrCustomer' => GuestOrCustomerMiddleware::class,
-            // 'Guest' => GuestMiddleware::class,
-            // 'sanctum' => EnsureFrontendRequestsAreStateful::class, // Add Sanctum Middleware Alias
+            'Guest' => GuestMiddleware::class,
+            'GuestOrPatient' => GuestOrPatient::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
