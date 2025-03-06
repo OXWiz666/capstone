@@ -33,7 +33,7 @@
                     </div>
                 </div>
             @endif
-
+            
             <!-- Registration Form -->
             <form action="{{ route('register.submit') }}" method="POST" class="mt-8 space-y-6">
                 @csrf
@@ -47,7 +47,7 @@
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                                 </svg>
                             </div>
-                            <input type="text" id="name" name="name" placeholder="Juan Dela Cruz"
+                            <input type="text" id="name" name="name" placeholder="ex. Juan Dela Cruz"
                                 class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
                                 value="{{ old('name') }}">
                         </div>
@@ -88,36 +88,25 @@
                                 class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 border border-gray-200">
                                 <select id="position" name="position" class="sr-only">
                                     <option value="">Select your position</option>
-                                    @foreach ([
-                                        'doctor' => 'Doctor',
-                                        'nurse' => 'Nurse',
-                                        'midwife' => 'Midwife',
-                                        'healthWorker' => 'Health Worker',
-                                        'administrator' => 'Administrator',
-                                    ] as $value => $label)
-                                        <option value="{{ $value }}" {{ old('position') == $value ? 'selected' : '' }}>
-                                            {{ $label }}
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->id }}" {{ old('position') == $role->id ? 'selected' : '' }}>
+                                            {{ $role->roletype }}
                                         </option>
                                     @endforeach
                                 </select>
 
-                                @foreach ([
-                                    'doctor' => 'Doctor',
-                                    'nurse' => 'Nurse',
-                                    'midwife' => 'Midwife',
-                                    'healthWorker' => 'Health Worker',
-                                    'administrator' => 'Administrator',
-                                ] as $value => $label)
+                                @foreach($roles as $role)
                                     <button type="button"
-                                        @click="selected = '{{ $label }}'; document.getElementById('position').value = '{{ $value }}'; open = false"
+                                        @click="selected = '{{ $role->roletype }}'; document.getElementById('position').value = '{{ $role->id }}'; open = false"
                                         class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors cursor-pointer flex items-center space-x-2"
-                                        :class="{'bg-gray-50': selected === '{{ $label }}'}">
-                                        <span class="flex-1">{{ $label }}</span>
-                                        <svg x-show="selected === '{{ $label }}'" class="h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        :class="{'bg-gray-50': selected === '{{ $role->roletype }}'}">
+                                        <span class="flex-1">{{ $role->roletype }}</span>
+                                        <svg x-show="selected === '{{ $role->roletype }}'" class="h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
                                     </button>
                                 @endforeach
+
                             </div>
                         </div>
                     </div>
@@ -267,7 +256,7 @@
 
                 <!-- Submit Button -->
                 <div class="mt-8">
-                    <button type="submit"
+                    <a href="{{ Route('') }}"
                         class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <svg class="h-5 w-5 text-gray-400 group-hover:text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -275,7 +264,7 @@
                             </svg>
                         </span>
                         Register
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Login Link -->

@@ -28,7 +28,7 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/services/records', [LandingPageController::class, 'records'])->name('services.records');
     Route::get('/services/vaccinations', [LandingPageController::class, 'vaccinations'])->name('services.vaccinations');
     // Contact Routes
-    Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+    //Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 });
 
 

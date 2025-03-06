@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\roles;
+use App\Models\User;
 class AuthController extends Controller
 {
 
@@ -24,7 +28,8 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('Auth.register');
+        $roles = roles::get();
+        return view('Auth.register',compact('roles'));
     }
 
     public function showForgotPasswordForm()
@@ -41,7 +46,11 @@ class AuthController extends Controller
         ]);
 
         
-
+         // Attempt to log the user in
+        if (Auth::attempt($credentials)) {
+            // Authentication was successful, redirect the user
+            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+        }
         // Attempt to log the user in
         // if (auth()->attempt($credentials)) {
         //     // Authentication passed, redirect to intended page or dashboard
@@ -49,16 +58,14 @@ class AuthController extends Controller
         // }
 
         // // Authentication failed, redirect back with error message
-        // return back()->withErrors([
-        //     'email' => 'The provided credentials do not match our records.',
-        // ])->withInput();
+        return back()->with('error','Invalid Credentials');
     }
 
     public function register(Request $request)
     {
         $rules = [
             'name' => 'required|min:2',
-            'position' => 'required',
+            'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:10',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
@@ -66,6 +73,10 @@ class AuthController extends Controller
             'securityQuestion' => 'required',
             'securityAnswer' => 'required',
         ];
+
+        $newUser = new User();
+        $newUser->
+
     }
 
 
