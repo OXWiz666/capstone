@@ -3,8 +3,25 @@
 @section('content')
     <div class="w-full max-w-md p-6 space-y-6 bg-white rounded-lg shadow-md tempo-4901d3a0-e44a-5c06-83da-013148656590"
         tempoelementid="tempo-4901d3a0-e44a-5c06-83da-013148656590">
-
-
+             <!-- Back to Home Button -->
+        <div class=" top-4 left-4">
+            <a href="{{ route('home') }}"
+               class="inline-flex items-center px-6 py-2.5 bg-black rounded-lg text-sm font-medium text-white 
+                      shadow-lg hover:shadow-2xl transform transition-all duration-300 
+                      hover:scale-105 hover:bg-gray-800 border border-gray-700 
+                      group animate-fade-in relative overflow-hidden">
+                <span class="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-50"></span>
+                <span class="relative flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         class="h-5 w-5 mr-2 transform transition-transform duration-300 group-hover:-translate-x-1" 
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back
+                </span>
+            </a>
+        </div>
+            
         <!-- Logo or Brand -->
             <div class="text-center">
                 <img class="mx-auto h-16 w-auto" src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png" alt="Logo">

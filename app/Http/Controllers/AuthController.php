@@ -91,7 +91,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
-            'securityQuestion' => 'required',
+            'securityQuestions' => 'required',
             'securityAnswer' => 'required'
         ]);
 
@@ -101,7 +101,7 @@ class AuthController extends Controller
         $newUser->password = Hash::make($request->password);
         $newUser->contactno = $request->contactNumber;
         $newUser->roleID = $request->position;
-        $newUser->questionID = $request->securityQuestion;
+        $newUser->questionID = $request->securityQuestions;
         $newUser->answer = $request->securityAnswer;
         $newUser->save();
 
