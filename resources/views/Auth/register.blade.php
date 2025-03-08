@@ -47,7 +47,7 @@
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                                 </svg>
                             </div>
-                            <input type="text" id="name" name="name" placeholder="Juan Dela Cruz"
+                            <input type="text" id="name" name="name" placeholder="ex. Juan Dela Cruz"
                                 class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
                                 value="{{ old('name') }}">
                         </div>
@@ -57,8 +57,8 @@
                     <div x-data="{ open: false, selected: '' }" class="relative">
                         <label for="position" class="block text-sm font-medium text-gray-700">Position/Role</label>
                         <div class="mt-1 relative">
-                            <button type="button" 
-                                @click="open = !open" 
+                            <button type="button"
+                                @click="open = !open"
                                 class="relative w-full bg-gray-50 pl-10 pr-10 py-3 text-left cursor-pointer rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out hover:bg-gray-100"
                                 :class="{'ring-2 ring-black': open}">
                                 <span class="block truncate" x-text="selected || 'Select your position'"></span>
@@ -69,7 +69,7 @@
                                     </svg>
                                 </span>
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200" 
+                                    <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
                                         :class="{'rotate-180': open}"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -77,7 +77,7 @@
                                 </span>
                             </button>
 
-                            <div x-show="open" 
+                            <div x-show="open"
                                 @click.away="open = false"
                                 x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="opacity-0 translate-y-1"
@@ -88,36 +88,25 @@
                                 class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 border border-gray-200">
                                 <select id="position" name="position" class="sr-only">
                                     <option value="">Select your position</option>
-                                    @foreach ([
-                                        'doctor' => 'Doctor',
-                                        'nurse' => 'Nurse',
-                                        'midwife' => 'Midwife',
-                                        'healthWorker' => 'Health Worker',
-                                        'administrator' => 'Administrator',
-                                    ] as $value => $label)
-                                        <option value="{{ $value }}" {{ old('position') == $value ? 'selected' : '' }}>
-                                            {{ $label }}
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->id }}" {{ old('position') == $role->id ? 'selected' : '' }}>
+                                            {{ $role->roletype }}
                                         </option>
                                     @endforeach
                                 </select>
 
-                                @foreach ([
-                                    'doctor' => 'Doctor',
-                                    'nurse' => 'Nurse',
-                                    'midwife' => 'Midwife',
-                                    'healthWorker' => 'Health Worker',
-                                    'administrator' => 'Administrator',
-                                ] as $value => $label)
+                                @foreach($roles as $role)
                                     <button type="button"
-                                        @click="selected = '{{ $label }}'; document.getElementById('position').value = '{{ $value }}'; open = false"
+                                        @click="selected = '{{ $role->roletype }}'; document.getElementById('position').value = '{{ $role->id }}'; open = false"
                                         class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors cursor-pointer flex items-center space-x-2"
-                                        :class="{'bg-gray-50': selected === '{{ $label }}'}">
-                                        <span class="flex-1">{{ $label }}</span>
-                                        <svg x-show="selected === '{{ $label }}'" class="h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        :class="{'bg-gray-50': selected === '{{ $role->roletype }}'}">
+                                        <span class="flex-1">{{ $role->roletype }}</span>
+                                        <svg x-show="selected === '{{ $role->roletype }}'" class="h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
                                     </button>
                                 @endforeach
+
                             </div>
                         </div>
                     </div>
@@ -185,8 +174,8 @@
                     <div x-data="{ open: false, selected: '' }" class="relative">
                         <label for="securityQuestion" class="block text-sm font-medium text-gray-700">Security Question</label>
                         <div class="mt-1 relative">
-                            <button type="button" 
-                                @click="open = !open" 
+                            <button type="button"
+                                @click="open = !open"
                                 class="relative w-full bg-gray-50 pl-10 pr-10 py-3 text-left cursor-pointer rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out hover:bg-gray-100"
                                 :class="{'ring-2 ring-black': open}">
                                 <span class="block truncate" x-text="selected || 'Select a security question'"></span>
@@ -196,7 +185,7 @@
                                     </svg>
                                 </span>
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200" 
+                                    <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
                                         :class="{'rotate-180': open}"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -204,7 +193,7 @@
                                 </span>
                             </button>
 
-                            <div x-show="open" 
+                            <div x-show="open"
                                 @click.away="open = false"
                                 x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="opacity-0 translate-y-1"
@@ -215,36 +204,32 @@
                                 class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 border border-gray-200">
                                 <select id="securityQuestion" name="securityQuestion" class="sr-only">
                                     <option value="">Select a security question</option>
-                                    @foreach ([
-                                        'birthPlace' => 'What is your place of birth?',
-                                        'firstPet' => 'What was the name of your first pet?',
-                                        'mothersMaidenName' => "What is your mother's maiden name?",
-                                        'elementarySchool' => 'What elementary school did you attend?',
-                                        'favoriteColor' => 'What is your favorite color?',
-                                    ] as $value => $label)
-                                        <option value="{{ $value }}" {{ old('securityQuestion') == $value ? 'selected' : '' }}>
-                                            {{ $label }}
+                                    @foreach ($questions as $question)
+                                        <option value="{{ $question->id }}" {{ old('securityQuestion') == $question->id ? 'selected' : '' }}>
+                                            {{ $question->question }}
                                         </option>
                                     @endforeach
                                 </select>
-
-                                @foreach ([
+                                @foreach ($questions as $question)
+                                    <button type="button"
+                                        @click="selected = '{{ $question->question }}'; document.getElementById('securityQuestion').value = '{{ $question->id }}'; open = false"
+                                        class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors cursor-pointer flex items-center space-x-2"
+                                        :class="{'bg-gray-50': selected === '{{ $question->question }}'}">
+                                        <span class="flex-1">{{ $question->question }}</span>
+                                        <svg x-show="selected === '{{ $question->question }}'" class="h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                @endforeach
+                                {{-- @foreach ([
                                     'birthPlace' => 'What is your place of birth?',
                                     'firstPet' => 'What was the name of your first pet?',
                                     'mothersMaidenName' => "What is your mother's maiden name?",
                                     'elementarySchool' => 'What elementary school did you attend?',
                                     'favoriteColor' => 'What is your favorite color?',
                                 ] as $value => $label)
-                                    <button type="button"
-                                        @click="selected = '{{ $label }}'; document.getElementById('securityQuestion').value = '{{ $value }}'; open = false"
-                                        class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors cursor-pointer flex items-center space-x-2"
-                                        :class="{'bg-gray-50': selected === '{{ $label }}'}">
-                                        <span class="flex-1">{{ $label }}</span>
-                                        <svg x-show="selected === '{{ $label }}'" class="h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </button>
-                                @endforeach
+
+                                @endforeach --}}
                             </div>
                         </div>
                     </div>
@@ -281,7 +266,7 @@
                 <!-- Login Link -->
                 <div class="text-center mt-4">
                     <p class="text-sm text-gray-600">
-                        Already have an account? 
+                        Already have an account?
                         <a href="{{ route('login') }}" class="font-medium text-black hover:text-gray-800 transition-colors">
                             Sign in
                         </a>
@@ -291,3 +276,24 @@
         </div>
     </div>
 @endsection
+
+<!-- function(title,text,icon = 'success') -->
+@push('scripts')
+    @if ($errors->any())
+        <script>
+            alert_toast('Error!','{{$errors->first()}}','error')
+        </script>
+    @endif
+
+    @if(session()->has('success'))
+        <script>
+            alert_toast('Success!',"{{session()->get('success')}}",'success')
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            alert_toast('Error!',"{{session()->get('error')}}",'success')
+        </script>
+    @endif
+@endpush

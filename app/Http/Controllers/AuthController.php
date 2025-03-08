@@ -5,8 +5,34 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\roles;
+use App\Models\securityquestions;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
+    public function getRedirectRoute() : Response
+    {
+        if(!Auth::check())
+            return redirect()->route('login');
+
+        //return redirect()->route('register');
+
+        switch(Auth::user()->roleID){ // For Route . ->name()
+            // case "2":
+            //     return redirect()->route('admin.dashboard');
+            // case "3":
+            //     return redirect()->route('admin.dashboard');
+            case "5":
+                return redirect()->route('home');
+            default:
+                return redirect()->intended('/');
+        }
+    }
+
     public function showAuthContainer()
     {
         return view('Login.auth-container', [
@@ -22,7 +48,9 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('Auth.register');
+        $roles = roles::get();
+        $questions = securityquestions::get();
+        return view('Auth.register',compact('roles','questions'));
     }
 
     public function showForgotPasswordForm()
@@ -38,30 +66,46 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Attempt to log the user in
-        if (auth()->attempt($credentials)) {
-            // Authentication passed, redirect to intended page or dashboard
-            return redirect()->intended('dashboard')->with('success', 'You are logged in!');
-        }
 
-        // Authentication failed, redirect back with error message
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput();
+         // Attempt to log the user in
+        if (Auth::attempt($credentials)) {
+            // Authentication was successful, redirect the user
+            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+        }
+        // Attempt to log the user in
+        // if (auth()->attempt($credentials)) {
+        //     // Authentication passed, redirect to intended page or dashboard
+        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+        // }
+
+        // // Authentication failed, redirect back with error message
+        return redirect()->back()->with('error','Invalid Credentials');
     }
 
     public function register(Request $request)
     {
-        $rules = [
+        $validate = $request->validate([
             'name' => 'required|min:2',
-            'position' => 'required',
-            'contactNumber' => 'required|min:10',
+            'position' => 'required|min:1|max:5',
+            'contactNumber' => 'required|min:11',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
+            'password' => 'required',
             'confirmPassword' => 'required|same:password',
             'securityQuestion' => 'required',
-            'securityAnswer' => 'required',
-        ];
+            'securityAnswer' => 'required'
+        ]);
+
+        $newUser = new User();
+        $newUser->fullname = $request->name;
+        $newUser->email = $request->email;
+        $newUser->password = Hash::make($request->password);
+        $newUser->contactno = $request->contactNumber;
+        $newUser->roleID = $request->position;
+        $newUser->questionID = $request->securityQuestion;
+        $newUser->answer = $request->securityAnswer;
+        $newUser->save();
+
+        return redirect()->route('login')->with('success','Registered Successfully!');
     }
 
 

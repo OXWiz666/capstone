@@ -16,14 +16,15 @@
             from { transform: translateX(-20px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
         @keyframes floatAnimation {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
+        }
+        @keyframes uniqueAnimation {
+            0% { transform: scale(1) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(10deg); opacity: 0.5; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         .animate-fade-in {
             animation: fadeIn 1s ease-out;
@@ -31,11 +32,12 @@
         .animate-slide-in {
             animation: slideIn 0.8s ease-out;
         }
-        .animate-scale-in {
-            animation: scaleIn 0.8s ease-out;
-        }
+
         .animate-float {
             animation: floatAnimation 3s ease-in-out infinite;
+        }
+        .animate-unique {
+            animation: uniqueAnimation 1s ease-out;
         }
         .logo-glow {
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));

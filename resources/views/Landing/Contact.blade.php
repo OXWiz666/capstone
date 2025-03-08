@@ -124,7 +124,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
+                <form action="#" method="POST" class="space-y-6">
                     @csrf
                     <div class="grid grid-cols-1 gap-6">
                         <div class="relative group">
