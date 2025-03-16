@@ -31,7 +31,7 @@
                                 </div>
                                 <div class="card-content">
                                     <!-- Calendar -->
-                                    <x-calendar :selected-date="$selectedDate" :schedule-dates="$scheduleDates" />
+                                    {{-- <x-calendar :selected-date="$selectedDate" :schedule-dates="$scheduleDates" /> --}}
 
                                     <div class="mt-4 flex items-center justify-center gap-4">
                                         <div class="flex items-center">
@@ -52,17 +52,17 @@
                             <div class="card">
                                 <div class="card-header flex flex-row items-center justify-between">
                                     <div>
-                                        <h3 class="text-xl">
+                                        {{-- <h3 class="text-xl">
                                             {{ $selectedDate ? 'Schedules for ' . \Carbon\Carbon::parse($selectedDate)->format('F d, Y') : 'All Upcoming Vaccination Schedules' }}
                                         </h3>
-                                        <p>{{ count($filteredSchedules) }} vaccination schedules found</p>
+                                        <p>{{ count($filteredSchedules) }} vaccination schedules found</p> --}}
                                     </div>
                                     <button class="btn-outline">
                                         <i class="h-4 w-4">Filter</i>
                                     </button>
                                 </div>
                                 <div class="card-content space-y-4">
-                                    @forelse($filteredSchedules as $schedule)
+                                    {{-- @forelse($filteredSchedules as $schedule)
                                     <div class="card mb-4">
                                         <div class="h-1 {{ $schedule->status === 'completed' ? 'bg-gray-300' : ($schedule->availableSlots === 0 ? 'bg-red-500' : 'bg-green-500') }}"></div>
                                         <div class="card-content p-4">
@@ -95,7 +95,6 @@
                                                     <div class="text-sm text-gray-600">
                                                         <span class="font-medium">Available Slots:</span> {{ $schedule->availableSlots }}/{{ $schedule->totalSlots }}
                                                     </div>
-                                                    <x-progress value="{{ ($schedule->availableSlots / $schedule->totalSlots) * 100 }}" />
                                                     <button class="mt-2" {{ $schedule->status === 'completed' || $schedule->availableSlots === 0 ? 'disabled' : '' }} onclick="window.location.href = '/appointments'">
                                                         {{ $schedule->status === 'completed' ? 'Completed' : ($schedule->availableSlots === 0 ? 'No Slots Available' : 'Book Appointment') }}
                                                     </button>
@@ -112,7 +111,7 @@
                                             View All Schedules
                                         </button>
                                     </div>
-                                    @endforelse
+                                    @endforelse --}}
                                 </div>
                             </div>
                         </div>
@@ -135,7 +134,7 @@
                         </div>
                         <div class="card-content">
                             <div class="space-y-6">
-                                @foreach ($vaccineRecords as $record)
+                                {{-- @foreach ($vaccineRecords as $record)
                                     <div class="border rounded-lg overflow-hidden">
                                         <div class="h-1 {{ $record->status === 'completed' ? 'bg-green-500' : ($record->status === 'scheduled' ? 'bg-blue-500' : 'bg-red-500') }}"></div>
                                         <div class="p-4">
@@ -177,12 +176,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
+                                @endforeach --}}
                             </div>
                         </div>
                         <div class="card-footer flex justify-between border-t p-4">
                             <div class="text-sm text-gray-600">
-                                <span class="font-medium">Total Records:</span> {{ count($vaccineRecords) }}
+                                {{-- <span class="font-medium">Total Records:</span> {{ count($vaccineRecords) }} --}}
                             </div>
                             <button class="btn-outline" size="sm">
                                 Download Records
@@ -194,3 +193,47 @@
         </div>
     </main>
 @endsection
+
+@push('scripts')
+    <!-- Include Tailwind CSS (if using Tailwind) -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<!-- Include Alpine.js (for reactivity if needed) -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.5/dist/cdn.min.js"></script>
+
+<!-- Include FullCalendar (for calendar functionality) -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+
+<!-- Include jQuery (if needed for FullCalendar) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include SweetAlert (for alerts and notifications) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Include Moment.js (for date formatting if needed) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+<!-- Vaccination Page Content -->
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold text-gray-900 mt-6">Vaccination Services</h1>
+    <p class="text-gray-600 mt-2">Manage your vaccination schedules and records in one place</p>
+
+    <!-- Calendar -->
+    <div id="calendar" class="mt-6"></div>
+</div>
+
+<script>
+    // Initialize FullCalendar
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '/api/vaccination-schedules', // Fetch events from API
+        });
+
+        calendar.render();
+    });
+</script>
+@endpush
