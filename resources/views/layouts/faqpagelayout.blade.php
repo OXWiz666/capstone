@@ -25,7 +25,7 @@
                 </p>
 
                 <!-- FAQ Accordion -->
-                <div class="space-y-3">
+                <div class="space-y-2">
                     @php
                         $faqs = [
                             ["question" => "How do I schedule an appointment at the health center?", "answer" => "You can schedule an appointment through our online appointment system by clicking on the 'Schedule Appointment' button on our homepage. Alternatively, you can visit the health center in person or call our appointment hotline at +63 (123) 456-7890."],
@@ -42,15 +42,15 @@
                     @endphp
 
                     @foreach ($faqs as $index => $faq)
-                        <div x-data="{ open: false }" class="border border-gray-100 rounded-md shadow-sm mb-2 transition-all duration-300 ease-in-out hover:shadow-md">
+                        <div x-data="{ open: false }" class="border-b border-l border-r border-gray-200 rounded-b-md shadow-sm mb-2 transition-all duration-300 ease-in-out hover:shadow-md">
                             <button
                                 @click="open = !open"
-                                class="w-full flex justify-between items-center p-4 text-left font-medium text-gray-700 hover:bg-gray-50 rounded-t-md focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:ring-inset transition-colors duration-200"
+                                class="w-full flex justify-between items-center p-3 text-left font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:ring-inset transition-colors duration-200"
                             >
-                                <span class="text-base">{{ $faq['question'] }}</span>
+                                <span class="text-sm">{{ $faq['question'] }}</span>
                                 <svg
                                     :class="{ 'rotate-180 text-indigo-500': open }"
-                                    class="w-4 h-4 transform transition-all duration-300 ease-in-out text-gray-400"
+                                    class="w-3 h-3 transform transition-all duration-300 ease-in-out text-gray-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -66,7 +66,7 @@
                                 x-transition:leave="transition ease-in duration-200"
                                 x-transition:leave-start="opacity-100 transform scale-100"
                                 x-transition:leave-end="opacity-0 transform scale-95"
-                                class="p-4 bg-gray-50 text-sm text-gray-600 rounded-b-md border-t border-gray-100"
+                                class="p-3 bg-gray-50 text-xs text-gray-600 rounded-b-md"
                             >
                                 {{ $faq['answer'] }}
                             </div>
