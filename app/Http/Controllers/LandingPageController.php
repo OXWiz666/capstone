@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 
-class LandingpageController extends Controller
+class LandingPageController extends Controller
 {
     public function index(): View
     {
@@ -137,8 +137,23 @@ class LandingpageController extends Controller
         ]);
     }
 
-    public function contact(): View
+    public function about(): View
     {
-        return view('contact');
+        return view('layouts.aboutuslayout');
+    }
+
+    public function services(): View
+    {
+        return view('layouts.services');
+    }
+
+    public function appointments(): View
+    {
+        return view('layouts.appointments');
+    }
+
+    public function records(): View
+    {
+        return view('layouts.records');
     }
 }

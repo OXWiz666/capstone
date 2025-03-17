@@ -38,7 +38,7 @@
                     <div>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Home</a>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Appointments</a>
-                        <a href="#" class="text-gray-400 hover:text-white block py-1">Contact</a>
+                        <a href="{{ route('contact') }}" class="text-gray-400 hover:text-white block py-1">Contact</a>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Terms of Service</a>
                     </div>
                     <div>

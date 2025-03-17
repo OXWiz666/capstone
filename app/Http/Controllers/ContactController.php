@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
+
+    public function index()
+    {
+        return view('layouts.contactpage');
+    }
+
     public function submit(Request $request)
     {
         // Validate the form data
