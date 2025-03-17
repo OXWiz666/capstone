@@ -2,7 +2,7 @@
 
 @section('content')
 
-@include('landing.HeroSection', 
+@include('landing.HeroSection',
         [
             'title' => 'Welcome to Barangay Calumpang Health Center',
             'description' => 'Your community healthcare partner providing accessible and quality medical services for all residents. Our digital healthcare system makes it easier than ever to manage your health needs.',
@@ -92,7 +92,7 @@
                 ],
             ],
         ])
-        @include('Landing.Contact',
+        @include('landing.include.contact',
          ['contactData' => $contactData])
 
 @endsection

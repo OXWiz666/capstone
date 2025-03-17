@@ -31,7 +31,6 @@
                                 </div>
                                 <div class="card-content">
                                     <!-- Calendar -->
-                                    {{-- <x-calendar :selected-date="$selectedDate" :schedule-dates="$scheduleDates" /> --}}
 
                                     <div class="mt-4 flex items-center justify-center gap-4">
                                         <div class="flex items-center">
@@ -191,7 +190,7 @@
                 </div>
             </div>
         </div>
-    </main>
+</main>
 @endsection
 
 @push('scripts')

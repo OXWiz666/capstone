@@ -86,12 +86,12 @@ class AuthController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|min:2',
-            'position' => 'required|min:1|max:5',
+            //'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:11',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
-            'securityQuestions' => 'required',
+            'securityQuestion' => 'required|min:1|max:5',
             'securityAnswer' => 'required'
         ]);
 
@@ -100,8 +100,8 @@ class AuthController extends Controller
         $newUser->email = $request->email;
         $newUser->password = Hash::make($request->password);
         $newUser->contactno = $request->contactNumber;
-        $newUser->roleID = $request->position;
-        $newUser->questionID = $request->securityQuestions;
+        $newUser->roleID = 5;
+        $newUser->questionID = $request->securityQuestion;
         $newUser->answer = $request->securityAnswer;
         $newUser->save();
 

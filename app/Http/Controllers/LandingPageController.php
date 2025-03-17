@@ -139,6 +139,6 @@ class LandingpageController extends Controller
 
     public function contact(): View
     {
-        return view('contact');
+        return view('landing.pages.contact');
     }
 }
