@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Barangay Calumpang Health Center</title>
+    <title>Calumpang Rural Health Unit</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
@@ -14,7 +14,7 @@
     <div class="w-full min-h-screen pt-25">
         @include('landing.HeroSection', 
         [
-            'title' => 'Welcome to Barangay Calumpang Health Center',
+            'title' => 'Welcome to Calumpang Rural Health Unit',
             'description' => 'Your community healthcare partner providing accessible and quality medical services for all residents. Our digital healthcare system makes it easier than ever to manage your health needs.',
             'ctaText' => 'Schedule an Appointment',
             'imageUrl' => 'https://i.ibb.co/wFSCZYdV/471634916-609791331562667-4920390300131702624-n.jpg'

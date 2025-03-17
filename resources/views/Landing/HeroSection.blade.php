@@ -13,10 +13,12 @@
     <div class="relative z-20 container mx-auto px-4 h-full flex flex-col justify-center items-start">
         <div class="max-w-lg">
             <h1 class="text-2xl sm:text-3xl md:text-3xl font-bold mb-2 leading-tight text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] tracking-tight">
-                Welcome to Barangay<br>
-                <span class="text-3xl sm:text-4xl md:text-4xl bg-clip-text text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                    Calumpang Health Center
-                </span>
+                Welcome to Barangay Calumpang<br>
+                <div class="flex items-center justify-center">
+                    <span class="text-3xl sm:text-4xl md:text-4xl bg-clip-text text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                        Rural Health Unit
+                    </span>
+                </div>
             </h1>
             <p class="text-sm md:text-base mb-3 text-justify text-white leading-relaxed max-w-md font-medium drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
                 Your community healthcare partner providing accessible and quality medical services for all residents. Our digital healthcare system makes it easier than ever to manage your health needs.

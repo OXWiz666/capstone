@@ -14,12 +14,19 @@
             {{-- Contact Information --}}
             <div class="space-y-8">
                 {{-- Map --}}
-                <div class="rounded-lg overflow-hidden shadow-md h-64 md:h-80">
-                    <img
-                        src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                        alt="Health Center Location Map"
-                        class="w-full h-full object-cover"
-                    />
+                <div class="rounded-lg overflow-hidden shadow-lg h-64 md:h-[400px] border border-gray-100 transition-all duration-300 hover:shadow-xl relative group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></div>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.6284443055966!2d125.16923!3d6.0967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f79ef7e2b25c07%3A0x745350b9a55d91ce!2sCalumpang%2C%20General%20Santos%20City%2C%20South%20Cotabato!5e0!3m2!1sen!2sph!4v1656123456789!5m2!1sen!2sph" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Barangay Calumpang General Santos City"
+                        class="w-full h-full filter contrast-[1.02] group-hover:contrast-[1.05] transition-all duration-300"
+                    ></iframe>
                 </div>
 
                 {{-- Contact Details --}}
