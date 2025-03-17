@@ -35,7 +35,7 @@
                 class="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
             <span
                 class="ml-2 font-semibold text-base hidden sm:inline text-gray-800 group-hover:text-black transition-colors duration-300">
-                Calumpang Health Center
+                Calumpang Rural Health Unit
             </span>
         </a>
 

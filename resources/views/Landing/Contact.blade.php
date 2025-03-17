@@ -6,7 +6,7 @@
                 Contact Us
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Get in touch with Barangay Calumpang Health Center
+                Get in touch with Calumpang Rural Health Unit General Santos City
             </p>
         </div>
 
@@ -33,7 +33,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-medium text-gray-900">Our Location</h3>
-                            <p class="text-gray-600 mt-1">123 Health Center Road, Barangay Calumpang, General Santos City</p>
+                            <p class="text-gray-600 mt-1">Calumpang, General Santos, Soccsksargen, Philippines</p>
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-medium text-gray-900">Phone Number</h3>
-                            <p class="text-gray-600 mt-1">+63 (33) 123-4567</p>
+                            <p class="text-gray-600 mt-1">(083) 554-0146</p>
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-medium text-gray-900">Email Address</h3>
-                            <p class="text-gray-600 mt-1">calumpang.health@example.com</p>
+                            <p class="text-gray-600 mt-1">calumpangrhu@gmail.com</p>
                         </div>
                     </div>
                 </div>
