@@ -22,8 +22,8 @@ class AuthController extends Controller
         //return redirect()->route('register');
 
         switch(Auth::user()->roleID){ // For Route . ->name()
-            // case "2":
-            //     return redirect()->route('admin.dashboard');
+             case "1":
+                return redirect()->route('admin');
             // case "3":
             //     return redirect()->route('admin.dashboard');
             case "5":

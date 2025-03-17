@@ -174,7 +174,7 @@
                     </li>
                     <li>
                         {{-- {{ route('faq') }} --}}
-                        <a href="#"
+                        <a href="{{ route('faq') }}"
                             class="nav-link group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative">
                             FAQ
                         </a>

@@ -11,6 +11,7 @@
 
     <script type="text/javascript" async="" src="https://us.i.posthog.com/static/array.js"></script>
 
+
     <!-- Add Alpine.js if not already included in your layout -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @stack('styles')

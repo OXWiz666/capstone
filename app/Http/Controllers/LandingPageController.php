@@ -141,4 +141,13 @@ class LandingpageController extends Controller
     {
         return view('landing.pages.contact');
     }
+
+    public function about(): View
+    {
+        return view('landing.pages.about');
+    }
+    public function faq(): View
+    {
+        return view('landing.pages.faq');
+    }
 }

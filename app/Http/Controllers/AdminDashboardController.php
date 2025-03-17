@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class DashboardController extends Controller
+class AdminDashboardController extends Controller
 {
     /**
      * Display the dashboard page.
@@ -17,7 +17,7 @@ class DashboardController extends Controller
     {
         // Get the authenticated user
         $user = Auth::user();
-        
+
         // Sample data - in a real application, you would fetch this from your database
         $stats = [
             'patients' => 1248,
@@ -25,14 +25,14 @@ class DashboardController extends Controller
             'medicine_inventory' => 156,
             'staff_members' => 18
         ];
-        
+
         // You can pass any data needed for your dashboard
         return view('Dashboard.Admin.dashboard', [
             'stats' => $stats,
             'user' => $user
         ]);
     }
-    
+
     /**
      * Get dashboard statistics as JSON for AJAX requests.
      *
@@ -63,10 +63,10 @@ class DashboardController extends Controller
                 'is_positive' => true
             ]
         ];
-        
+
         return response()->json($stats);
     }
-    
+
     /**
      * Get queue updates for the dashboard.
      *
@@ -80,10 +80,10 @@ class DashboardController extends Controller
             'waiting' => 8,
             'completed' => 12
         ];
-        
+
         return response()->json($queue);
     }
-    
+
     /**
      * Get appointment updates for the dashboard.
      *
@@ -105,7 +105,7 @@ class DashboardController extends Controller
                 'total' => 86
             ]
         ];
-        
+
         return response()->json($appointments);
     }
 }

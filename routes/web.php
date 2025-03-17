@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
@@ -30,8 +31,15 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/appointments', [LandingPageController::class, 'appointments'])->name('appointments');
     Route::get('/services/records', [LandingPageController::class, 'records'])->name('services.records');
     Route::get('/services/vaccinations', [VaccineController::class, 'index'])->name('services.vaccinations');
+    Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
     // Contact Routes
     //Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+});
+
+Route::middleware(['auth','Admin'])->group(function(){
+    Route::prefix('Admin')->group(function(){
+        Route::get('/',[AdminDashboardController::class,'index'])->name('admin');
+    });
 });
 
 Route::middleware(['auth'])->group(function () {
