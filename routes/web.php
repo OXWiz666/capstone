@@ -10,11 +10,6 @@ use App\Http\Controllers\QueueController;
 use App\Http\Controllers\VaccinationController;
 use Illuminate\Support\Facades\Auth;
 
-// About us Routes
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
 // Auth Routes
 
 Route::middleware(["Guest"])->group(function () {
@@ -31,6 +26,7 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/', [LandingPageController::class, 'index'])->name('home');
     Route::get('/services', [LandingPageController::class, 'services'])->name('services');
     Route::get('/about', [LandingPageController::class, 'about'])->name('about');
+    Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::get('/appointments', [LandingPageController::class, 'appointments'])->name('appointments');
     Route::get('/services/records', [LandingPageController::class, 'records'])->name('services.records');

@@ -142,6 +142,11 @@ class LandingPageController extends Controller
         return view('layouts.aboutuslayout');
     }
 
+    public function faq(): View
+    {
+        return view('layouts.faqpagelayout');
+    }
+
     public function services(): View
     {
         return view('layouts.services');
