@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
+    
+
     public function getRedirectRoute() : Response
     {
         if(!Auth::check())
@@ -72,12 +74,24 @@ class AuthController extends Controller
             // Authentication was successful, redirect the user
             return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
         }
+
+         // Attempt to log the user in
+        if (Auth::attempt($credentials)) {
+            // Authentication was successful, redirect the user
+            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+        }
         // Attempt to log the user in
         // if (auth()->attempt($credentials)) {
         //     // Authentication passed, redirect to intended page or dashboard
         //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
         // }
+        // if (auth()->attempt($credentials)) {
+        //     // Authentication passed, redirect to intended page or dashboard
+        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+        // }
 
+        // // Authentication failed, redirect back with error message
+        // return redirect()->back()->with('error','Invalid Credentials');
         // // Authentication failed, redirect back with error message
         return redirect()->back()->with('error','Invalid Credentials');
     }

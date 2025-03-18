@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
-class GuestMiddleware extends Controller
+
+class GuestMiddleware
 {
     /**
      * Handle an incoming request.

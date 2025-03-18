@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\QueueController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\VaccineController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -28,7 +32,7 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/contact', [LandingPageController::class, 'contact'])->name('contact');
     Route::get('/appointments', [LandingPageController::class, 'appointments'])->name('appointments');
     Route::get('/services/records', [LandingPageController::class, 'records'])->name('services.records');
-    Route::get('/services/vaccinations', [VaccinationController::class, 'index'])->name('services.vaccinations');
+    Route::get('/services/vaccinations', [VaccineController::class, 'index'])->name('services.vaccinations');
     // Contact Routes
     //Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 });

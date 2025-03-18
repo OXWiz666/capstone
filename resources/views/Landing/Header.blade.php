@@ -29,9 +29,13 @@
 <header class="w-full h-16 bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 z-50">
     <div class="container mx-auto h-full flex items-center justify-between px-4">
         {{-- Logo --}}
-        <a href="{{ route('home') }}" class="flex items-center group">
+        <a href="{{ Route('home') }}" class="flex items-center group">
+            <!-- <img src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png" -->
             <img src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png"
                 alt="Barangay Calumpang Health Center"
+                class="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
+            <span
+                class="ml-2 font-semibold text-base hidden sm:inline text-gray-800 group-hover:text-black transition-colors duration-300">
                 class="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
             <span
                 class="ml-2 font-semibold text-base hidden sm:inline text-gray-800 group-hover:text-black transition-colors duration-300">
@@ -40,17 +44,31 @@
         </a>
 
         {{-- Desktop Navigation --}}
-        <div class="hidden md:block">
+        <div class="hidden md:flex flex-1 justify-center">
             <nav>
-                <ul class="flex space-x-1">
+                <ul class="flex space-x-6">
                     <li>
-                        <a href="{{ route('home') }}"
+                        <a href="{{ Route('home') }}"
+                            class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
+                        <a href="{{ Route('home') }}"
                             class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
                             Home
                         </a>
                     </li>
 
+
                     {{-- Services Dropdown --}}
+                    <li x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" @click.away="open = false" @keydown.escape.window="open = false"
+                            class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full"
+                            :class="{ 'bg-gray-100 text-gray-900': open }">
+                            <span>Services</span>
+                            <svg class="ml-1 h-4 w-4 transition-transform duration-300" :class="{ 'rotate-180': open }"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
                     <li x-data="{ open: false }" class="relative">
                         <button @click="open = !open" @click.away="open = false" @keydown.escape.window="open = false"
                             class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full"
@@ -73,7 +91,7 @@
                             class="absolute left-0 mt-2 w-72 origin-top-right rounded-xl bg-white p-4 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none"
                             style="display: none;">
                             <div class="space-y-2">
-                                <a href="{{ route('appointments') }}"
+                                <a href="{{ Route('appointments') }}"
                                     class="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300">
                                     <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-black transition-colors duration-300"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -91,7 +109,7 @@
                                     </div>
                                 </a>
 
-                                <a href="{{ route('services.records') }}"
+                                <a href="{{ Route('services.records') }}"
                                     class="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300">
                                     <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-black transition-colors duration-300"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -110,7 +128,24 @@
                                     </div>
                                 </a>
 
-                                <a href="{{ route('services.vaccinations') }}"
+                                <a href="{{ Route('services.vaccinations') }}"
+                                    class="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300">
+                                    <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-black transition-colors duration-300"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <div>
+                                        <p
+                                            class="text-sm font-medium text-gray-900 group-hover:text-black transition-colors duration-300">
+                                            Vaccinations</p>
+                                        <p
+                                            class="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
+                                            View vaccination schedules and availability</p>
+                                    </div>
+
+                                <a href="{{ Route('services.vaccinations') }}"
                                     class="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300">
                                     <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-black transition-colors duration-300"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -132,13 +167,15 @@
                     </li>
 
                     <li>
-                        <a href="{{ route('about') }}"
+                        <a href="{{ Route('about') }}"
+                            class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
+                        <a href="{{ Route('about') }}"
                             class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
                             About
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ Route('contact') }}"
                             class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
                             Contact
                         </a>
@@ -151,7 +188,21 @@
         @guest
             {{-- Login Button --}}
             <div class="flex items-center gap-3">
-                <a href="{{ route('login') }}"
+                <a href="{{ Route('login') }}"
+                    class="hidden md:flex items-center gap-1.5 px-4 py-2 border rounded-lg text-gray-700 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm group">
+                    <svg class="h-4 w-4 text-gray-600 group-hover:text-black transition-colors duration-300"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Login</span>
+                </a>
+            </div>
+
+        @guest
+            {{-- Login Button --}}
+            <div class="flex items-center gap-3">
+                <a href="{{ Route('login') }}"
                     class="hidden md:flex items-center gap-1.5 px-4 py-2 border rounded-lg text-gray-700 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm group">
                     <svg class="h-4 w-4 text-gray-600 group-hover:text-black transition-colors duration-300"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -225,7 +276,7 @@
         class="md:hidden absolute top-16 inset-x-0 bg-white border-b border-gray-200 shadow-lg"
         style="display: none;">
         <nav class="px-4 py-2 space-y-1">
-            <a href="{{ route('home') }}"
+            <a href="{{ Route('home') }}"
                 class="block px-4 py-2.5 text-sm text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
                 Home
             </a>
@@ -244,32 +295,20 @@
                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0" class="px-4 py-2 space-y-1" style="display: none;">
-                    <a href="{{ route('appointments') }}"
+                    <a href="{{ Route('appointments') }}"
                         class="block px-4 py-2.5 text-sm text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
                         Appointments
                     </a>
-                    <a href="{{ route('services.records') }}"
+                    <a href="{{ Route('services.records') }}"
                         class="block px-4 py-2.5 text-sm text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
                         Medical Records
                     </a>
-                    <a href="{{ route('services.vaccinations') }}"
+                    <a href="{{ Route('services.vaccinations') }}"
                         class="block px-4 py-2.5 text-sm text-gray-600 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
                         Vaccinations
                     </a>
                 </div>
             </div>
-            <a href="{{ route('about') }}"
-                class="block px-4 py-2.5 text-sm text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
-                About
-            </a>
-            <a href="{{ route('contact') }}"
-                class="block px-4 py-2.5 text-sm text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
-                Contact
-            </a>
-            <a href="{{ route('login') }}"
-                class="block px-4 py-2.5 text-sm text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-all duration-300">
-                Login
-            </a>
         </nav>
     </div>
 </header>
