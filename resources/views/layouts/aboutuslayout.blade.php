@@ -10,13 +10,13 @@
     <!-- Header -->
     @include('landing.header')
 
-    <main class="flex-grow pt-20">
+    <main class="flex-grow">
         <!-- Hero Section -->
         <div class="relative bg-gray-900 text-white py-20 overflow-hidden">
             <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&q=80')] bg-cover bg-center animate-pulse"></div>
             <div class="container mx-auto px-4 relative z-10">
                 <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight animate-fade-in-down">
-                    About Calumpang Rural Health Unit
+                    About Calumpang Rural Health Unit 
                 </h1>
                 <p class="text-xl text-center max-w-3xl mx-auto text-gray-300 animate-fade-in-up">
                     Serving our community with compassionate care and innovative

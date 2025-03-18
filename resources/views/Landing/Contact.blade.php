@@ -209,16 +209,17 @@
                     </div>
 
                     <button type="submit" 
-                        class="w-full bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300 
-                        transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center space-x-2 relative overflow-hidden group">
+                        class="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-all duration-300 
+                        transform hover:scale-[1.03] hover:shadow-xl flex items-center justify-center space-x-2 relative overflow-hidden group
+                        border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span class="relative z-10 flex items-center">
-                            <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
                             </svg>
-                            <span class="font-medium">Send Message</span>
+                            <span class="font-medium tracking-wide">Send Message</span>
                         </span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-600
-                            transition-all duration-300 group-hover:opacity-100"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-gray-900 to-gray-800
+                            opacity-0 transition-all duration-300 group-hover:opacity-100"></div>
                     </button>
                 </form>
             </div>
