@@ -105,6 +105,27 @@
             
         </div>
 
+     <!-- Mobile-Navigation -->
+<div class="md:hidden fixed inset-0 z-50 bg-gray-100 overflow-y-auto">
+    <div class="flex flex-col h-full">
+        <div class="flex justify-between items-center p-4 bg-white shadow">
+            <a href="{{ route('home') }}" class="flex items-center">
+                <img src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png" alt="Barangay Calumpang Health Center" class="h-8 w-auto">
+                <span class="ml-2 font-semibold text-gray-800">Calumpang RHU</span>
+            </a>
+            <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-700">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-grow p-4">
+            @yield('content')
+        </div>
+    </div>
+</div>
+
+
         <!-- Mobile-only footer -->
         <div class="md:hidden text-center p-4 text-xs text-gray-400 bg-gray-800 animate-fade-in">
             <p>© {{ date('Y') }} Barangay Calumpang Health Center</p>

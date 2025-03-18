@@ -58,22 +58,22 @@
             <!-- History and Team Section -->
             <div class="grid md:grid-cols-2 gap-10 mb-16">
                 <div class="max-w-4xl mx-auto bg-gray-700 rounded-xl shadow-lg overflow-hidden mb-8 transform transition-all hover:scale-[1.01] duration-300 animate-fade-in">
-                    <div class="md:flex items-stretch h-full">
-                        <div class="md:w-2/5 h-full">
+                    <div class="flex flex-col md:flex-row items-stretch h-full">
+                        <div class="md:w-2/5 h-64 md:h-auto">
                             <img
                                 class="h-full w-full object-cover"
                                 src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
                                 alt="History of healthcare"
                             />
                         </div>
-                        <div class="p-8 md:w-3/5 flex flex-col justify-center">
+                        <div class="p-6 md:p-8 md:w-3/5 flex flex-col justify-center">
                             <div class="inline-block px-3 py-1 rounded-full bg-gray-600 text-gray-200 font-semibold text-sm mb-4 animate-bounce">
                                 Our History
                             </div>
-                            <h2 class="text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
+                            <h2 class="text-xl md:text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
                                 Serving Since 1985
                             </h2>
-                            <p class="text-gray-300 leading-relaxed animate-fade-in-left">
+                            <p class="text-sm md:text-base text-gray-300 leading-relaxed animate-fade-in-left">
                                 Established in 1985, the Barangay Calumpang Health Center has
                                 been serving the community for over three decades. What started
                                 as a small clinic has evolved into a comprehensive healthcare
@@ -86,22 +86,22 @@
                 </div>
 
                 <div class="max-w-4xl mx-auto bg-gray-700 rounded-xl shadow-lg overflow-hidden mb-8 transform transition-all hover:scale-[1.01] duration-300 animate-fade-in">
-                    <div class="md:flex items-stretch">
-                        <div class="md:w-2/5">
+                    <div class="flex flex-col md:flex-row items-stretch">
+                        <div class="md:w-2/5 h-64 md:h-auto">
                             <img
                                 class="h-full w-full object-cover"
                                 src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80"
                                 alt="Healthcare team"
                             />
                         </div>
-                        <div class="p-8 md:w-3/5 flex flex-col justify-center">
+                        <div class="p-6 md:p-8 md:w-3/5 flex flex-col justify-center">
                             <div class="inline-block px-3 py-1 rounded-full bg-gray-600 text-gray-200 font-semibold text-sm mb-4 animate-bounce">
                                 Our Team
                             </div>
-                            <h2 class="text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
+                            <h2 class="text-xl md:text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
                                 Dedicated Professionals
                             </h2>
-                            <p class="text-gray-300 leading-relaxed animate-fade-in-left">
+                            <p class="text-sm md:text-base text-gray-300 leading-relaxed animate-fade-in-left">
                                 Our team consists of licensed physicians, nurses, midwives, and
                                 community health workers committed to providing the highest
                                 standard of care. All our medical professionals undergo regular

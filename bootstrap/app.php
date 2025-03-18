@@ -17,19 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
 
-
-        // $middleware->alias([
-        //     'Guest' => GuestMiddleware::class
-        //     // 'admin' => AdminMiddleware::class,
-        //     // 'customer' => CustomerMiddleware::class,
-        //     // 'adminstaff' => AdminStaffMiddleware::class,
-        //     // 'GuestOrCustomer' => GuestOrCustomerMiddleware::class,
-        //     // 'Guest' => GuestMiddleware::class,
-        //     // 'sanctum' => EnsureFrontendRequestsAreStateful::class, // Add Sanctum Middleware Alias
-        // ]);
         $middleware->alias([
             'Guest' => GuestMiddleware::class,
-            'GuestOrPatient' => GuestOrPatient::class
+            'GuestOrPatient' => GuestOrPatient::class,
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'role' => \App\Http\Middleware\CheckRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

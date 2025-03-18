@@ -67,7 +67,7 @@
         </a>
         {{-- Mobile Navigation --}}
         <div class="md:hidden">
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-300 hover:text-white focus:outline-none focus:text-white transition-colors duration-200" aria-label="toggle menu">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900 transition-all duration-300 transform hover:scale-110 active:scale-95" aria-label="toggle menu">
                 <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
                     <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path>
                 </svg>
@@ -82,30 +82,55 @@
              x-transition:leave-start="opacity-100 transform translate-x-0"
              x-transition:leave-end="opacity-0 transform -translate-x-full"
              @click.away="mobileMenuOpen = false" 
-             class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 shadow-lg overflow-y-auto">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <span class="font-semibold text-lg text-white">Menu</span>
-                <button @click="mobileMenuOpen = false" class="text-gray-300 hover:text-white focus:outline-none focus:text-white transition-colors duration-200">
+             class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-gray-50 to-white shadow-2xl overflow-y-auto">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <a href="{{ route('home') }}" class="flex items-center group">
+                    <img src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png"
+                        alt="Barangay Calumpang Health Center"
+                        class="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
+                    <span class="ml-2 font-semibold text-base text-gray-800 group-hover:text-black transition-colors duration-300">
+                        Calumpang RHU
+                    </span>
+                </a>
+                <button @click="mobileMenuOpen = false" class="text-gray-600 hover:text-gray-800 focus:outline-none focus:text-gray-800 transition-all duration-300 transform hover:rotate-180 active:scale-95">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            <nav class="px-4 pt-4 pb-8">
-                <ul class="space-y-2">
+            <nav class="px-6 py-8">
+                <ul class="space-y-4">
                     <li>
-                        <a href="{{ route('home') }}" class="block py-2 px-4 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">Home</a>
+                        <a href="{{ route('home') }}" class="flex items-center py-3 px-4 text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all duration-300 transform hover:translate-x-2 hover:shadow-md active:translate-x-1 active:shadow-sm">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            Home
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('about') }}" class="block py-2 px-4 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">About</a>
+                        <a href="{{ route('about') }}" class="flex items-center py-3 px-4 text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all duration-300 transform hover:translate-x-2 hover:shadow-md active:translate-x-1 active:shadow-sm">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            About
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('contact') }}" class="block py-2 px-4 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">Contact</a>
+                        <a href="{{ route('contact') }}" class="flex items-center py-3 px-4 text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all duration-300 transform hover:translate-x-2 hover:shadow-md active:translate-x-1 active:shadow-sm">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            Contact
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('faq') }}" class="block py-2 px-4 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">FAQ</a>
+                        <a href="{{ route('faq') }}" class="flex items-center py-3 px-4 text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all duration-300 transform hover:translate-x-2 hover:shadow-md active:translate-x-1 active:shadow-sm">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            FAQ
+                        </a>
                     </li>
                 </ul>
+                <div class="mt-8">
+                    <a href="{{ route('login') }}" class="flex items-center justify-center w-full py-3 px-4 bg-gray-800 text-white text-center font-semibold rounded-lg transition-all duration-300 transform hover:bg-gray-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 active:scale-95 hover:shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                        Login
+                    </a>
+                </div>
             </nav>
         </div>
 
