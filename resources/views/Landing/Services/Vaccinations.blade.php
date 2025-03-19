@@ -1,6 +1,6 @@
 @extends('layouts.landingpagelayout')
 
-@section('content')
+{{-- @section('content')
 <div class="min-h-screen flex flex-col bg-slate-50">
     @include('Landing.header')
 
@@ -14,7 +14,7 @@
             <div x-data="{ activeTab: 'schedules' }" class="tabs">
                 <div class="mb-8 border-b">
                     <nav class="flex space-x-4" aria-label="Tabs">
-                        <button @click="activeTab = 'schedules'" 
+                        <button @click="activeTab = 'schedules'"
                                 :class="{ 'border-blue-500 text-blue-600': activeTab === 'schedules' }"
                                 class="px-3 py-2 text-sm font-medium border-b-2">
                             Vaccination Schedules
@@ -106,4 +106,4 @@
 
     @include('Landing.footer')
 </div>
-@endsection
+@endsection --}}

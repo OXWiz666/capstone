@@ -24,10 +24,10 @@ class AuthController extends Controller
         //return redirect()->route('register');
 
         switch(Auth::user()->roleID){ // For Route . ->name()
-            // case "2":
-            //     return redirect()->route('admin.dashboard');
-            // case "3":
-            //     return redirect()->route('admin.dashboard');
+             case "1":
+                return redirect()->route('admin');
+            case "4":
+                return redirect()->route('midwife.dashboard');
             case "5":
                 return redirect()->route('home');
             default:
@@ -45,7 +45,7 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function showRegisterForm()
@@ -72,14 +72,30 @@ class AuthController extends Controller
          // Attempt to log the user in
         if (Auth::attempt($credentials)) {
             // Authentication was successful, redirect the user
-            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+            $user = Auth::user();
+            $token = $user->createToken($user->email)->plainTextToken;
+            
+            $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'token' => $token,
+                    'message' => 'Login successful'
+                ]);
+            }
+
+            
+             // If the request is from Vue.js (or API), return the token as a JSON response
+            
+
+            return redirect()->intended('/')->withCookie($cookie);  // Redirect to the intended route, like the dashboard
         }
 
          // Attempt to log the user in
-        if (Auth::attempt($credentials)) {
-            // Authentication was successful, redirect the user
-            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
-        }
+        // if (Auth::attempt($credentials)) {
+        //     // Authentication was successful, redirect the user
+        //     return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+        // }
         // Attempt to log the user in
         // if (auth()->attempt($credentials)) {
         //     // Authentication passed, redirect to intended page or dashboard
@@ -100,12 +116,12 @@ class AuthController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|min:2',
-            'position' => 'required|min:1|max:5',
+            //'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:11',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
-            'securityQuestions' => 'required',
+            'securityQuestion' => 'required|min:1|max:5',
             'securityAnswer' => 'required'
         ]);
 
@@ -114,8 +130,8 @@ class AuthController extends Controller
         $newUser->email = $request->email;
         $newUser->password = Hash::make($request->password);
         $newUser->contactno = $request->contactNumber;
-        $newUser->roleID = $request->position;
-        $newUser->questionID = $request->securityQuestions;
+        $newUser->roleID = 5;
+        $newUser->questionID = $request->securityQuestion;
         $newUser->answer = $request->securityAnswer;
         $newUser->save();
 

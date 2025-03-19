@@ -19,6 +19,9 @@ class GuestOrPatient extends Controller
     public function handle(Request $request, Closure $next): Response
     {
         if(!Auth::check() || (Auth::check() && Auth::user()->roleID == 5)){
+            // if($jwt = $request->cookie('jwt')){
+            //     $request->header->set('Authorization','Bearer '.$jwt);
+            // }
             return $next($request);
         }
         return app(AuthController::class)->getRedirectRoute();
