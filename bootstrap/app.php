@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\GuestMiddleware;
+use App\Http\Middleware\GuestOrPatient;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-
-
-use App\Http\Middleware\GuestOrPatient;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,13 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
-
         $middleware->alias([
             'Guest' => GuestMiddleware::class,
             'GuestOrPatient' => GuestOrPatient::class,
-            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-            'role' => \App\Http\Middleware\CheckRole::class,
+            'Admin' => AdminMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -55,6 +55,9 @@
             backdrop-filter: blur(12px);
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @stack('styles')
 </head>
 <body class="bg-gray-900 text-white">
     <div class="min-h-screen flex flex-col md:flex-row overflow-hidden">
@@ -102,7 +105,7 @@
             <div class="w-full animate-scale-in" style="animation-delay: 0.3s">
                 @yield('content')
             </div>
-            
+
         </div>
 
      <!-- Mobile-Navigation -->
@@ -132,12 +135,16 @@
             <p class="mt-1">All rights reserved</p>
         </div>
     </div>
-
     <script>
-        // Add any additional JavaScript functionality here
-        document.addEventListener('alpine:init', () => {
-            // You can add custom Alpine.js data and methods here if needed
-        });
+        window.alert_toast = function(title,text,icon = 'success'){
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon
+            });
+        }
+
     </script>
+    @stack('scripts')
 </body>
 </html>

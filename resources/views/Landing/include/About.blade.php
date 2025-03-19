@@ -1,22 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gradient-to-b from-slate-50 to-white">
-    <!-- Header -->
-    @include('landing.header')
-
-    <main class="flex-grow">
+<main class="flex-grow">
         <!-- Hero Section -->
         <div class="relative bg-gray-900 text-white py-20 overflow-hidden">
             <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&q=80')] bg-cover bg-center animate-pulse"></div>
             <div class="container mx-auto px-4 relative z-10">
                 <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 tracking-tight animate-fade-in-down">
-                    About Calumpang Rural Health Unit 
+                    About Calumpang Rural Health Unit
                 </h1>
                 <p class="text-xl text-center max-w-3xl mx-auto text-gray-300 animate-fade-in-up">
                     Serving our community with compassionate care and innovative
@@ -57,23 +45,24 @@
 
             <!-- History and Team Section -->
             <div class="grid md:grid-cols-2 gap-10 mb-16">
+                <!-- History Section -->
                 <div class="max-w-4xl mx-auto bg-gray-700 rounded-xl shadow-lg overflow-hidden mb-8 transform transition-all hover:scale-[1.01] duration-300 animate-fade-in">
                     <div class="flex flex-col md:flex-row items-stretch h-full">
-                        <div class="md:w-2/5 h-64 md:h-auto">
+                        <div class="h-64 md:h-auto md:w-2/5">
                             <img
                                 class="h-full w-full object-cover"
                                 src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
                                 alt="History of healthcare"
                             />
                         </div>
-                        <div class="p-6 md:p-8 md:w-3/5 flex flex-col justify-center">
+                        <div class="p-8 md:w-3/5 flex flex-col justify-center">
                             <div class="inline-block px-3 py-1 rounded-full bg-gray-600 text-gray-200 font-semibold text-sm mb-4 animate-bounce">
                                 Our History
                             </div>
-                            <h2 class="text-xl md:text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
+                            <h2 class="text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
                                 Serving Since 1985
                             </h2>
-                            <p class="text-sm md:text-base text-gray-300 leading-relaxed animate-fade-in-left">
+                            <p class="text-gray-300 leading-relaxed animate-fade-in-left">
                                 Established in 1985, the Barangay Calumpang Health Center has
                                 been serving the community for over three decades. What started
                                 as a small clinic has evolved into a comprehensive healthcare
@@ -85,23 +74,24 @@
                     </div>
                 </div>
 
+                <!-- Team Section -->
                 <div class="max-w-4xl mx-auto bg-gray-700 rounded-xl shadow-lg overflow-hidden mb-8 transform transition-all hover:scale-[1.01] duration-300 animate-fade-in">
                     <div class="flex flex-col md:flex-row items-stretch">
-                        <div class="md:w-2/5 h-64 md:h-auto">
+                        <div class="h-64 md:h-auto md:w-2/5">
                             <img
                                 class="h-full w-full object-cover"
                                 src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&q=80"
                                 alt="Healthcare team"
                             />
                         </div>
-                        <div class="p-6 md:p-8 md:w-3/5 flex flex-col justify-center">
+                        <div class="p-8 md:w-3/5 flex flex-col justify-center">
                             <div class="inline-block px-3 py-1 rounded-full bg-gray-600 text-gray-200 font-semibold text-sm mb-4 animate-bounce">
                                 Our Team
                             </div>
-                            <h2 class="text-xl md:text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
+                            <h2 class="text-2xl font-bold text-gray-200 mb-4 animate-fade-in-right">
                                 Dedicated Professionals
                             </h2>
-                            <p class="text-sm md:text-base text-gray-300 leading-relaxed animate-fade-in-left">
+                            <p class="text-gray-300 leading-relaxed animate-fade-in-left">
                                 Our team consists of licensed physicians, nurses, midwives, and
                                 community health workers committed to providing the highest
                                 standard of care. All our medical professionals undergo regular
@@ -251,8 +241,3 @@
             </div>
         </div>
     </main>
-
-    <!-- Footer -->
-    @include('landing.footer')
-</body>
-</html>

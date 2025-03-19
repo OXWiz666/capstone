@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frequently Asked Questions</title>
-    <!-- Include Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-slate-50">
-    <!-- Header -->
-    @include('landing.header')
-
-    <main class="flex-grow pt-20">
+<main class="flex-grow pt-20">
         <div class="container mx-auto px-4 py-12">
             <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">
                 Frequently Asked Questions
@@ -25,7 +12,7 @@
                 </p>
 
                 <!-- FAQ Accordion -->
-                <div class="space-y-3">
+                <div class="space-y-2">
                     @php
                         $faqs = [
                             ["question" => "How do I schedule an appointment at the health center?", "answer" => "You can schedule an appointment through our online appointment system by clicking on the 'Schedule Appointment' button on our homepage. Alternatively, you can visit the health center in person or call our appointment hotline at +63 (123) 456-7890."],
@@ -42,15 +29,15 @@
                     @endphp
 
                     @foreach ($faqs as $index => $faq)
-                        <div x-data="{ open: false }" class="border border-gray-200 rounded-lg shadow-sm mb-4 transition-all duration-300 ease-in-out hover:shadow-md">
+                        <div x-data="{ open: false }" class="border-b border-l border-r border-gray-200 rounded-b-md shadow-sm mb-2 transition-all duration-300 ease-in-out hover:shadow-md">
                             <button
                                 @click="open = !open"
-                                class="w-full flex justify-between items-center p-4 text-left font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 transition-colors duration-200"
+                                class="w-full flex justify-between items-center p-3 text-left font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:ring-inset transition-colors duration-200"
                             >
-                                <span class="text-base">{{ $faq['question'] }}</span>
+                                <span class="text-sm">{{ $faq['question'] }}</span>
                                 <svg
-                                    :class="{ 'rotate-180 text-black': open }"
-                                    class="w-5 h-5 transform transition-transform duration-300 ease-in-out text-gray-400"
+                                    :class="{ 'rotate-180 text-indigo-500': open }"
+                                    class="w-3 h-3 transform transition-all duration-300 ease-in-out text-gray-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -58,15 +45,15 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </button>
-                            <div 
-                                x-show="open" 
+                            <div
+                                x-show="open"
                                 x-transition:enter="transition ease-out duration-300"
-                                x-transition:enter-start="opacity-0 transform -translate-y-4"
-                                x-transition:enter-end="opacity-100 transform translate-y-0"
-                                x-transition:leave="transition ease-in duration-300"
-                                x-transition:leave-start="opacity-100 transform translate-y-0"
-                                x-transition:leave-end="opacity-0 transform -translate-y-4"
-                                class="p-4 bg-gray-50 text-sm text-gray-600 rounded-b-lg"
+                                x-transition:enter-start="opacity-0 transform scale-95"
+                                x-transition:enter-end="opacity-100 transform scale-100"
+                                x-transition:leave="transition ease-in duration-200"
+                                x-transition:leave-start="opacity-100 transform scale-100"
+                                x-transition:leave-end="opacity-0 transform scale-95"
+                                class="p-3 bg-gray-50 text-xs text-gray-600 rounded-b-md"
                             >
                                 {{ $faq['answer'] }}
                             </div>
@@ -101,11 +88,3 @@
             </div>
         </div>
     </main>
-
-    <!-- Footer -->
-    @include('landing.footer')
-
-    <!-- Include Alpine.js for interactivity -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-</body>
-</html>

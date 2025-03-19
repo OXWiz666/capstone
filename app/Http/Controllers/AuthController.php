@@ -19,17 +19,14 @@ class AuthController extends Controller
         if(!Auth::check())
             return redirect()->route('login');
 
-        //return redirect()->route('register');
-
-        switch(Auth::user()->roleID){ // For Route . ->name()
-            // case "2":
-            //     return redirect()->route('admin.dashboard');
-            // case "3":
-            //     return redirect()->route('admin.dashboard');
+        // Check user role and redirect to appropriate dashboard
+        switch(Auth::user()->roleID){ 
+            case "1":
+                return redirect()->route('admin');
             case "5":
                 return redirect()->route('home');
             default:
-                return redirect()->intended('/');
+                return redirect()->route('dashboard');
         }
     }
 
@@ -86,12 +83,12 @@ class AuthController extends Controller
     {
         $validate = $request->validate([
             'name' => 'required|min:2',
-            'position' => 'required|min:1|max:5',
+            //'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:11',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
-            'securityQuestion' => 'required',
+            'securityQuestion' => 'required|min:1|max:5',
             'securityAnswer' => 'required'
         ]);
 
@@ -100,7 +97,7 @@ class AuthController extends Controller
         $newUser->email = $request->email;
         $newUser->password = Hash::make($request->password);
         $newUser->contactno = $request->contactNumber;
-        $newUser->roleID = $request->position;
+        $newUser->roleID = 5;
         $newUser->questionID = $request->securityQuestion;
         $newUser->answer = $request->securityAnswer;
         $newUser->save();

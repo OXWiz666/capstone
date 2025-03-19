@@ -4,15 +4,15 @@
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gray-100 relative">
         <!-- Back to Home Button -->
         <div class="absolute top-4 left-4">
-            <a href="{{ url('/') }}" 
-               class="inline-flex items-center px-6 py-2.5 bg-black rounded-lg text-sm font-medium text-white 
-                      shadow-lg hover:shadow-2xl transform transition-all duration-300 
+            <a href="{{ url('/') }}"
+               class="inline-flex items-center px-6 py-2.5 bg-black rounded-lg text-sm font-medium text-white
+                      shadow-lg hover:shadow-2xl transform transition-all duration-300
                       hover:scale-105 hover:bg-gray-800 border border-gray-700
                       group animate-fade-in relative overflow-hidden">
                 <span class="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-50"></span>
                 <span class="relative flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" 
-                         class="h-5 w-5 mr-2 transform transition-transform duration-300 group-hover:-translate-x-1" 
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-5 w-5 mr-2 transform transition-transform duration-300 group-hover:-translate-x-1"
                          fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
@@ -23,11 +23,14 @@
         <div class="w-full max-w-2xl space-y-8 bg-white p-8 rounded-2xl shadow-xl relative">
             <!-- Logo or Brand -->
             <div class="text-center">
-                <img class="mx-auto h-16 w-auto" src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png" alt="Logo">
-                <h2 class="mt-4 text-3xl font-extrabold text-gray-900 tracking-tight">
+                <div class="relative group mb-4">
+                    <img class="mx-auto h-16 w-auto logo-glow animate-float" src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png" alt="Logo">
+                    <div class="absolute inset-0 bg-white/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+                </div>
+                <h2 class="mt-4 text-3xl font-extrabold text-gray-900 tracking-tight animate-scale-in" style="animation-delay: 0.2s">
                     Welcome back
                 </h2>
-                <p class="mt-2 text-sm text-gray-600">
+                <p class="mt-2 text-sm text-gray-600 animate-scale-in" style="animation-delay: 0.4s">
                     Sign in to your account to continue
                 </p>
             </div>
@@ -82,34 +85,34 @@
                                 </svg>
                             </div>
                             <div x-data="{ showPassword: false }">
-                                <input 
-                                    :type="showPassword ? 'text' : 'password'" 
-                                    id="password" 
-                                    name="password" 
+                                <input
+                                    :type="showPassword ? 'text' : 'password'"
+                                    id="password"
+                                    name="password"
                                     placeholder="Enter your password"
                                     class="pl-10 pr-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent hover:border-gray-400 backdrop-blur-sm"
                                     required
                                 >
-                                <button 
+                                <button
                                     type="button"
                                     @click="showPassword = !showPassword"
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center"
                                 >
-                                    <svg 
-                                        class="h-5 w-5 text-gray-400 hover:text-gray-600" 
+                                    <svg
+                                        class="h-5 w-5 text-gray-400 hover:text-gray-600"
                                         :class="{'hidden': showPassword, 'block': !showPassword }"
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        viewBox="0 0 20 20" 
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
                                         fill="currentColor"
                                     >
                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
                                     </svg>
-                                    <svg 
-                                        class="h-5 w-5 text-gray-400 hover:text-gray-600" 
+                                    <svg
+                                        class="h-5 w-5 text-gray-400 hover:text-gray-600"
                                         :class="{'block': showPassword, 'hidden': !showPassword }"
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        viewBox="0 0 20 20" 
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
                                         fill="currentColor"
                                     >
                                         <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd"/>
@@ -129,7 +132,7 @@
                                 Remember me
                             </label>
                         </div>
-                        <a href="{{ route('forgot.password') }}" 
+                        <a href="{{ route('forgot.password') }}"
                            class="text-sm font-medium text-black hover:text-gray-800 transition-colors">
                             Forgot your password?
                         </a>
@@ -152,7 +155,7 @@
                 <!-- Register Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        Don't have an account? 
+                        Don't have an account?
                         <a href="{{ route('register') }}" class="font-medium text-black hover:text-gray-800 transition-colors">
                             Register now
                         </a>

@@ -1,25 +1,23 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\QueueController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\QueueController;
+use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Auth;
 
 // Auth Routes
-
-Route::middleware(["Guest"])->group(function () {
+Route::middleware(['Guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 });
-
 
 Route::middleware(['GuestOrPatient'])->group(function () {
     // Home Routes
@@ -39,8 +37,14 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 });
 
-Route::middleware(['auth'])->group(function(){
-    Route::get('/logout',function(){
+Route::middleware(['auth','Admin'])->group(function(){
+    Route::prefix('Admin')->group(function(){
+        Route::get('/',[AdminDashboardController::class,'index'])->name('admin');
+    });
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', function () {
         Auth::logout();
 
         return app(AuthController::class)->getRedirectRoute();

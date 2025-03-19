@@ -1,4 +1,4 @@
-@extends('Dashboard.Admin.layout')
+@extends('layouts.admindashlayout')
 
 @section('title', 'Dashboard')
 @section('header', 'Dashboard')
@@ -210,7 +210,7 @@
             ['key' => 'doctor', 'header' => 'Doctor'],
             ['key' => 'service', 'header' => 'Service'],
             [
-                'key' => 'status', 
+                'key' => 'status',
                 'header' => 'Status',
                 'format' => function($value) {
                     $color = match($value) {

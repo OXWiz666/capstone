@@ -12,7 +12,7 @@ class ContactController extends Controller
 
     public function index()
     {
-        return view('layouts.contactpage');
+        return view('Landing.pages.Contact');
     }
 
     public function submit(Request $request)
