@@ -5,12 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\VaccinationController;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MidwifeController;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\VaccinationController;
 use App\Http\Controllers\VaccineController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 // Auth Routes
 
@@ -43,9 +45,20 @@ Route::middleware(['auth','Admin'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/logout', function () {
+    Route::match(['GET','POST'],'/logout', function () {
+        $cookie = Cookie::forget('jwt');
         Auth::logout();
 
         return app(AuthController::class)->getRedirectRoute();
     })->name('logout');
 });
+
+Route::middleware(['auth:sanctum','Midwife'])->group(function(){
+    Route::prefix('Midwife')->group(function(){
+        Route::get('/',[MidwifeController::class, 'index'])->name('midwife.dashboard');
+    });
+});
+
+// Route::get('{slug}',function(){
+//     return app(AuthController::class)->getRedirectRoute();
+// });

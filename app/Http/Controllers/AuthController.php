@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
+    
+
     public function getRedirectRoute() : Response
     {
         if(!Auth::check())
@@ -24,8 +26,8 @@ class AuthController extends Controller
         switch(Auth::user()->roleID){ // For Route . ->name()
              case "1":
                 return redirect()->route('admin');
-            // case "3":
-            //     return redirect()->route('admin.dashboard');
+            case "4":
+                return redirect()->route('midwife.dashboard');
             case "5":
                 return redirect()->route('home');
             default:
@@ -43,7 +45,7 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function showRegisterForm()
@@ -70,14 +72,42 @@ class AuthController extends Controller
          // Attempt to log the user in
         if (Auth::attempt($credentials)) {
             // Authentication was successful, redirect the user
-            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+            $user = Auth::user();
+            $token = $user->createToken($user->email)->plainTextToken;
+            
+            $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'token' => $token,
+                    'message' => 'Login successful'
+                ]);
+            }
+
+            
+             // If the request is from Vue.js (or API), return the token as a JSON response
+            
+
+            return redirect()->intended('/')->withCookie($cookie);  // Redirect to the intended route, like the dashboard
         }
+
+         // Attempt to log the user in
+        // if (Auth::attempt($credentials)) {
+        //     // Authentication was successful, redirect the user
+        //     return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+        // }
         // Attempt to log the user in
         // if (auth()->attempt($credentials)) {
         //     // Authentication passed, redirect to intended page or dashboard
         //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
         // }
+        // if (auth()->attempt($credentials)) {
+        //     // Authentication passed, redirect to intended page or dashboard
+        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+        // }
 
+        // // Authentication failed, redirect back with error message
+        // return redirect()->back()->with('error','Invalid Credentials');
         // // Authentication failed, redirect back with error message
         return redirect()->back()->with('error','Invalid Credentials');
     }

@@ -17,7 +17,7 @@
     @stack('styles')
 </head>
 <body>
-    @include('landing.header')
+    @include('Landing.header')
 
     <div class="w-full min-h-screen pt-20">
 

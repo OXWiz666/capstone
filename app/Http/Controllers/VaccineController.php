@@ -8,6 +8,6 @@ class VaccineController extends Controller
 {
     //
     public function index(){
-        return view('landing.vaccination.vaccination');
+        return view('Landing.Vaccination.vaccination');
     }
 }

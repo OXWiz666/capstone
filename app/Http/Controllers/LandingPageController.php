@@ -108,7 +108,7 @@ class LandingpageController extends Controller
             'mapUrl' => 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
         ];
 
-        return view('landing.home', [
+        return view('Landing.Home', [
             'heroData' => $heroData,
             'servicesData' => $servicesData,
             'benefitsData' => $benefitsData,
@@ -139,15 +139,15 @@ class LandingpageController extends Controller
 
     public function contact(): View
     {
-        return view('landing.pages.contact');
+        return view('Landing.pages.contact');
     }
 
     public function about(): View
     {
-        return view('landing.pages.about');
+        return view('Landing.pages.about');
     }
     public function faq(): View
     {
-        return view('landing.pages.faq');
+        return view('Landing.pages.faq');
     }
 }

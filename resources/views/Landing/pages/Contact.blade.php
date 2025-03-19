@@ -1,5 +1,5 @@
 @extends('layouts.landingpagelayout')
 
 @section('content')
-    @include('landing.include.contact')
+    @include('Landing.include.contact')
 @endsection

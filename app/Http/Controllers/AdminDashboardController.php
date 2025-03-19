@@ -17,7 +17,6 @@ class AdminDashboardController extends Controller
     {
         // Get the authenticated user
         $user = Auth::user();
-
         // Sample data - in a real application, you would fetch this from your database
         $stats = [
             'patients' => 1248,
@@ -25,14 +24,12 @@ class AdminDashboardController extends Controller
             'medicine_inventory' => 156,
             'staff_members' => 18
         ];
-
         // You can pass any data needed for your dashboard
         return view('Dashboard.Admin.dashboard', [
             'stats' => $stats,
             'user' => $user
         ]);
     }
-
     /**
      * Get dashboard statistics as JSON for AJAX requests.
      *
@@ -105,7 +102,6 @@ class AdminDashboardController extends Controller
                 'total' => 86
             ]
         ];
-
         return response()->json($appointments);
     }
 }

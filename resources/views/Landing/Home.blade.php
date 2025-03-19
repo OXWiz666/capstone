@@ -1,8 +1,8 @@
-@extends('layouts.LandingPageLayout')
+@extends('layouts.landingpagelayout')
 
 @section('content')
 
-@include('landing.HeroSection',
+@include('Landing.HeroSection',
         [
             'title' => 'Welcome to Barangay Calumpang Health Center',
             'description' => 'Your community healthcare partner providing accessible and quality medical services for all residents. Our digital healthcare system makes it easier than ever to manage your health needs.',
@@ -34,7 +34,7 @@
                 ],
             ],
         ])
-        @include('landing.benefits',
+        @include('Landing.benefits',
         [
             'title' => 'Benefits of Our Digital Healthcare System',
             'subtitle' => 'Discover how our system improves healthcare access for Barangay Calumpang residents',
@@ -61,7 +61,7 @@
                 ],
             ],
         ])
-        @include('landing.testimonials',
+        @include('Landing.testimonials',
         [
             'title' => 'What Our Community Says',
             'subtitle' => 'Hear from residents who have experienced our digital healthcare services',
@@ -92,7 +92,7 @@
                 ],
             ],
         ])
-        @include('landing.include.contact',
+        @include('Landing.include.contact',
          ['contactData' => $contactData])
 
 @endsection

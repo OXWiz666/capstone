@@ -17,8 +17,14 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check() && Auth::user()->roleID == 1){
-            return $next($request);
+        if(Auth::check()){
+            if(Auth::user()->roleID == 1){
+                if($jwt = $request->cookie('jwt')){
+                    $request->header->set('Authorization','Bearer '.$jwt);
+                }
+                return $next($request);
+            }
+            //return app(AuthController::class)->getRedirectRoute();
         }
         return app(AuthController::class)->getRedirectRoute();
     }
