@@ -262,7 +262,7 @@
                     <button @click="open = !open" @click.away="open = false" @keydown.escape.window="open = false"
                         class="group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative"
                         :class="{ 'bg-gray-100 text-gray-900': open }">
-                        <span>{{ Auth::user()->fullname }}</span>
+                        <span>{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
                         <svg class="ml-1 h-4 w-4 transition-transform duration-300" :class="{ 'rotate-180': open }"
                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -274,7 +274,7 @@
                         x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-1"
                         class="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50">
                         <div class="p-2">
-                            <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300">
                                 Profile
                             </a>
                             <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300"

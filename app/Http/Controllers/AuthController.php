@@ -57,7 +57,21 @@ class AuthController extends Controller
 
     public function showForgotPasswordForm()
     {
-        return view('auth.forgot');
+        //return view('auth.forgot');
+        $Q = securityquestions::get();
+        return view('auth.forgot',compact('Q'));
+        //return view('auth.reset-password',compact('Q'));
+    }
+
+    public function forgotPwFormPost(Request $request){
+        // Check if email is valid & exists in DB
+
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $token = 
+
     }
 
     public function login(Request $request)
@@ -115,7 +129,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validate = $request->validate([
-            'name' => 'required|min:2',
+            'first_name' => 'required|min:2',
+            'last_name' => 'required|min:2',
             //'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:11',
             'email' => 'required|email|unique:users,email',
@@ -126,7 +141,8 @@ class AuthController extends Controller
         ]);
 
         $newUser = new User();
-        $newUser->fullname = $request->name;
+        $newUser->firstname = $request->first_name;
+        $newUser->lastname = $request->last_name;
         $newUser->email = $request->email;
         $newUser->password = Hash::make($request->password);
         $newUser->contactno = $request->contactNumber;
