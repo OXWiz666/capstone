@@ -63,6 +63,17 @@ class AuthController extends Controller
         //return view('auth.reset-password',compact('Q'));
     }
 
+    public function forgotPwFormPost(Request $request){
+        // Check if email is valid & exists in DB
+
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $token = 
+
+    }
+
     public function login(Request $request)
     {
         // Validate the login request
