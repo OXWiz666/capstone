@@ -9,7 +9,7 @@
             'ctaText' => 'Schedule an Appointment',
             'imageUrl' => 'https://i.ibb.co/wFSCZYdV/471634916-609791331562667-4920390300131702624-n.jpg'
         ])
-        @include('landing.services',
+        @include('Landing.services',
         [
             'title' => 'Our Digital Healthcare Services',
             'subtitle' => 'Discover the range of digital services available to Barangay Calumpang residents through our health center management system.',

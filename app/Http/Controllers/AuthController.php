@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
-    
+
 
     public function getRedirectRoute() : Response
     {
@@ -74,9 +74,9 @@ class AuthController extends Controller
             // Authentication was successful, redirect the user
             $user = Auth::user();
             $token = $user->createToken($user->email)->plainTextToken;
-            
+
             $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
-            
+
             if ($request->wantsJson()) {
                 return response()->json([
                     'token' => $token,
@@ -84,9 +84,9 @@ class AuthController extends Controller
                 ]);
             }
 
-            
+
              // If the request is from Vue.js (or API), return the token as a JSON response
-            
+
 
             return redirect()->intended('/')->withCookie($cookie);  // Redirect to the intended route, like the dashboard
         }
@@ -109,7 +109,7 @@ class AuthController extends Controller
         // // Authentication failed, redirect back with error message
         // return redirect()->back()->with('error','Invalid Credentials');
         // // Authentication failed, redirect back with error message
-        return redirect()->back()->with('error','Invalid Credentials');
+        return redirect()->back()->withErrors(['error' => 'Invalid Credentials']);
     }
 
     public function register(Request $request)

@@ -3,55 +3,46 @@
 <!--begin::Head-->
 
 <head>
+
+    {{-- <link rel="stylesheet" href="{{ asset('../resources/') }}"> --}}
+    {{-- <script src="{{ asset('../resources/js/app.js') }}" defer></script> --}}
+    {{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>AdminLTE v4 | Dashboard</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
     <meta name="author" content="ColorlibHQ" />
-    <meta
-        name="description"
+    <meta name="description"
         content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta
-        name="keywords"
+    <meta name="keywords"
         content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
     <!--end::Primary Meta Tags-->
     <!--begin::Fonts-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
     <!--end::Fonts-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
     <!--end::Third Party Plugin(OverlayScrollbars)-->
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
     <!-- jsvectormap -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+
+
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -94,15 +85,14 @@
                                 <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
-                                        <img
-                                            src="{{ asset('adminlte/img/user1-128x128.jpg') }}"
-                                            alt="User Avatar"
+                                        <img src="{{ asset('adminlte/img/user1-128x128.jpg') }}" alt="User Avatar"
                                             class="img-size-50 rounded-circle me-3" />
                                     </div>
                                     <div class="flex-grow-1">
                                         <h3 class="dropdown-item-title">
                                             Brad Diesel
-                                            <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
+                                            <span class="float-end fs-7 text-danger"><i
+                                                    class="bi bi-star-fill"></i></span>
                                         </h3>
                                         <p class="fs-7">Call me whenever you can...</p>
                                         <p class="fs-7 text-secondary">
@@ -117,9 +107,7 @@
                                 <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
-                                        <img
-                                            src="{{asset('adminlte/img/user8-128x128.jpg')}}"
-                                            alt="User Avatar"
+                                        <img src="{{ asset('adminlte/img/user8-128x128.jpg') }}" alt="User Avatar"
                                             class="img-size-50 rounded-circle me-3" />
                                     </div>
                                     <div class="flex-grow-1">
@@ -142,9 +130,7 @@
                                 <!--begin::Message-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0">
-                                        <img
-                                            src="{{asset('adminlte/img/user3-128x128.jpg')}}"
-                                            alt="User Avatar"
+                                        <img src="{{ asset('adminlte/img/user3-128x128.jpg') }}" alt="User Avatar"
                                             class="img-size-50 rounded-circle me-3" />
                                     </div>
                                     <div class="flex-grow-1">
@@ -206,18 +192,14 @@
                     <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img
-                                src="{{asset('adminlte/img/user2-160x160.jpg')}}"
-                                class="user-image rounded-circle shadow"
-                                alt="User Image" />
+                            <img src="{{ asset('adminlte/img/user2-160x160.jpg') }}"
+                                class="user-image rounded-circle shadow" alt="User Image" />
                             <span class="d-none d-md-inline">Alexander Pierce</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
-                                <img
-                                    src="{{asset('adminlte/img/user2-160x160.jpg')}}"
-                                    class="rounded-circle shadow"
+                                <img src="{{ asset('adminlte/img/user2-160x160.jpg') }}" class="rounded-circle shadow"
                                     alt="User Image" />
                                 <p>
                                     Alexander Pierce - Web Developer
@@ -239,7 +221,8 @@
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                <a href="{{ route('logout') }}" class="btn btn-default btn-flat float-end">Sign out</a>
+                                <a href="{{ route('logout') }}" class="btn btn-default btn-flat float-end">Sign
+                                    out</a>
                             </li>
                             <!--end::Menu Footer-->
                         </ul>
@@ -258,9 +241,7 @@
                 <!--begin::Brand Link-->
                 <a href="./index.html" class="brand-link">
                     <!--begin::Brand Image-->
-                    <img
-                        src="{{ asset('adminlte/img/AdminLTELogo.png') }}"
-                        alt="AdminLTE Logo"
+                    <img src="{{ asset('adminlte/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                         class="brand-image opacity-75 shadow" />
                     <!--end::Brand Image-->
                     <!--begin::Brand Text-->
@@ -274,10 +255,7 @@
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
                     <!--begin::Sidebar Menu-->
-                    <ul
-                        class="nav sidebar-menu flex-column"
-                        data-lte-toggle="treeview"
-                        role="menu"
+                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
@@ -735,17 +713,13 @@
                                     <h3>150</h3>
                                     <p>New Orders</p>
                                 </div>
-                                <svg
-                                    class="small-box-icon"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true">
+                                <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path
-                                        d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"></path>
+                                        d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z">
+                                    </path>
                                 </svg>
-                                <a
-                                    href="#"
+                                <a href="#"
                                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                                     More info <i class="bi bi-link-45deg"></i>
                                 </a>
@@ -760,17 +734,13 @@
                                     <h3>53<sup class="fs-5">%</sup></h3>
                                     <p>Bounce Rate</p>
                                 </div>
-                                <svg
-                                    class="small-box-icon"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true">
+                                <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path
-                                        d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"></path>
+                                        d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z">
+                                    </path>
                                 </svg>
-                                <a
-                                    href="#"
+                                <a href="#"
                                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                                     More info <i class="bi bi-link-45deg"></i>
                                 </a>
@@ -785,17 +755,13 @@
                                     <h3>44</h3>
                                     <p>User Registrations</p>
                                 </div>
-                                <svg
-                                    class="small-box-icon"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true">
+                                <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path
-                                        d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
+                                        d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z">
+                                    </path>
                                 </svg>
-                                <a
-                                    href="#"
+                                <a href="#"
                                     class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
                                     More info <i class="bi bi-link-45deg"></i>
                                 </a>
@@ -810,23 +776,16 @@
                                     <h3>65</h3>
                                     <p>Unique Visitors</p>
                                 </div>
-                                <svg
-                                    class="small-box-icon"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true">
-                                    <path
-                                        clip-rule="evenodd"
-                                        fill-rule="evenodd"
-                                        d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"></path>
-                                    <path
-                                        clip-rule="evenodd"
-                                        fill-rule="evenodd"
-                                        d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"></path>
+                                <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z">
+                                    </path>
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z">
+                                    </path>
                                 </svg>
-                                <a
-                                    href="#"
+                                <a href="#"
                                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                                     More info <i class="bi bi-link-45deg"></i>
                                 </a>
@@ -837,134 +796,144 @@
                     </div>
                     <!--end::Row-->
                     <!--begin::Row-->
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card mb-4">
-                <div class="card-header">
-                  <h5 class="card-title">Monthly Recap Report</h5>
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                      <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                      <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                    </button>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-tool dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-wrench"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" role="menu">
-                        <a href="#" class="dropdown-item">Action</a>
-                        <a href="#" class="dropdown-item">Another action</a>
-                        <a href="#" class="dropdown-item"> Something else here </a>
-                        <a class="dropdown-divider"></a>
-                        <a href="#" class="dropdown-item">Separated link</a>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <!--begin::Row-->
-                  <div class="row">
-                    <div class="col-md-8">
-                      <p class="text-center">
-                        <strong>Sales: 1 Jan, 2023 - 30 Jul, 2023</strong>
-                      </p>
-                      <div id="sales-chart"></div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-4">
-                      <p class="text-center"><strong>Goal Completion</strong></p>
-                      <div class="progress-group">
-                        Add Products to Cart
-                        <span class="float-end"><b>160</b>/200</span>
-                        <div class="progress progress-sm">
-                          <div class="progress-bar text-bg-primary" style="width: 80%"></div>
+                    <div class="row">
+
+                        <div class="col-12" wire:poll>
+                            <example-component></example-component>
                         </div>
-                      </div>
-                      <!-- /.progress-group -->
-                      <div class="progress-group">
-                        Complete Purchase
-                        <span class="float-end"><b>310</b>/400</span>
-                        <div class="progress progress-sm">
-                          <div class="progress-bar text-bg-danger" style="width: 75%"></div>
+
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="card-title">Monthly Recap Report</h5>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                                            <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                                            <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-tool dropdown-toggle"
+                                                data-bs-toggle="dropdown">
+                                                <i class="bi bi-wrench"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" role="menu">
+                                                <a href="#" class="dropdown-item">Action</a>
+                                                <a href="#" class="dropdown-item">Another action</a>
+                                                <a href="#" class="dropdown-item"> Something else here </a>
+                                                <a class="dropdown-divider"></a>
+                                                <a href="#" class="dropdown-item">Separated link</a>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <p class="text-center">
+                                                <strong>Sales: 1 Jan, 2023 - 30 Jul, 2023</strong>
+                                            </p>
+                                            <div id="sales-chart"></div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-4">
+                                            <p class="text-center"><strong>Goal Completion</strong></p>
+                                            <div class="progress-group">
+                                                Add Products to Cart
+                                                <span class="float-end"><b>160</b>/200</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-primary" style="width: 80%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="progress-group">
+                                                Complete Purchase
+                                                <span class="float-end"><b>310</b>/400</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-danger" style="width: 75%"></div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="progress-group">
+                                                <span class="progress-text">Visit Premium Page</span>
+                                                <span class="float-end"><b>480</b>/800</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-success" style="width: 60%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                            <div class="progress-group">
+                                                Send Inquiries
+                                                <span class="float-end"><b>250</b>/500</span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar text-bg-warning" style="width: 50%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.progress-group -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!-- ./card-body -->
+                                <div class="card-footer">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center border-end">
+                                                <span class="text-success">
+                                                    <i class="bi bi-caret-up-fill"></i> 17%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">$35,210.43</h5>
+                                                <span class="text-uppercase">TOTAL REVENUE</span>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center border-end">
+                                                <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">$10,390.90</h5>
+                                                <span class="text-uppercase">TOTAL COST</span>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center border-end">
+                                                <span class="text-success">
+                                                    <i class="bi bi-caret-up-fill"></i> 20%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">$24,813.53</h5>
+                                                <span class="text-uppercase">TOTAL PROFIT</span>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-md-3 col-6">
+                                            <div class="text-center">
+                                                <span class="text-danger">
+                                                    <i class="bi bi-caret-down-fill"></i> 18%
+                                                </span>
+                                                <h5 class="fw-bold mb-0">1200</h5>
+                                                <span class="text-uppercase">GOAL COMPLETIONS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!-- /.card-footer -->
+                            </div>
+                            <!-- /.card -->
                         </div>
-                      </div>
-                      <!-- /.progress-group -->
-                      <div class="progress-group">
-                        <span class="progress-text">Visit Premium Page</span>
-                        <span class="float-end"><b>480</b>/800</span>
-                        <div class="progress progress-sm">
-                          <div class="progress-bar text-bg-success" style="width: 60%"></div>
-                        </div>
-                      </div>
-                      <!-- /.progress-group -->
-                      <div class="progress-group">
-                        Send Inquiries
-                        <span class="float-end"><b>250</b>/500</span>
-                        <div class="progress progress-sm">
-                          <div class="progress-bar text-bg-warning" style="width: 50%"></div>
-                        </div>
-                      </div>
-                      <!-- /.progress-group -->
+                        <!-- /.col -->
                     </div>
-                    <!-- /.col -->
-                  </div>
-                  <!--end::Row-->
-                </div>
-                <!-- ./card-body -->
-                <div class="card-footer">
-                  <!--begin::Row-->
-                  <div class="row">
-                    <div class="col-md-3 col-6">
-                      <div class="text-center border-end">
-                        <span class="text-success">
-                          <i class="bi bi-caret-up-fill"></i> 17%
-                        </span>
-                        <h5 class="fw-bold mb-0">$35,210.43</h5>
-                        <span class="text-uppercase">TOTAL REVENUE</span>
-                      </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-6">
-                      <div class="text-center border-end">
-                        <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0% </span>
-                        <h5 class="fw-bold mb-0">$10,390.90</h5>
-                        <span class="text-uppercase">TOTAL COST</span>
-                      </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-6">
-                      <div class="text-center border-end">
-                        <span class="text-success">
-                          <i class="bi bi-caret-up-fill"></i> 20%
-                        </span>
-                        <h5 class="fw-bold mb-0">$24,813.53</h5>
-                        <span class="text-uppercase">TOTAL PROFIT</span>
-                      </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-6">
-                      <div class="text-center">
-                        <span class="text-danger">
-                          <i class="bi bi-caret-down-fill"></i> 18%
-                        </span>
-                        <h5 class="fw-bold mb-0">1200</h5>
-                        <span class="text-uppercase">GOAL COMPLETIONS</span>
-                      </div>
-                    </div>
-                  </div>
-                  <!--end::Row-->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-            </div>
-            <!-- /.col -->
-          </div>
-          <!--end::Row-->
+                    <!--end::Row-->
                 </div>
                 <!--end::Container-->
             </div>
@@ -989,20 +958,16 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script
-        src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
     <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
     <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
+    </script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="{{ asset('adminlte/css/js/adminlte.js') }}"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
@@ -1029,10 +994,8 @@
     <!--end::OverlayScrollbars Configure-->
     <!-- OPTIONAL SCRIPTS -->
     <!-- sortablejs -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
-        integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ="
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
+        integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ=" crossorigin="anonymous"></script>
     <!-- sortablejs -->
     <script>
         const connectedSortables = document.querySelectorAll('.connectedSortable');
@@ -1049,10 +1012,8 @@
         });
     </script>
     <!-- apexcharts -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
     <!-- ChartJS -->
     <script>
         // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
@@ -1112,14 +1073,10 @@
         sales_chart.render();
     </script>
     <!-- jsvectormap -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"
-        integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y="
-        crossorigin="anonymous"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"
-        integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY="
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"
+        integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"
+        integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script>
     <!-- jsvectormap -->
     <script>
         const visitorsData = {
@@ -1230,12 +1187,13 @@
     </script>
     <!--end::Script-->
 
-        <!-- Bootstrap JS (must be included for collapse and other components to work) -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <!-- Bootstrap JS (must be included for collapse and other components to work) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
 
 
-        
-        <script src="{{ asset('adminlte/js/adminlte.min.js') }}"></script>
+
+    <script src="{{ asset('adminlte/js/adminlte.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
 </body>
