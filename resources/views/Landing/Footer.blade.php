@@ -36,16 +36,16 @@
                 <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <a href="#" class="text-gray-400 hover:text-white block py-1">Home</a>
+                        <a href="{{ Route('home') }}" class="text-gray-400 hover:text-white block py-1">Home</a>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Appointments</a>
-                        <a href="#" class="text-gray-400 hover:text-white block py-1">Contact</a>
+                        <a href="{{ Route('contact') }}" class="text-gray-400 hover:text-white block py-1">Contact</a>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Terms of Service</a>
                     </div>
                     <div>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Services</a>
-                        <a href="#" class="text-gray-400 hover:text-white block py-1">About Us</a>
+                        <a href="{{ Route('about') }}" class="text-gray-400 hover:text-white block py-1">About Us</a>
                         <a href="#" class="text-gray-400 hover:text-white block py-1">Privacy Policy</a>
-                        <a href="#" class="text-gray-400 hover:text-white block py-1">FAQ</a>
+                        <a href="{{ Route('faq') }}" class="text-gray-400 hover:text-white block py-1">FAQ</a>
                     </div>
                 </div>
             </div>
