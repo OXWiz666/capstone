@@ -42,18 +42,48 @@
             <form action="{{ route('register.submit') }}" method="POST" class="mt-8 space-y-6">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Full Name -->
+                    <!-- First Name -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                                 </svg>
                             </div>
-                            <input type="text" id="name" name="name" placeholder="ex. Juan Dela Cruz"
-                                class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
-                                value="{{ old('name') }}">
+                            <input type="text" id="firstName" name="firstName" placeholder="ex. Juan"
+                                class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600"
+                                value="{{ old('firstName') }}">
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <input type="text" id="lastName" name="lastName" placeholder="ex. Dela Cruz"
+                                class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600"
+                                value="{{ old('lastName') }}">
+                        </div>
+                    </div>
+
+                    <!-- Birthdate -->
+                    <div>
+                        <label for="birthdate" class="block text-sm font-medium text-gray-700">Birthdate</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <input type="date" id="birthdate" name="birthdate"
+                                class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600"
+                                value="{{ old('birthdate') }}">
                         </div>
                     </div>
 
@@ -125,7 +155,7 @@
                             </svg>
                         </div>
                         <input type="text" id="contactNumber" name="contactNumber" placeholder="09123456789"
-                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600"
                             value="{{ old('contactNumber') }}">
                     </div>
                 </div>
@@ -141,7 +171,7 @@
                             </svg>
                         </div>
                         <input type="email" id="email" name="email" placeholder="juan.delacruz@example.com"
-                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600"
                             value="{{ old('email') }}">
                     </div>
                 </div>
@@ -156,7 +186,7 @@
                             </svg>
                         </div>
                         <input type="password" id="password" name="password" placeholder="********"
-                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent">
+                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600">
                     </div>
                 </div>
 
@@ -170,12 +200,9 @@
                             </svg>
                         </div>
                         <input type="password" id="confirmPassword" name="confirmPassword" placeholder="********"
-                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent">
+                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600">
                     </div>
                 </div>
-
-
-
 
                     <!-- Security Question -->
                     <div x-data="{ open: false, selected: '' }" class="relative">
@@ -251,7 +278,7 @@
                             </svg>
                         </div>
                         <input type="text" id="securityAnswer" name="securityAnswer" placeholder="Your answer"
-                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                            class="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline outline-1 outline-gray-600"
                             value="{{ old('securityAnswer') }}">
                     </div>
                 </div>
