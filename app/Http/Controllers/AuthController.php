@@ -69,7 +69,7 @@ class AuthController extends Controller
     {
         //return view('auth.forgot');
         $Q = securityquestions::get();
-        return view('auth.forgot',compact('Q'));
+        return view('Auth.forgot',compact('Q'));
         //return view('auth.reset-password',compact('Q'));
     }
 
@@ -78,15 +78,7 @@ class AuthController extends Controller
         if(!password_reset_tokens::where('token',$token)){
             return redirect()->route('login')->with('Error','Invalid Token');
         };
-
-
-
-        //dd($request);
-
         $Q = securityquestions::get();
-
-
-
         return view ('Auth.reset-password',compact('token','Q'));
     }
 

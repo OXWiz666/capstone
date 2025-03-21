@@ -9,7 +9,7 @@
             'ctaText' => 'Schedule an Appointment',
             'imageUrl' => 'https://i.ibb.co/wFSCZYdV/471634916-609791331562667-4920390300131702624-n.jpg'
         ])
-        @include('Landing.services',
+        @include('Landing.Services',
         [
             'title' => 'Our Digital Healthcare Services',
             'subtitle' => 'Discover the range of digital services available to Barangay Calumpang residents through our health center management system.',
@@ -34,7 +34,7 @@
                 ],
             ],
         ])
-        @include('Landing.benefits',
+        @include('Landing.Benefits',
         [
             'title' => 'Benefits of Our Digital Healthcare System',
             'subtitle' => 'Discover how our system improves healthcare access for Barangay Calumpang residents',
@@ -61,7 +61,7 @@
                 ],
             ],
         ])
-        @include('Landing.testimonials',
+        @include('Landing.Testimonials',
         [
             'title' => 'What Our Community Says',
             'subtitle' => 'Hear from residents who have experienced our digital healthcare services',
@@ -92,7 +92,7 @@
                 ],
             ],
         ])
-        @include('Landing.include.contact',
+        @include('Landing.include.Contact',
          ['contactData' => $contactData])
 
 @endsection
