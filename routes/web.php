@@ -22,6 +22,12 @@ Route::middleware(['Guest'])->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
+    Route::post('/forgotpw-post',[AuthController::class,'forgotPwFormPost'])->name('forgotpw.post');
+
+    Route::get('/forgotpw-post/reset/{token}',[AuthController::class,'showResetPassword'])->name('forgotpw.reset.get');
+
+    Route::post('/forgotpw/reset/{token}',[AuthController::class,'ResetPassword'])->name('forgotpw.reset.post');
 });
 
 Route::middleware(['GuestOrPatient'])->group(function () {
