@@ -18,7 +18,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if(Auth::check()){
-            if(Auth::user()->roleID == 1){
+            if(Auth::user()->roleID == 7){
                 if($jwt = $request->cookie('jwt')){
                     $request->header->set('Authorization','Bearer '.$jwt);
                 }

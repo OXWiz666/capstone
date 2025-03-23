@@ -35,11 +35,13 @@ class AuthController extends Controller
 
         switch(Auth::user()->roleID){ // For Route . ->name()
              case "1":
-                return redirect()->route('admin');
+                return redirect()->route('doctor.home');
             case "4":
                 return redirect()->route('midwife.dashboard');
             case "5":
                 return redirect()->route('home');
+            case "7":
+                return redirect()->route('admin');
             default:
                 return redirect()->intended('/');
         }
@@ -93,11 +95,19 @@ class AuthController extends Controller
         $check = password_reset_tokens::where('token',$token)
         ->first();
 
-        User::where('email',$check->email)->update([
-            'password' => Hash::make($request->password)
-        ]);
 
-        password_reset_tokens::where('token',$token)->delete();
+
+        if(!User::where('email',$check->email)
+        ->where('questionID',$request->question)
+        ->where('answer',$request->answer)
+        ->update([
+            'password' => Hash::make($request->password)
+        ])){
+            return redirect()->back()->with('error','Question or Answer is incorrect!');
+        }
+
+        password_reset_tokens::where('token',$token)
+        ->orWhere('email',$check->email)->delete();
 
         //dd($request->email);
         if($check){

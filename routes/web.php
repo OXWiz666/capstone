@@ -7,10 +7,14 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\Doctor\DoctorController;
 use App\Http\Controllers\MidwifeController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\TestDashboard\TestDbControllerrr;
 use App\Http\Controllers\VaccinationController;
 use App\Http\Controllers\VaccineController;
+use App\Livewire\Doctor\DoctorDashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
@@ -40,8 +44,24 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/services/records', [LandingPageController::class, 'records'])->name('services.records');
     Route::get('/services/vaccinations', [VaccineController::class, 'index'])->name('services.vaccinations');
     Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
+
+
+    //Route::get('/dashboard/test', [TestDbControllerrr::class, 'index'])->name('dashboard.test');
+
     // Contact Routes
     //Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+});
+
+Route::middleware(['auth','Patient'])->group(function(){
+    Route::prefix('Patient')->group(function(){
+        Route::get('/profile',[PatientController::class,'profile'])->name('patient.profile');
+    });
+});
+
+Route::middleware(['auth','Doctor'])->group(function(){
+    Route::prefix('Doctor')->group(function(){
+        Route::get('/',DoctorDashboard::class)->name('doctor.home');
+    });
 });
 
 Route::middleware(['auth','Admin'])->group(function(){

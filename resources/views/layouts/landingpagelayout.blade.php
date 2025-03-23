@@ -14,6 +14,10 @@
 
     <!-- Add Alpine.js if not already included in your layout -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
+
+
     @stack('styles')
 </head>
 <body>
@@ -32,6 +36,8 @@
     <script type="text/javascript" crossorigin="anonymous" src="https://us-assets.i.posthog.com/static/recorder.js?v=1.229.2"></script>
     <script type="text/javascript" crossorigin="anonymous" src="https://us-assets.i.posthog.com/array/phc_jjpEvBVV0R2mp44ePAL8Yt4jdtX5HW1lc493rkpUwwa/config.js"></script>
     <script src="https://api.tempolabs.ai/proxy-asset?url=https://storage.googleapis.com/tempo-public-assets/error-handling.js"></script>
+
+
     @stack('scripts')
 </body>
 </html>
