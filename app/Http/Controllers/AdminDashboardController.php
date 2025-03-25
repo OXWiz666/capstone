@@ -64,8 +64,10 @@ class AdminDashboardController extends Controller
             ]
         ];
 
+
         return response()->json($stats);
     }
+
 
     /**
      * Get queue updates for the dashboard.
@@ -81,8 +83,10 @@ class AdminDashboardController extends Controller
             'completed' => 12
         ];
 
+
         return response()->json($queue);
     }
+
 
     /**
      * Get appointment updates for the dashboard.
@@ -105,7 +109,7 @@ class AdminDashboardController extends Controller
                 'total' => 86
             ]
         ];
-
+        
         return response()->json($appointments);
     }
 }

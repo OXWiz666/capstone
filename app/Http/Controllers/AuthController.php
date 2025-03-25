@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\password_reset_tokens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,19 +13,35 @@ use App\Models\securityquestions;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+
+use Illuminate\Support\Facades\Mail;
+
+
+
+use Illuminate\Support\Str;
+
+use function Laravel\Prompts\password;
+
 class AuthController extends Controller
 {
+
+
     public function getRedirectRoute() : Response
     {
         if(!Auth::check())
             return redirect()->route('login');
 
-        // Check user role and redirect to appropriate dashboard
-        switch(Auth::user()->roleID){ 
-            case "1":
-                return redirect()->route('admin');
+        //return redirect()->route('register');
+
+        switch(Auth::user()->roleID){ // For Route . ->name()
+             case "1":
+                return redirect()->route('doctor.home');
+            case "4":
+                return redirect()->route('midwife.dashboard');
             case "5":
                 return redirect()->route('home');
+            case "7":
+                return redirect()->route('admin');
             default:
                 return redirect()->route('dashboard');
         }
@@ -40,7 +57,7 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function showRegisterForm()
@@ -52,7 +69,76 @@ class AuthController extends Controller
 
     public function showForgotPasswordForm()
     {
-        return view('auth.forgot');
+        //return view('auth.forgot');
+        $Q = securityquestions::get();
+        return view('Auth.forgot',compact('Q'));
+        //return view('auth.reset-password',compact('Q'));
+    }
+
+    public function showResetPassword($token){
+
+        if(!password_reset_tokens::where('token',$token)){
+            return redirect()->route('login')->with('Error','Invalid Token');
+        };
+        $Q = securityquestions::get();
+        return view ('Auth.reset-password',compact('token','Q'));
+    }
+
+    public function ResetPassword(Request $request,$token){
+        $request->validate([
+            'question' => 'required|numeric',
+            'answer' => 'required',
+            'password' => 'required|min:8',
+            'newpassword' => 'same:password|required|min:8'
+        ]);
+
+        $check = password_reset_tokens::where('token',$token)
+        ->first();
+
+
+
+        if(!User::where('email',$check->email)
+        ->where('questionID',$request->question)
+        ->where('answer',$request->answer)
+        ->update([
+            'password' => Hash::make($request->password)
+        ])){
+            return redirect()->back()->with('error','Question or Answer is incorrect!');
+        }
+
+        password_reset_tokens::where('token',$token)
+        ->orWhere('email',$check->email)->delete();
+
+        //dd($request->email);
+        if($check){
+            return redirect()->route('login')->with('success','Password has been successfully reset!');
+        }else{
+            return redirect()->back()->with('error','Please check all details.');
+        }
+    }
+
+    public function forgotPwFormPost(Request $request){
+        // Check if email is valid & exists in DB
+
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $token = Str::random(65);
+
+        password_reset_tokens::insert([
+            'email' => $request->email,
+            'token' => $token
+        ]);
+
+        Mail::send('Auth.resetpw-email',['token' => $token], function($message) use($request){
+            $message->to($request->email);
+            $message->subject('Forgot Password');
+        });
+
+        return redirect()->back()->with('success','Link has been sent to your email. Please check it out!');
+        //dd($token);
+
     }
 
     public function login(Request $request)
@@ -67,14 +153,42 @@ class AuthController extends Controller
          // Attempt to log the user in
         if (Auth::attempt($credentials)) {
             // Authentication was successful, redirect the user
-            return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+            $user = Auth::user();
+            $token = $user->createToken($user->email)->plainTextToken;
+
+            $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'token' => $token,
+                    'message' => 'Login successful'
+                ]);
+            }
+
+
+             // If the request is from Vue.js (or API), return the token as a JSON response
+
+
+            return redirect()->intended('/')->withCookie($cookie);  // Redirect to the intended route, like the dashboard
         }
+
+         // Attempt to log the user in
+        // if (Auth::attempt($credentials)) {
+        //     // Authentication was successful, redirect the user
+        //     return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+        // }
         // Attempt to log the user in
         // if (auth()->attempt($credentials)) {
         //     // Authentication passed, redirect to intended page or dashboard
         //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
         // }
+        // if (auth()->attempt($credentials)) {
+        //     // Authentication passed, redirect to intended page or dashboard
+        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+        // }
 
+        // // Authentication failed, redirect back with error message
+        // return redirect()->back()->with('error','Invalid Credentials');
         // // Authentication failed, redirect back with error message
         return redirect()->back()->with('error','Invalid Credentials');
     }
@@ -84,19 +198,25 @@ class AuthController extends Controller
         $validate = $request->validate([
             'name' => 'required|min:2',
             //'position' => 'required|min:1|max:5',
+            'first_name' => 'required|min:2',
+            'last_name' => 'required|min:2',
+            //'position' => 'required|min:1|max:5',
             'contactNumber' => 'required|min:11',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
             'securityQuestion' => 'required|min:1|max:5',
+            'securityQuestion' => 'required|min:1|max:5',
             'securityAnswer' => 'required'
         ]);
 
         $newUser = new User();
-        $newUser->fullname = $request->name;
+        $newUser->firstname = $request->first_name;
+        $newUser->lastname = $request->last_name;
         $newUser->email = $request->email;
         $newUser->password = Hash::make($request->password);
         $newUser->contactno = $request->contactNumber;
+        $newUser->roleID = 5;
         $newUser->roleID = 5;
         $newUser->questionID = $request->securityQuestion;
         $newUser->answer = $request->securityAnswer;

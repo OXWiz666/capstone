@@ -170,19 +170,19 @@
 @push('scripts')
     @if ($errors->any())
         <script>
-            alert_toast('Error!', '{{ $errors->first() }}', 'error')
+            alert_toast('Error!','{{$errors->first()}}','error')
         </script>
     @endif
 
-    @if (session()->has('success'))
+    @if(session()->has('success'))
         <script>
-            alert_toast('Success!', "{{ session()->get('success') }}", 'success')
+            alert_toast('Success!',"{{session()->get('success')}}",'success')
         </script>
     @endif
 
     @if (session()->has('error'))
         <script>
-            alert_toast('Error!', "{{ session()->get('error') }}", 'error')
+            alert_toast('Error!',"{{session()->get('error')}}",'error')
         </script>
     @endif
 @endpush

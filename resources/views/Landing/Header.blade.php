@@ -3,6 +3,7 @@
 
 <style>
     /* Enhanced dropdown animations */
+    /* Enhanced dropdown animations */
     .dropdown-enter {
         opacity: 0;
         transform: translateY(-10px);
@@ -10,6 +11,7 @@
     .dropdown-enter-active {
         opacity: 1;
         transform: translateY(0);
+        transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1), transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
         transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1), transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
     }
     .dropdown-leave {
@@ -56,7 +58,49 @@
         max-width: 80vw;
         z-index: 50;
         overflow-y: auto;
+        transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
     }
+    /* Hover animations */
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #000;
+        transition: width 0.3s ease, left 0.3s ease;
+    }
+    .nav-link:hover::after {
+        width: 100%;
+        left: 0;
+    }
+    /* Smooth header shadow */
+    .header-shadow {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.3s ease;
+    }
+    .header-shadow:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    /* Mobile menu */
+    .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 300px;
+        max-width: 80vw;
+        z-index: 50;
+        overflow-y: auto;
+    }
+    .mobile-menu.open {
+        transform: translateX(0);
+    }
+
+
     .mobile-menu.open {
         transform: translateX(0);
     }
@@ -65,12 +109,15 @@
 </style>
 
 <header x-data="{ mobileMenuOpen: false }" class="w-full h-16 bg-white border-b border-gray-200 header-shadow fixed top-0 left-0 z-50">
+<header x-data="{ mobileMenuOpen: false }" class="w-full h-16 bg-white border-b border-gray-200 header-shadow fixed top-0 left-0 z-50">
     <div class="container mx-auto h-full flex items-center justify-between px-4">
         {{-- Logo --}}
         <a href="{{ route('home') }}" class="flex items-center group">
             <img src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png"
                 alt="Barangay Calumpang Health Center"
                 class="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
+            <span class="ml-2 font-semibold text-base text-gray-800 group-hover:text-black transition-colors duration-300">
+                Calumpang RHU
             <span class="ml-2 font-semibold text-base text-gray-800 group-hover:text-black transition-colors duration-300">
                 Calumpang RHU
             </span>
@@ -252,9 +299,16 @@
                 <a href="{{ route('login') }}" class="hidden md:flex items-center gap-1.5 px-4 py-2 border rounded-lg text-gray-700 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm group hover:shadow-md">
                     <svg class="h-4 w-4 text-gray-600 group-hover:text-black transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+        {{-- User Menu --}}
+        <div class="flex items-center">
+            @guest
+                <a href="{{ route('login') }}" class="hidden md:flex items-center gap-1.5 px-4 py-2 border rounded-lg text-gray-700 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm group hover:shadow-md">
+                    <svg class="h-4 w-4 text-gray-600 group-hover:text-black transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                     <span>Login</span>
                 </a>
+            @endguest
             @endguest
 
             @auth
@@ -285,8 +339,14 @@
                                 @csrf
                             </form>
                         </div>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                @csrf
+                            </form>
+                        </div>
                     </div>
                 </div>
+            @endauth
             @endauth
     </div>
 </header>

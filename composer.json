@@ -1,5 +1,5 @@
 {
-    
+
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
@@ -12,6 +12,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "laravel/ui": "^4.6",
         "nesbot/carbon": "^3.8.4"
@@ -31,7 +32,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-            
+
         }
     },
     "autoload-dev": {
@@ -63,7 +64,7 @@
             "dont-discover": []
         }
     },
-    
+
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -75,5 +76,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true
-    
+
 }
