@@ -7,9 +7,6 @@ use App\Http\Middleware\GuestOrPatient;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-
-
-use App\Http\Middleware\GuestOrPatient;
 use App\Http\Middleware\MidwifeMiddleware;
 use App\Http\Middleware\PatientMiddlware;
 use App\Http\Middleware\PharmacistMiddleware;

@@ -299,17 +299,11 @@
                 <a href="{{ route('login') }}" class="hidden md:flex items-center gap-1.5 px-4 py-2 border rounded-lg text-gray-700 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm group hover:shadow-md">
                     <svg class="h-4 w-4 text-gray-600 group-hover:text-black transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-        {{-- User Menu --}}
-        <div class="flex items-center">
-            @guest
-                <a href="{{ route('login') }}" class="hidden md:flex items-center gap-1.5 px-4 py-2 border rounded-lg text-gray-700 hover:text-black hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm group hover:shadow-md">
-                    <svg class="h-4 w-4 text-gray-600 group-hover:text-black transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                     <span>Login</span>
                 </a>
             @endguest
-            @endguest
+
 
             @auth
                 <div x-data="{ open: false }" class="relative">
@@ -339,14 +333,8 @@
                                 @csrf
                             </form>
                         </div>
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
-                        </div>
                     </div>
                 </div>
-            @endauth
             @endauth
     </div>
 </header>
