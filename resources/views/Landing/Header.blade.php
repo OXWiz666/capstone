@@ -3,7 +3,6 @@
 
 <style>
     /* Enhanced dropdown animations */
-    /* Enhanced dropdown animations */
     .dropdown-enter {
         opacity: 0;
         transform: translateY(-10px);
@@ -107,8 +106,6 @@
 
 
 </style>
-
-<header x-data="{ mobileMenuOpen: false }" class="w-full h-16 bg-white border-b border-gray-200 header-shadow fixed top-0 left-0 z-50">
 <header x-data="{ mobileMenuOpen: false }" class="w-full h-16 bg-white border-b border-gray-200 header-shadow fixed top-0 left-0 z-50">
     <div class="container mx-auto h-full flex items-center justify-between px-4">
         {{-- Logo --}}
@@ -116,8 +113,6 @@
             <img src="https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png"
                 alt="Barangay Calumpang Health Center"
                 class="h-8 w-auto transition-transform duration-300 group-hover:scale-110" />
-            <span class="ml-2 font-semibold text-base text-gray-800 group-hover:text-black transition-colors duration-300">
-                Calumpang RHU
             <span class="ml-2 font-semibold text-base text-gray-800 group-hover:text-black transition-colors duration-300">
                 Calumpang RHU
             </span>
@@ -130,7 +125,6 @@
                 </svg>
             </button>
         </div>
-
         <div x-show="mobileMenuOpen" 
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 transform -translate-x-full"
@@ -304,7 +298,6 @@
                 </a>
             @endguest
 
-
             @auth
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" @click.away="open = false" @keydown.escape.window="open = false"
@@ -336,5 +329,6 @@
                     </div>
                 </div>
             @endauth
+        </div>
     </div>
 </header>

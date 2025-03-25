@@ -20,17 +20,17 @@
 
     @stack('styles')
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
     @include('Landing.Header')
 
-    <div class="w-full min-h-screen pt-20">
-
+    <div class="w-full flex-grow pt-20">
         @yield('content')
-
-
-
     </div>
-    @include('Landing.Footer')
+
+    <footer class="w-full">
+        @include('Landing.Footer')
+    </footer>
+    
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script type="text/javascript" crossorigin="anonymous" src="https://us-assets.i.posthog.com/static/recorder.js?v=1.229.2"></script>
