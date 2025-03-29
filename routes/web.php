@@ -55,9 +55,10 @@ Route::middleware(['GuestOrPatient'])->group(function () {
 Route::middleware(['auth','Patient'])->group(function(){
     Route::prefix('Patient')->group(function(){
         Route::get('/profile',[PatientController::class,'profile'])->name('patient.profile');
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });
-
 Route::middleware(['auth','Doctor'])->group(function(){
     Route::prefix('Doctor')->group(function(){
         Route::get('/',DoctorDashboard::class)->name('doctor.home');
