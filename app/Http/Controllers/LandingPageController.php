@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 class LandingpageController extends Controller
 {
-    public function index(): View
+    public function index()
     {
         $heroData = [
             'title' => 'Welcome to Barangay Calumpang Health Center',
@@ -108,6 +109,8 @@ class LandingpageController extends Controller
             'mapUrl' => 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
         ];
 
+        return Inertia::render('Authenticated/Patient/Dashboard',[]);
+{
         return view('Landing.Home', [
             'heroData' => $heroData,
             'servicesData' => $servicesData,
@@ -135,6 +138,18 @@ class LandingpageController extends Controller
                 'email' => 'info@calumpanghealthcenter.gov.ph',
             ],
         ]);
+    }
+        // return Inertia::render('Authenticated/Patient/Dashboard',[
+
+        // ]);
+    }
+
+    private function renderReact($condition){
+        if($condition == true){
+            return Inertia::render('Authenticated/Patient/Dashboard',[
+
+            ]);
+        }
     }
 
     public function contact(): View

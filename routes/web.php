@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminDashboardController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
@@ -14,9 +12,16 @@ use App\Http\Controllers\QueueController;
 use App\Http\Controllers\TestDashboard\TestDbControllerrr;
 use App\Http\Controllers\VaccinationController;
 use App\Http\Controllers\VaccineController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Livewire\Doctor\DoctorDashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Auth Routes
 
@@ -71,20 +76,56 @@ Route::middleware(['auth','Admin'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::match(['GET','POST'],'/logout', function () {
-        $cookie = Cookie::forget('jwt');
-        Auth::logout();
+    Route::post('/logout', function (Request $request) {
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
 
+        $request->session()->regenerateToken();
+
+        //return redirect('/');
+        // $cookie = Cookie::forget('jwt');
+
+        // Auth::logout();
+
+        //return response()->json(['message' => 'Logged out successfully'])->withCookie($cookie);
         return app(AuthController::class)->getRedirectRoute();
     })->name('logout');
 });
 
 Route::middleware(['auth:sanctum','Midwife'])->group(function(){
+
     Route::prefix('Midwife')->group(function(){
         Route::get('/',[MidwifeController::class, 'index'])->name('midwife.dashboard');
     });
+
 });
 
-// Route::get('{slug}',function(){
-//     return app(AuthController::class)->getRedirectRoute();
+
+
+
+
+
+
+
+
+
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
 // });
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+//require __DIR__.'/auth.php';

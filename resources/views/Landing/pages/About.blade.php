@@ -1,5 +1,5 @@
 @extends('layouts.landingpagelayout')
 
 @section('content')
-    @include('Landing.include.about')
+    @include('landing.include.about')
 @endsection

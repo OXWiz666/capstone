@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 use Illuminate\Support\Facades\Mail;
-
+use Inertia\Inertia;
 
 
 use Illuminate\Support\Str;
@@ -57,7 +57,8 @@ class AuthController extends Controller
 
     public function showLogin()
     {
-        return view('Auth.login');
+        //return view('Auth.login');
+        return Inertia::render("Auth/Login2");
     }
 
     public function showRegisterForm()
@@ -157,8 +158,9 @@ class AuthController extends Controller
             $token = $user->createToken($user->email)->plainTextToken;
 
             $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
-
+            $request->session()->regenerate();
             if ($request->wantsJson()) {
+
                 return response()->json([
                     'token' => $token,
                     'message' => 'Login successful'

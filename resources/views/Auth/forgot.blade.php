@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif  
 
             <!-- Multi-Step Form -->
             <div x-data="{
