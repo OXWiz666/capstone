@@ -65,7 +65,11 @@ class AuthController extends Controller
     {
         $roles = roles::get();
         $questions = securityquestions::get();
-        return view('Auth.register',compact('roles','questions'));
+        return Inertia::render("Auth/Register2",[
+            "roles" => $roles,
+            "questions" => $questions
+        ]);
+        //return view('Auth.register',compact('roles','questions'));
     }
 
     public function showForgotPasswordForm()
@@ -142,57 +146,72 @@ class AuthController extends Controller
 
     }
 
-    public function login(Request $request)
-    {
-        // Validate the login request
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+    // public function login(Request $request)
+    // {
+    //     // Validate the login request
+    //     $credentials = $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required',
+    //     ]);
 
 
-         // Attempt to log the user in
-        if (Auth::attempt($credentials)) {
-            // Authentication was successful, redirect the user
-            $user = Auth::user();
-            $token = $user->createToken($user->email)->plainTextToken;
+    //      // Attempt to log the user in
+    //     if (Auth::attempt($credentials)) {
+    //         // Authentication was successful, redirect the user
+    //         $user = Auth::user();
+    //         $token = $user->createToken($user->email)->plainTextToken;
 
-            $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
-            $request->session()->regenerate();
-            if ($request->wantsJson()) {
+    //         $cookie = cookie('jwt', $token, 60*24,null,null,true,true,false,'None'); // 1 day
+    //         $request->session()->regenerate();
+    //         if ($request->wantsJson()) {
 
-                return response()->json([
-                    'token' => $token,
-                    'message' => 'Login successful'
-                ]);
-            }
-
-
-             // If the request is from Vue.js (or API), return the token as a JSON response
+    //             return response()->json([
+    //                 'token' => $token,
+    //                 'message' => 'Login successful'
+    //             ]);
+    //         }
 
 
-            return redirect()->intended('/')->withCookie($cookie);  // Redirect to the intended route, like the dashboard
+    //          // If the request is from Vue.js (or API), return the token as a JSON response
+
+
+    //         return redirect()->intended('/')->withCookie($cookie);  // Redirect to the intended route, like the dashboard
+    //     }
+
+    //      // Attempt to log the user in
+    //     // if (Auth::attempt($credentials)) {
+    //     //     // Authentication was successful, redirect the user
+    //     //     return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
+    //     // }
+    //     // Attempt to log the user in
+    //     // if (auth()->attempt($credentials)) {
+    //     //     // Authentication passed, redirect to intended page or dashboard
+    //     //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+    //     // }
+    //     // if (auth()->attempt($credentials)) {
+    //     //     // Authentication passed, redirect to intended page or dashboard
+    //     //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
+    //     // }
+
+    //     // // Authentication failed, redirect back with error message
+    //     // return redirect()->back()->with('error','Invalid Credentials');
+    //     // // Authentication failed, redirect back with error message
+    //     return redirect()->back()->with('error','Invalid Credentials');
+    // }
+
+    public function login(Request $request){
+        // $credentials = $request->validate([
+        //     'email' => 'required',
+        //     'password' => 'required',
+        // ]);
+        if(!Auth::attempt($request->only('email','password'))){
+            //return redirect()->back()->with('error','Invalid credentials');
+            return back()->withErrors([
+                        'error' => 'Invalid credentials',
+                    ]);
         }
-
-         // Attempt to log the user in
-        // if (Auth::attempt($credentials)) {
-        //     // Authentication was successful, redirect the user
-        //     return redirect()->intended('/');  // Redirect to the intended route, like the dashboard
-        // }
-        // Attempt to log the user in
-        // if (auth()->attempt($credentials)) {
-        //     // Authentication passed, redirect to intended page or dashboard
-        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
-        // }
-        // if (auth()->attempt($credentials)) {
-        //     // Authentication passed, redirect to intended page or dashboard
-        //     return redirect()->intended('dashboard')->with('success', 'You are logged in!');
-        // }
-
-        // // Authentication failed, redirect back with error message
-        // return redirect()->back()->with('error','Invalid Credentials');
-        // // Authentication failed, redirect back with error message
-        return redirect()->back()->with('error','Invalid Credentials');
+        return redirect()->intended(route('home'));
+        //return Inertia::render("Authenticated/Patient/Dashboard",[]);
     }
 
     public function register(Request $request)
@@ -220,7 +239,14 @@ class AuthController extends Controller
         $newUser->answer = $request->securityAnswer;
         $newUser->save();
 
-        return redirect()->route('login')->with('success','Registered Successfully!');
+        return Inertia::render("Auth/Login2",[
+            "flash" => [
+                "message" => "Registered Successfully!",
+                "icon" => "success",
+                "title" => "Success!"
+            ]
+        ]);
+        //return redirect()->route('login')->with('success','Registered Successfully!');
     }
 
 

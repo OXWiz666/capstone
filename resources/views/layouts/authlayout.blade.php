@@ -171,7 +171,6 @@
                 icon: icon
             });
         }
-
     </script>
     @stack('scripts')
 </body>
