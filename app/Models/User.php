@@ -47,4 +47,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function emercont()
+    {
+        return $this->hasMany(emergencycontacts::class,'user_id','id');
+    }
 }

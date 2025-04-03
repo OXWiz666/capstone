@@ -58,8 +58,9 @@ Route::middleware(['GuestOrPatient'])->group(function () {
 });
 
 Route::middleware(['auth','Patient'])->group(function(){
-    Route::prefix('Patient')->group(function(){
+    Route::prefix('patient')->group(function(){
         Route::get('/profile',[PatientController::class,'profile'])->name('patient.profile');
+        Route::post('/profile/update',[PatientController::class,'update'])->name('patient.profile.update');
     });
 });
 
@@ -93,11 +94,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum','Midwife'])->group(function(){
-
     Route::prefix('Midwife')->group(function(){
         Route::get('/',[MidwifeController::class, 'index'])->name('midwife.dashboard');
     });
-
 });
 
 

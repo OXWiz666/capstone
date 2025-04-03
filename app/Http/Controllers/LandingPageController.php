@@ -129,14 +129,18 @@ class LandingpageController extends Controller
         }
     }
 
-    public function contact(): View
+    public function contact()
     {
-        return view('Landing.pages.contact');
+        return Inertia::render('Landing/contacts',[
+
+        ]);
+        //return view('Landing.pages.contact');
     }
 
-    public function about(): View
+    public function about()
     {
-        return view('Landing.pages.about');
+        return Inertia::render('Landing/aboutpage',[ ]);
+        //return view('Landing.pages.about');
     }
     public function faq(): View
     {

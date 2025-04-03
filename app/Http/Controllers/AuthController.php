@@ -220,7 +220,7 @@ class AuthController extends Controller
             'first_name' => 'required|min:2',
             'last_name' => 'required|min:2',
             //'position' => 'required|min:1|max:5',
-            'contactNumber' => 'required|min:11',
+            'contactNumber' => 'required|min:11|numeric',
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
