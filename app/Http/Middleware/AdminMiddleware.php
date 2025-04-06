@@ -19,9 +19,9 @@ class AdminMiddleware
     {
         if(Auth::check()){
             if(Auth::user()->roleID == 7){
-                if($jwt = $request->cookie('jwt')){
-                    $request->header->set('Authorization','Bearer '.$jwt);
-                }
+                // if($jwt = $request->cookie('jwt')){
+                //     $request->header->set('Authorization','Bearer '.$jwt);
+                // }
                 return $next($request);
             }
             //return app(AuthController::class)->getRedirectRoute();

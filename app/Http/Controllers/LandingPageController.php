@@ -6,7 +6,7 @@ use Illuminate\View\View;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
-class LandingpageController extends Controller
+class LandingPageController extends Controller
 {
     public function index()
     {
@@ -142,8 +142,9 @@ class LandingpageController extends Controller
         return Inertia::render('Landing/aboutpage',[ ]);
         //return view('Landing.pages.about');
     }
-    public function faq(): View
+    public function faq()
     {
-        return view('Landing.pages.faq');
+        return Inertia::render('Landing/faq',[ ]);
+        //return view('Landing.pages.faq');
     }
 }

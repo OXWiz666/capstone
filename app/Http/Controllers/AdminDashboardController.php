@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-
+use Inertia\Inertia;
 class AdminDashboardController extends Controller
 {
-    /**
-     * Display the dashboard page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index(): View
+    // /**
+    //  * Display the dashboard page.
+    //  *
+    //  * @return \Illuminate\View\View
+    //  */
+    public function index()
     {
         // Get the authenticated user
         $user = Auth::user();
@@ -25,9 +25,13 @@ class AdminDashboardController extends Controller
             'staff_members' => 18
         ];
         // You can pass any data needed for your dashboard
-        return view('Dashboard.Admin.dashboard', [
-            'stats' => $stats,
-            'user' => $user
+        // return view('Dashboard.Admin.dashboard', [
+        //     'stats' => $stats,
+        //     'user' => $user
+        // ]);
+
+        return Inertia::render("Authenticated/Admin/Dashboard",[
+            
         ]);
     }
     /**

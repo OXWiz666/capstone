@@ -40,7 +40,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'Midwife' => MidwifeMiddleware::class,
             'Doctor' => DoctorMiddleware::class,
             'Pharmacist' => PharmacistMiddleware::class,
-            'Patient' => PatientMiddlware::class
+            'Patient' => PatientMiddlware::class,
+            'Admin' => AdminMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

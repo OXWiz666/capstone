@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Models\roles;
 
 class User extends Authenticatable
 {
@@ -50,5 +51,9 @@ class User extends Authenticatable
     public function emercont()
     {
         return $this->hasMany(emergencycontacts::class,'user_id','id');
+    }
+
+    public function role(){
+        return $this->belongsTo(roles::class,'roleID');
     }
 }

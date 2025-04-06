@@ -71,7 +71,7 @@ Route::middleware(['auth','Doctor'])->group(function(){
 });
 
 Route::middleware(['auth','Admin'])->group(function(){
-    Route::prefix('Admin')->group(function(){
+    Route::prefix('admin')->group(function(){
         Route::get('/',[AdminDashboardController::class,'index'])->name('admin');
     });
 });
