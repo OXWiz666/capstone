@@ -69,7 +69,7 @@ const Sidebar = ({
       icon: <MessageSquare className="h-5 w-5" />,
       path: "/sms",
       id: "sms",
-      roles: ["Admin"],
+      roles: ["Admin"], 
     },
     {
       title: "Reports",

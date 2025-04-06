@@ -349,12 +349,10 @@ const Header = ({
                         </li>
                         <li className="relative">
                             <button
-                                onClick={toggleServicesDropdown}
-                                onMouseEnter={() =>
-                                    setServicesDropdownOpen(true)
-                                }
-                                onMouseLeave={() =>
-                                    setServicesDropdownOpen(false)
+                                onClick={() =>
+                                    setServicesDropdownOpen(
+                                        (prev) => !prev
+                                    )
                                 }
                                 className={`nav-link group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative ${
                                     servicesDropdownOpen
@@ -384,7 +382,11 @@ const Header = ({
                                         setServicesDropdownOpen(true)
                                     }
                                     onMouseLeave={() =>
-                                        setServicesDropdownOpen(false)
+                                        setTimeout(
+                                            () =>
+                                                setServicesDropdownOpen(false),
+                                            500
+                                        )
                                     }
                                 >
                                     <div className="space-y-2">
@@ -456,10 +458,10 @@ const Header = ({
                                             </svg>
                                             <div>
                                                 <p className="text-sm font-medium text-gray-900 group-hover:text-black transition-colors duration-300">
-                                                    Vaccinations
+                                                    Seasonal Programs
                                                 </p>
                                                 <p className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
-                                                    View vaccination schedules
+                                                    View seasonal programs
                                                     and availability
                                                 </p>
                                             </div>

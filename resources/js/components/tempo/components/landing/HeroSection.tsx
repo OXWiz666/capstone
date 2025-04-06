@@ -4,29 +4,25 @@ import { ArrowRight } from "lucide-react";
 
 export default function HeroSection() {
     return (
-        <section className="w-full h-screen bg-black relative overflow-hidden -mt-3">
+        <section className="w-full h-[600px] bg-white relative overflow-hidden">
             <div className="absolute inset-0">
                 <img
-                    src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
-                    className="w-full h-full object-cover"
+                    src="https://i.ibb.co/wFSCZYdV/471634916-609791331562667-4920390300131702624-n.jpg"
+                    className="w-full h-full object-cover filter blur-sm"
                 />
-                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute inset-0 bg-black/60" />
             </div>
 
             <div className="relative z-20 container mx-auto px-4 h-full flex flex-col justify-center items-start">
                 <div className="max-w-lg">
                     <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold mb-2 leading-tight text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] tracking-tight">
-                        Welcome to Barangay
-                        <br />
-                        <span className="text-3xl sm:text-4xl md:text-4xl bg-clip-text text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                            Calumpang Health Center
-                        </span>
+                        Welcome to Barangay <br />
+                        Calumpang Rural Health Unit
                     </h1>
                     <p className="text-sm md:text-base mb-3 text-justify text-white leading-relaxed max-w-md font-medium drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
-                        Your community healthcare partner providing accessible
-                        and quality medical services for all residents. Our
-                        digital healthcare system makes it easier than ever to
-                        manage your health needs.
+                        We provide accessible and quality healthcare services to
+                        our community, making it easy for you to manage your
+                        health needs with our digital healthcare system.
                     </p>
                     <a
                         href="{{ $onCtaClick ?? '/appointments' }}"

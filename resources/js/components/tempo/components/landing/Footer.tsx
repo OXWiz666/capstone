@@ -13,6 +13,11 @@ import { Separator } from "../ui/separator";
 
 interface FooterProps {
   logoSrc?: string;
+  logoStyle?: {
+    width: string;
+    height: string;
+    objectFit: "contain" | "cover" | "fill" | "none" | "scale-down";
+  };
   socialLinks?: {
     platform: string;
     url: string;
@@ -29,16 +34,21 @@ interface FooterProps {
 }
 
 const Footer = ({
-  logoSrc = "/vite.svg",
+  logoSrc = "https://i.ibb.co/bjPTPJDW/344753576-269776018821308-8152932488548493632-n-removebg-preview.png",
+  logoStyle = {
+    width: "150px",
+    height: "150px",
+    objectFit: "contain",
+  },
   socialLinks = [
     { platform: "Facebook", url: "https://facebook.com" },
     { platform: "Twitter", url: "https://twitter.com" },
     { platform: "Instagram", url: "https://instagram.com" },
   ],
   contactInfo = {
-    address: "123 Health Center Road, Barangay Calumpang",
-    phone: "+63 (123) 456-7890",
-    email: "info@calumpanghealthcenter.gov.ph",
+    address: "Calumpang, General Santos, Soccsksargen, Philippines",
+    phone: "(083) 554-0146",
+    email: "calumpangrhu@gmail.com",
   },
   quickLinks = [
     { title: "Home", url: "/" },
@@ -46,7 +56,6 @@ const Footer = ({
     { title: "Appointments", url: "/appointments" },
     { title: "About Us", url: "/about" },
     { title: "Contact", url: "/#contact" },
-    { title: "Privacy Policy", url: "/privacy" },
     { title: "Terms of Service", url: "/terms" },
     { title: "FAQ", url: "/faq" },
   ],
@@ -68,9 +77,10 @@ const Footer = ({
               <img
                 src={logoSrc}
                 alt="Barangay Calumpang Health Center"
-                className="h-10 w-10 mr-3"
+                style={{ ...logoStyle, width: "40px", height: "40px" }}
+                className="mr-3 filter drop-shadow-md rounded-full"
               />
-              <h3 className="text-xl font-bold">Calumpang Health Center</h3>
+              <h3 className="text-xl font-bold">Calumpang Rural Health Unit</h3>
             </div>
             <p className="text-slate-300 mb-4">
               Providing quality healthcare services to the residents of Barangay
@@ -134,7 +144,7 @@ const Footer = ({
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-slate-400 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Barangay Calumpang Health Center. All
+            {new Date().getFullYear()} Barangay Calumpang Rural Health Unit. All
             rights reserved.
           </p>
           <Button

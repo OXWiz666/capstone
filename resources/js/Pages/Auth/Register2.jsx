@@ -29,7 +29,7 @@ export default function Register({ roles, questions, errors }) {
         <LoginLayout>
             <Head title="Register" />
             <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="w-full max-w-md p-6 space-y-6 bg-white rounded-lg shadow-md">
+                <div className="w-full max-w-3xl p-8 space-y-6 bg-white rounded-lg shadow-md">
                     {/* Logo or Brand */}
                     <div className="text-center">
                         <img

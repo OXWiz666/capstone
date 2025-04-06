@@ -125,7 +125,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({ title, subtitle, 
                   <div className="flex items-center mt-auto">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" alt="Maria Santos" className="w-12 h-12 rounded-full mr-4" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Maria Santos</h4>
+                      <h4 className="font-medium text-gray-900">Renz Emilanan</h4>
                       <p className="text-sm text-gray-500">Barangay Resident</p>
                     </div>
                   </div>
@@ -144,7 +144,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({ title, subtitle, 
                   <div className="flex items-center mt-auto">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Juan" alt="Juan Dela Cruz" className="w-12 h-12 rounded-full mr-4" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Juan Dela Cruz</h4>
+                      <h4 className="font-medium text-gray-900">Vincent Ermac</h4>
                       <p className="text-sm text-gray-500">Senior Citizen</p>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({ title, subtitle, 
                   <div className="flex items-center mt-auto">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ana" alt="Ana Reyes" className="w-12 h-12 rounded-full mr-4" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Ana Reyes</h4>
+                      <h4 className="font-medium text-gray-900">Jude Lesmoras</h4>
                       <p className="text-sm text-gray-500">Mother of Three</p>
                     </div>
                   </div>
@@ -182,7 +182,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({ title, subtitle, 
                   <div className="flex items-center mt-auto">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Pedro" alt="Pedro Lim" className="w-12 h-12 rounded-full mr-4" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Pedro Lim</h4>
+                      <h4 className="font-medium text-gray-900">Abdul Jabbar Lim Mohammad</h4>
                       <p className="text-sm text-gray-500">Community Health Worker</p>
                     </div>
                   </div>

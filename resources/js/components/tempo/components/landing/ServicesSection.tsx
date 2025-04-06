@@ -74,8 +74,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
     };
 
     return (
-        <section className="py-12 px-2 md:px-4 bg-slate-50">
-            <div className="container mx-auto max-w-4xl">
+        <section className="py-12 px-4 md:px-8 lg:px-16 bg-slate-50">
+            <div className="container mx-auto max-w-7xl">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">
                         Our Digital Healthcare Services
