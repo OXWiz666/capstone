@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AppointmentsController;
+use App\Http\Controllers\Admin\HealthProgramsController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\PatientsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
@@ -73,6 +77,10 @@ Route::middleware(['auth','Doctor'])->group(function(){
 Route::middleware(['auth','Admin'])->group(function(){
     Route::prefix('admin')->group(function(){
         Route::get('/',[AdminDashboardController::class,'index'])->name('admin');
+        Route::get('/patients',[PatientsController::class,'index'])->name('admin.patients');
+        Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
+        Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
+        Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
     });
 });
 

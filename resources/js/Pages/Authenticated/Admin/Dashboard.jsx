@@ -13,7 +13,8 @@ import AdminLayout from "@/Layouts/AdminLayout";
 
 export default function Dashboard({}) {
     return (
-        <AdminLayout>
+        <AdminLayout
+        header="Dashboard">
             {/* Main Content Area */}
             <motion.div
                     initial={{ opacity: 0, y: 20 }}

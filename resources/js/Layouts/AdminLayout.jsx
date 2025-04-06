@@ -5,7 +5,7 @@
 // import { Link, usePage } from "@inertiajs/react";
 // import { useState } from "react";
 
-import React from "react";
+import React,{useState} from "react";
 import { motion } from "framer-motion";
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
 import StatisticsOverview from "@/components/tempo/admin/include/StatisticsOverview";
@@ -19,16 +19,22 @@ import { Badge } from "@/components/tempo/components/ui/badge";
 import { usePage } from "@inertiajs/react";
 
 export default function AdminLayout({ header, children }) {
+    // const [activePage, setActivePage] = useState("dashboard"); // Default: 'dashboard'
     return (
         <div className="flex h-screen bg-background">
             {/* Sidebar */}
-            <Sidebar />
+            <Sidebar
+            // activePage={activePage}
+            // setActivePage={setActivePage}
+            />
             {/* Main Content */}
             <div className="flex-1 overflow-auto">
                 {/* Header */}
                 <header className="sticky top-0 z-10 border-b bg-white p-4 flex justify-between items-center shadow-sm">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold">Dashboard</h1>
+                        {header &&
+                            <h1 className="text-2xl font-bold">{header}</h1>
+                        }
                         <div className="relative max-w-md hidden md:block">
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input

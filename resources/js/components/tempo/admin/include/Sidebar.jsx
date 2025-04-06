@@ -22,9 +22,10 @@ import { router } from '@inertiajs/react';
 //   userRole?: "Admin" | "Doctor" | "Pharmacist";
 // }
 
+
 const Sidebar = ({
-  activePage = "dashboard",
-  userRole = "Admin",
+    activePage,
+  userRole = "Admin"
 }) => {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -32,35 +33,40 @@ const Sidebar = ({
     {
       title: "Dashboard",
       icon: <Home className="h-5 w-5" />,
-      path: "/",
+      route: "admin",
+      path: "/admin",
       id: "dashboard",
       roles: ["Admin", "Doctor", "Pharmacist"],
     },
     {
       title: "Patient Records",
       icon: <Users className="h-5 w-5" />,
-      path: "/patients",
+      route:"admin.patients",
+      path: "/admin/patients",
       id: "patients",
       roles: ["Admin", "Doctor"],
     },
     {
       title: "Appointments",
       icon: <Calendar className="h-5 w-5" />,
-      path: "/appointments",
+      route:"admin.appointments",
+      path: "/admin/appointments",
       id: "appointments",
       roles: ["Admin", "Doctor"],
     },
     {
       title: "Health Programs",
       icon: <HeartPulse className="h-5 w-5" />,
-      path: "/programs",
+      route:"admin.programs",
+      path: "/admin/programs",
       id: "programs",
       roles: ["Admin", "Doctor"],
     },
     {
       title: "Inventory",
       icon: <Package className="h-5 w-5" />,
-      path: "/inventory",
+      route:"admin.inventory",
+      path: "/admin/inventory",
       id: "inventory",
       roles: ["Admin", "Pharmacist"],
     },
@@ -93,7 +99,7 @@ const Sidebar = ({
 
     const user = usePage().props.auth.user;
     const role = usePage().props.auth.role;
-
+    //const [activePage, setActivePage] = useState('dashboard');
   return (
     <div
       className={cn(
@@ -135,11 +141,12 @@ const Sidebar = ({
                 href={item.path}
                 className={cn(
                   "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  activePage === item.id
+                  route().current(item.route) && item.route
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground",
                   collapsed && "justify-center px-0",
                 )}
+
               >
                 {item.icon}
                 {!collapsed && <span className="ml-3">{item.title}</span>}
