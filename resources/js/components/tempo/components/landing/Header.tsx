@@ -165,7 +165,7 @@ const Header = ({
                                 {servicesOpen && (
                                     <div className="pl-10 pr-3 py-1 space-y-1">
                                         <Link
-                                            href="#"
+                                            href={route('patient.appoint')}
                                             className="flex items-center py-2 px-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-100 hover:to-transparent rounded-md transition-all duration-300 transform hover:translate-x-1 hover:shadow-sm"
                                         >
                                             <svg
@@ -184,7 +184,7 @@ const Header = ({
                                             Appointments
                                         </Link>
                                         <Link
-                                            href="#"
+                                            href={route('patient.medrecords')}
                                             className="flex items-center py-2 px-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-100 hover:to-transparent rounded-md transition-all duration-300 transform hover:translate-x-1 hover:shadow-sm"
                                         >
                                             <svg
@@ -389,7 +389,7 @@ const Header = ({
                                 >
                                     <div className="space-y-2">
                                         <Link
-                                            href="#"
+                                            href={route('patient.appoint')}
                                             className="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300 transform hover:translate-x-1"
                                         >
                                             <svg
@@ -414,7 +414,7 @@ const Header = ({
                                             </div>
                                         </Link>
                                         <Link
-                                            href="#"
+                                            href={route('patient.medrecords')}
                                             className="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300 transform hover:translate-x-1"
                                         >
                                             <svg

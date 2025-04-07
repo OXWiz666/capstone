@@ -80,7 +80,8 @@ const Sidebar = ({
     {
       title: "Reports",
       icon: <BarChart3 className="h-5 w-5" />,
-      path: "/reports",
+      route:"admin.reports",
+      path: "/admin/reports",
       id: "reports",
       roles: ["Admin"],
     },

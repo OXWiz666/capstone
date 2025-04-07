@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AppointmentsController;
 use App\Http\Controllers\Admin\HealthProgramsController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\PatientsController;
+use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
@@ -54,7 +55,7 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/services/vaccinations', [VaccineController::class, 'index'])->name('services.vaccinations');
     Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
 
-
+    Route::get('/appointments',[PatientController::class,'appointments'])->name('patient.appoint');
     //Route::get('/dashboard/test', [TestDbControllerrr::class, 'index'])->name('dashboard.test');
 
     // Contact Routes
@@ -65,6 +66,10 @@ Route::middleware(['auth','Patient'])->group(function(){
     Route::prefix('patient')->group(function(){
         Route::get('/profile',[PatientController::class,'profile'])->name('patient.profile');
         Route::post('/profile/update',[PatientController::class,'update'])->name('patient.profile.update');
+        Route::get('/medical-records',[PatientController::class,'medicalrecords'])->name('patient.medrecords');
+
+        ## Appointment
+        Route::post('/appointment/create',[PatientController::class,'storeAppointment'])->name('patient.appoint.create');
     });
 });
 
@@ -81,6 +86,8 @@ Route::middleware(['auth','Admin'])->group(function(){
         Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
         Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
         Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
+        Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
+
     });
 });
 

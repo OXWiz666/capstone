@@ -117,7 +117,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                         </p>
                         <div className="mt-auto">
                             <a
-                                href="#"
+                                href={route('patient.appoint')}
                                 className="inline-block px-4 py-2 text-sm font-medium text-black border border-black rounded-md hover:bg-black hover:text-white transition-colors"
                             >
                                 Book Nows
@@ -154,7 +154,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                         </p>
                         <div className="mt-auto">
                             <a
-                                href="#"
+                                href={route('patient.medrecords')}
                                 className="inline-block px-4 py-2 text-sm font-medium text-black border border-black rounded-md hover:bg-black hover:text-white transition-colors"
                             >
                                 Access Records

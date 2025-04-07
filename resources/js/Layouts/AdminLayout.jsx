@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/tempo/componen
 import { Badge } from "@/components/tempo/components/ui/badge";
 import { usePage } from "@inertiajs/react";
 
-export default function AdminLayout({ header, children }) {
+export default function AdminLayout({ header, children,tools }) {
     // const [activePage, setActivePage] = useState("dashboard"); // Default: 'dashboard'
     return (
         <div className="flex h-screen bg-background">
@@ -45,7 +45,10 @@ export default function AdminLayout({ header, children }) {
                         </div>
                     </div>
 
+
+
                     <div className="flex items-center gap-4">
+                        {tools}
                         <Button
                             variant="ghost"
                             size="icon"

@@ -35,65 +35,65 @@ import {
 const mockAppointments = [
   {
     id: "AP001",
-    patientName: "Maria Santos",
-    patientId: "P12345",
+    // user?.firstname: "Maria Santos",
+    user_id: "P12345",
     date: "2023-06-15",
     time: "09:00 AM",
     doctor: "Dr. Reyes",
-    purpose: "General Checkup",
+    // user?.service.servicename: "General Checkup",
     status: "Completed",
     avatar: "maria",
   },
   {
     id: "AP002",
-    patientName: "Juan Cruz",
-    patientId: "P12346",
+    // user?.firstname: "Juan Cruz",
+    user_id: "P12346",
     date: "2023-06-15",
     time: "10:30 AM",
     doctor: "Dr. Santos",
-    purpose: "Vaccination",
+    // user?.service.servicename: "Vaccination",
     status: "Completed",
     avatar: "juan",
   },
   {
     id: "AP003",
-    patientName: "Elena Magtanggol",
-    patientId: "P12347",
+    // user?.firstname: "Elena Magtanggol",
+    user_id: "P12347",
     date: "2023-06-15",
     time: "01:00 PM",
     doctor: "Dr. Reyes",
-    purpose: "Prenatal Checkup",
+    // user?.service.servicename: "Prenatal Checkup",
     status: "Cancelled",
     avatar: "elena",
   },
   {
     id: "AP004",
-    patientName: "Pedro Penduko",
-    patientId: "P12348",
+    // user?.firstname: "Pedro Penduko",
+    user_id: "P12348",
     date: "2023-06-16",
     time: "11:00 AM",
     doctor: "Dr. Santos",
-    purpose: "Blood Test",
+    // user?.service.servicename: "Blood Test",
     status: "Scheduled",
     avatar: "pedro",
   },
   {
     id: "AP005",
-    patientName: "Lorna Diaz",
-    patientId: "P12349",
+    // user?.firstname: "Lorna Diaz",
+    user_id: "P12349",
     date: "2023-06-16",
     time: "02:30 PM",
     doctor: "Dr. Reyes",
-    purpose: "Follow-up",
+    // user?.service.servicename: "Follow-up",
     status: "Scheduled",
     avatar: "lorna",
   },
 ];
 
-export default function appointments({}){
+export default function appointments({Appoints}){
 
 
-    const [appointments, setAppointments] = useState(mockAppointments);
+    const [appointments, setAppointments] = useState(Appoints);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortConfig, setSortConfig] = useState({
@@ -104,11 +104,11 @@ export default function appointments({}){
   // Filter appointments based on search term and status
   const filteredAppointments = appointments.filter((appointment) => {
     const matchesSearch =
-      appointment.patientName
+      appointment.user?.firstname
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      appointment.patientId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase());
+      appointment.user_id.toLowerCase().includes(searchTerm.toLowerCase())
+      //|| appointment.doctor.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "all" || appointment.status === statusFilter;
@@ -118,14 +118,25 @@ export default function appointments({}){
 
   // Sort appointments
   const sortedAppointments = [...filteredAppointments].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? 1 : -1;
-    }
-    return 0;
-  });
+  const valA = a[sortConfig.key];
+  const valB = b[sortConfig.key];
+
+  // Handle undefined/null values
+  if (valA == null) return sortConfig.direction === "ascending" ? -1 : 1;
+  if (valB == null) return sortConfig.direction === "ascending" ? 1 : -1;
+
+  // String comparison (case insensitive)
+  if (typeof valA === 'string' && typeof valB === 'string') {
+    const compareResult = valA.toLowerCase().localeCompare(valB.toLowerCase());
+    return sortConfig.direction === "ascending" ? compareResult : -compareResult;
+  }
+
+  // Number comparison
+  if (valA < valB) return sortConfig.direction === "ascending" ? -1 : 1;
+  if (valA > valB) return sortConfig.direction === "ascending" ? 1 : -1;
+
+  return 0;
+});
 
   // Request sort
   const requestSort = (key) => {
@@ -139,21 +150,31 @@ export default function appointments({}){
   // Get status badge color
   const getStatusBadge = (status) => {
     switch (status) {
-      case "Completed":
+      case 2:
         return <Badge className="bg-green-500">Completed</Badge>;
-      case "Scheduled":
+      case 1:
         return <Badge className="bg-blue-500">Scheduled</Badge>;
-      case "Cancelled":
+      case 3:
         return <Badge className="bg-red-500">Cancelled</Badge>;
       default:
-        return <Badge>{status}</Badge>;
+        return <Badge>{status} ew</Badge>;
     }
+
   };
 
+    const tools = () => {
+        return (
+            <Button variant="outline" className="flex items-center gap-2">
+              {/* <Calendar className="h-4 w-4" /> */}
+              <span>Schedule New</span>
+            </Button>
+        )
+    }
 
     return (
         <AdminLayout
-        header="Appointments">
+        header="Appointments"
+        tools={tools()}>
              <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -176,9 +197,9 @@ export default function appointments({}){
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Statuses</SelectItem>
-                      <SelectItem value="Scheduled">Scheduled</SelectItem>
-                      <SelectItem value="Completed">Completed</SelectItem>
-                      <SelectItem value="Cancelled">Cancelled</SelectItem>
+                      <SelectItem value={1}>Scheduled</SelectItem>
+                      <SelectItem value={2}>Completed</SelectItem>
+                      <SelectItem value={3}>Cancelled</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -191,11 +212,11 @@ export default function appointments({}){
                     <TableRow>
                       <TableHead
                         className="cursor-pointer"
-                        onClick={() => requestSort("patientName")}
+                        onClick={() => requestSort("user?.firstname")}
                       >
                         <div className="flex items-center">
                           Patient
-                          {sortConfig.key === "patientName" && (
+                          {sortConfig.key === "user?.firstname" && (
                             <span className="ml-1">
                               {sortConfig.direction === "ascending" ? (
                                 <ChevronUp className="h-4 w-4" />
@@ -237,11 +258,11 @@ export default function appointments({}){
                             <div className="flex items-center gap-3">
                               <Avatar>
                                 <AvatarImage
-                                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${appointment.avatar}`}
-                                  alt={appointment.patientName}
+                                //   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${appointment.avatar}`}
+                                  alt={appointment.user?.firstname}
                                 />
                                 <AvatarFallback>
-                                  {appointment.patientName
+                                  {appointment.user?.firstname
                                     .split(" ")
                                     .map((n) => n[0])
                                     .join("")}
@@ -249,10 +270,10 @@ export default function appointments({}){
                               </Avatar>
                               <div>
                                 <div className="font-medium">
-                                  {appointment.patientName}
+                                  {appointment.user?.firstname}
                                 </div>
                                 <div className="text-sm text-muted-foreground">
-                                  {appointment.patientId}
+                                  {appointment.user_id}
                                 </div>
                               </div>
                             </div>
@@ -265,8 +286,8 @@ export default function appointments({}){
                               {appointment.time}
                             </div>
                           </TableCell>
-                          <TableCell>{appointment.doctor}</TableCell>
-                          <TableCell>{appointment.purpose}</TableCell>
+                          <TableCell>DOCTOR</TableCell>
+                          <TableCell>{appointment.user?.service?.servicename}</TableCell>
                           <TableCell>
                             {getStatusBadge(appointment.status)}
                           </TableCell>
