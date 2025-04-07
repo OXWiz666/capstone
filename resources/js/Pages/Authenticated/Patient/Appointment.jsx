@@ -44,6 +44,7 @@ useForm({
     date: new Date(),
     time: "",
     service: "",
+    servicename: "",
     notes: "",
 });
 const handleSubmit = (data) => {
@@ -99,7 +100,7 @@ return (
                                 Service
                             </p>
                             <p className="text-gray-900">
-                                {data.service}
+                                {data.servicename}
                             </p>
                         </div>
                         <div>

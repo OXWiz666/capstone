@@ -42,21 +42,17 @@ formData,
         lastname: user.lastname,
         email: user.email,
         phone: user.contactno ?? "",
+        servicename: "",
+        service: ""
       });
     }
   }, [user]);
-//     const [formData, setFormData] = useState({
-//         firstname: user.firstname,
-//         middlename: user.middlename ?? "",
-//         lastname:user.lastname,
-//         email: user.email,
-//         phone: user.contactno ?? "",
-//         date: new  Date(),
-//         time: "",
-//         service: "",
-//         notes: "",
-//   });
 
+// Create a service lookup object
+const serviceLookup = services.reduce((acc, service) => {
+  acc[service.id] = service;
+  return acc;
+}, {});
   const [date, setDate] = useState(new Date());
 
     // Separate handler for date changes
@@ -66,11 +62,6 @@ formData,
     };
 
   const handleChange = (e) => {
-    // const { name, value } = e.target;
-    // if(e){
-    //     setDate(e);
-    // }
-    // setFormData((prev) => ({ ...prev, [name]: value }));
     const { name, value } = e.target;
 
   // Special handling for phone number
@@ -266,23 +257,32 @@ formData,
   <Label>Service Type</Label>
   <Select
     value={formData.service?.toString()} // Ensure string value
-    onValueChange={(value) => handleSelectChange("service", value)}
+    onValueChange={(selectedId) => {
+        const service = serviceLookup[selectedId];
+        if (service) {
+         handleSelectChange("service", service.id);
+            handleSelectChange("servicename", service.servicename);
+              //  handleSelectChange("customAttr", service.customAttribute);
+        }// handleSelectChange("servicename", selectedService?.servicename || "");
+    }
+
+    }
     required
   >
     <SelectTrigger className="w-full">
       <SelectValue placeholder="Select service">
         {formData.service ? (
-          services.find(s => s.id.toString() === formData.service.toString())?.servicename
+            services.find(s => s.id.toString() === formData.service.toString())?.servicename
         ) : (
-          "Select service"
+            "Select service"
         )}
-      </SelectValue>
+        </SelectValue>
     </SelectTrigger>
     <SelectContent>
       {services.map((service) => (
         <SelectItem
           key={service.id} // Use service.id as key
-          value={service.id.toString()} // Ensure string value
+          value={service.id} // Ensure string value
         >
           {service.servicename}
         </SelectItem>
