@@ -10,6 +10,14 @@ import {
   ChevronUp,
   Download,
 } from "lucide-react";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/tempo/components/ui/card";
 import { Button } from "@/components/tempo/components/ui/button";
 import { Input } from "@/components/tempo/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/tempo/components/ui/avatar";
@@ -30,6 +38,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/tempo/components/ui/select";
+
+import Modal from "@/components/CustomModal"
 
 // Mock data for appointments
 const mockAppointments = [
@@ -171,6 +181,24 @@ export default function appointments({Appoints}){
         )
     }
 
+    const [isModalOpen,setIsModalOpen] = useState(false);
+
+    const [appointment_,setAppointment_] = useState({});
+    const openModal = (e,appointment) => {
+        //alert('wew')
+        fetch(`/admin/appointment/get/${appointment}`)
+        .then((resp) => resp.json())
+        .then((data) => {
+            //console.log(data);
+            setAppointment_(data)
+        })
+        setIsModalOpen(true);
+        //console.log(id);
+    }
+
+    const closeModal = (e) => {
+        setIsModalOpen(false);
+    }
     return (
         <AdminLayout
         header="Appointments"
@@ -253,7 +281,7 @@ export default function appointments({Appoints}){
                   <TableBody>
                     {sortedAppointments.length > 0 ? (
                       sortedAppointments.map((appointment) => (
-                        <TableRow key={appointment.id}>
+                        <TableRow key={appointment.id} >
                           <TableCell>
                             <div className="flex items-center gap-3">
                               <Avatar>
@@ -287,12 +315,12 @@ export default function appointments({Appoints}){
                             </div>
                           </TableCell>
                           <TableCell>DOCTOR</TableCell>
-                          <TableCell>{appointment.user?.service?.servicename}</TableCell>
+                          <TableCell>{appointment.service?.servicename}</TableCell>
                           <TableCell>
                             {getStatusBadge(appointment.status)}
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" onClick={(e) => openModal(e,appointment.id)} size="sm">
                               View
                             </Button>
                           </TableCell>
@@ -313,6 +341,80 @@ export default function appointments({Appoints}){
               </div>
             </div>
           </motion.div>
+          <Modal
+            isOpen={isModalOpen}
+            hasCancel={true}
+            onClose={closeModal}
+            maxWidth="2xl"
+            canceltext="Okay"
+            savetext=""
+            >
+                <CardTitle>Appointment Details</CardTitle>
+                    <CardDescription>
+                        {/* Please save this information for your reference */}
+                    </CardDescription>
+                <Card>
+                    <CardHeader>
+
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">
+                                Name
+                            </p>
+                            <p className="text-gray-900">{appointment_.user?.firstname} {appointment_.user?.lastname}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">
+                                Service
+                            </p>
+                            <p className="text-gray-900">
+                                {appointment_.service?.servicename}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">
+                                Date
+                            </p>
+                            <p className="text-gray-900">
+                                {appointment_.date}
+                                {/* {data.date
+                                ? data.date.toLocaleDateString()
+                                : "Not specified"} */}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">
+                                Time
+                            </p>
+                            <p className="text-gray-900">{appointment_.time}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">
+                                Email
+                            </p>
+                            <p className="text-gray-900">{appointment_.user?.email}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">
+                                Phone
+                            </p>
+                            <p className="text-gray-900">{appointment_.phone}</p>
+                        </div>
+                    </div>
+                    {/* {data.notes && (
+
+                    )} */}
+                    <div>
+                        <p className="text-sm font-medium text-gray-500">
+                            Additional Notes
+                        </p>
+                        <p className="text-gray-900">{appointment_.notes}</p>
+                    </div>
+                    </CardContent>
+                </Card>
+          </Modal>
         </AdminLayout>
     )
 }

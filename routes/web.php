@@ -88,6 +88,7 @@ Route::middleware(['auth','Admin'])->group(function(){
         Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
 
+        Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
     });
 });
 
