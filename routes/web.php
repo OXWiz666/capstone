@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AppointmentsController;
+use App\Http\Controllers\Admin\DoctorsController;
 use App\Http\Controllers\Admin\HealthProgramsController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\PatientsController;
@@ -68,6 +69,7 @@ Route::middleware(['auth','Patient'])->group(function(){
         Route::post('/profile/update',[PatientController::class,'update'])->name('patient.profile.update');
         Route::get('/medical-records',[PatientController::class,'medicalrecords'])->name('patient.medrecords');
 
+        Route::get('/appointments/history',[PatientController::class,'appointmentshistory'])->name('patient.appoint.history');
         ## Appointment
         Route::post('/appointment/create',[PatientController::class,'storeAppointment'])->name('patient.appoint.create');
     });
@@ -87,7 +89,7 @@ Route::middleware(['auth','Admin'])->group(function(){
         Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
         Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
-
+        Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
         Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
     });
 });

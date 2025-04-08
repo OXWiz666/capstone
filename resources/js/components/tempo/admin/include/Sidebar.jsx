@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Home,
+  Stethoscope
 } from "lucide-react";
 import { cn } from "@/components/tempo/lib/utils";
 import { Button } from "@/components/tempo/components/ui/button";
@@ -43,6 +44,14 @@ const Sidebar = ({
       icon: <Users className="h-5 w-5" />,
       route:"admin.patients",
       path: "/admin/patients",
+      id: "patients",
+      roles: ["Admin", "Doctor"],
+    },
+     {
+      title: "Doctors",
+      icon: <Stethoscope className="h-5 w-5" />,
+      route:"admin.doctors",
+      path: "/admin/doctors",
       id: "patients",
       roles: ["Admin", "Doctor"],
     },

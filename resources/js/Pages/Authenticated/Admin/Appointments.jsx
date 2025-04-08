@@ -192,7 +192,7 @@ export default function appointments({Appoints}){
             //console.log(data);
             setAppointment_(data)
         })
-        setIsModalOpen(true);
+        setIsModalOpen(true);   
         //console.log(id);
     }
 
@@ -222,7 +222,7 @@ export default function appointments({Appoints}){
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Status" />
-                    </SelectTrigger>
+                    </SelectTrigger>    
                     <SelectContent>
                       <SelectItem value="all">All Statuses</SelectItem>
                       <SelectItem value={1}>Scheduled</SelectItem>

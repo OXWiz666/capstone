@@ -38,6 +38,7 @@ class PatientController extends Controller
             'address' => 'required|min:3',
             'birthdate' => 'required',
             'bloodType' => 'required|min:1',
+            'gender' => "required|in:M,F"
         ]);
 
         User::where('id',Auth::user()->id)->update([
@@ -48,10 +49,8 @@ class PatientController extends Controller
             'address' => $request->address,
             'birth' => $request->birthdate,
             'bloodtype' => $request->bloodType,
+            'gender' => $request->gender
         ]);
-
-
-
     }
 
     public function medicalrecords(){
@@ -61,11 +60,21 @@ class PatientController extends Controller
 
     public function appointments(){
         $serv = servicetypes::get();
-        return Inertia::render('Authenticated/Patient/Appointment',[
-            'services' => $serv
+        return Inertia::render('Authenticated/Patient/Appointments/Appointment',[
+            'services' => $serv,
+            'ActiveTAB' => 'appointment'
         ]);
     }
+    public function appointmentshistory(){
+        $appointments =
+        appointments::with(['service','user'])
+        ->where('user_id',Auth::user()->id)->paginate(5);
 
+        return Inertia::render('Authenticated/Patient/Appointments/AppointmentHistory',[
+            'appointments' => $appointments,
+            'ActiveTAB' => 'History'
+        ]);
+    }
     public function storeAppointment(Request $request){
         $request->validate([
             'phone' => 'required|min:10',

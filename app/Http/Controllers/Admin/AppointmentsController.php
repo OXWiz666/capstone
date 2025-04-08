@@ -19,7 +19,11 @@ class AppointmentsController extends Controller
             'Appoints' => $appointments
         ]);
     }
-
+    public function history(){
+        return Inertia::render('Authenticated/Admin/Appointments/AppointmentHistory',[
+            // 'Appoints' => $appointments
+        ]);
+    }
     public function GetAppointment(appointments $appointment){
         $appointment->load(['user','service']);
         return response()->json($appointment);

@@ -35,6 +35,7 @@ import {
     Shield,
 } from "lucide-react";
 import LandingLayout from "@/Layouts/LandingLayout";
+import { Head, useForm,router } from '@inertiajs/react';
 
 //import { useAuth } from "../../contexts/AuthContext";
 
@@ -786,7 +787,8 @@ const MedicalRecordsPage = () => {
                                     For emergency services, please call the
                                     health center directly
                                 </div>
-                                <Button variant="outline" size="sm">
+                                <Button variant="outline" size="sm"
+                                onClick={(e) => router.visit('/contact')}>
                                     Need Help?
                                 </Button>
                             </CardFooter>
