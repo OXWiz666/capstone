@@ -225,7 +225,9 @@ class AuthController extends Controller
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
             'securityQuestion' => 'required|min:1|max:5',
-            'securityAnswer' => 'required'
+            'securityAnswer' => 'required',
+            'gender' => "required|in:M,F",
+            'birth' => "required|date"
         ]);
 
         $newUser = new User();
@@ -237,6 +239,8 @@ class AuthController extends Controller
         $newUser->roleID = 5;
         $newUser->questionID = $request->securityQuestion;
         $newUser->answer = $request->securityAnswer;
+        $newUser->gender = $request->gender;
+        $newUser->birth = $request->birth;
         $newUser->save();
 
         return Inertia::render("Auth/Login2",[

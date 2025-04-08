@@ -3,8 +3,14 @@ import { Link, usePage, Head, useForm } from "@inertiajs/react";
 import LoginLayout from "@/Layouts/LoginLayout";
 import { toast } from "react-toastify";
 import NavLink from "@/Components/NavLink";
+import {
+    EnvelopeClosedIcon,
+    LockClosedIcon,
+    Cross2Icon,
+    ArrowLeftIcon,
+} from "@radix-ui/react-icons";
 
-export default function Login2({}) {
+export default function Login2({ flash }) {
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing } = useForm({
         email: "",
@@ -30,6 +36,12 @@ export default function Login2({}) {
     //     }
     //   }, [errors]);
 
+    useEffect(() => {
+        if (flash) {
+            alert_toast(flash.title, flash.message, flash.icon);
+        }
+    }, [flash]);
+
     return (
         <LoginLayout>
             <Head title="Login" />
@@ -38,28 +50,14 @@ export default function Login2({}) {
                 <div className="absolute top-4 left-4">
                     <NavLink
                         href={route("home")}
-                        className="inline-flex items-center px-6 py-2.5 bg-black rounded-lg text-sm font-medium text-white
-                      shadow-lg hover:shadow-2xl transform transition-all duration-300
-                      hover:scale-105 hover:bg-gray-800 border border-gray-700
-                      group animate-fade-in relative overflow-hidden"
+                        className="inline-flex items-center px-8 py-3 rounded-lg bg-black text-white shadow-lg hover:shadow-2xl transform transition-all duration-300 hover:scale-105 hover:bg-gray-800 border border-gray-700 group animate-fade-in relative overflow-hidden"
                     >
-                        <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-50"></span>
-                        <span className="relative flex items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5 mr-2 transform transition-transform duration-300 group-hover:-translate-x-1"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                                />
-                            </svg>
-                            Back to Home
+                        <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-50 rounded-lg"></span>
+                        <span className="relative flex items-center justify-center">
+                            <ArrowLeftIcon className="h-6 w-6 mr-2 transition-transform duration-300 group-hover:-translate-x-1 group-hover:text-white" />
+                            <span className="relative text-base font-medium transition-colors duration-300 group-hover:text-white">
+                                Back to Home
+                            </span>
                         </span>
                     </NavLink>
                 </div>
@@ -73,7 +71,7 @@ export default function Login2({}) {
                             alt="Logo"
                         />
                         <h2 className="mt-4 text-3xl font-extrabold text-gray-900 tracking-tight">
-                            Welcome back
+                            Welcome
                         </h2>
                         <p className="mt-2 text-sm text-gray-600">
                             Sign in to your account to continue
@@ -85,18 +83,7 @@ export default function Login2({}) {
                         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
-                                    <svg
-                                        className="h-5 w-5 text-red-400"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
+                                    <Cross2Icon className="h-5 w-5 text-red-400" />
                                 </div>
                                 <div className="ml-3">
                                     <ul className="text-sm text-red-600">
@@ -111,7 +98,7 @@ export default function Login2({}) {
                         </div>
                     )}
                     {/* {Object.keys(errors).length > 0 && (
-            <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+            <div className="bg-red-50 border-l-4 border-red-400 p-4 ro  unded-md">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg
@@ -150,15 +137,7 @@ export default function Login2({}) {
                                 </label>
                                 <div className="mt-1 relative rounded-md shadow-sm">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg
-                                            className="h-5 w-5 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                        </svg>
+                                        <EnvelopeClosedIcon className="h-5 w-5 text-gray-400" />
                                     </div>
                                     <input
                                         type="text"
@@ -168,7 +147,7 @@ export default function Login2({}) {
                                             setData("email", e.target.value)
                                         }
                                         placeholder="you@example.com"
-                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent hover:border-gray-400 backdrop-blur-sm"
+                                        className="pl-10 block w-full rounded-lg border border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent hover:border-gray-400 backdrop-blur-sm"
                                     />
                                 </div>
                             </div>
@@ -183,30 +162,19 @@ export default function Login2({}) {
                                 </label>
                                 <div className="mt-1 relative rounded-md shadow-sm">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg
-                                            className="h-5 w-5 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
+                                        <LockClosedIcon className="h-5 w-5 text-gray-400" />
                                     </div>
                                     <input
                                         type={
                                             showPassword ? "text" : "password"
                                         }
+                                        id="password"
                                         value={data.password}
                                         onChange={(e) =>
                                             setData("password", e.target.value)
                                         }
-                                        id="password"
-                                        placeholder="Enter your password"
-                                        className="pl-10 pr-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent hover:border-gray-400 backdrop-blur-sm"
+                                        placeholder="••••••••"
+                                        className="pl-10 block w-full rounded-lg border border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent hover:border-gray-400 backdrop-blur-sm"
                                     />
                                     <button
                                         type="button"

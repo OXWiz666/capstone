@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link, usePage } from "@inertiajs/react";
 interface Service {
     icon: "calendar" | "file-text" | "clock";
     title: string;
@@ -74,8 +74,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
     };
 
     return (
-        <section className="py-12 px-2 md:px-4 bg-slate-50">
-            <div className="container mx-auto max-w-4xl">
+        <section className="py-12 px-4 md:px-8 lg:px-16 bg-slate-50">
+            <div className="container mx-auto max-w-7xl">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">
                         Our Digital Healthcare Services
@@ -116,12 +116,12 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                             health center in person.
                         </p>
                         <div className="mt-auto">
-                            <a
-                                href={route('patient.appoint')}
+                            <Link
+                                href="/appointments"
                                 className="inline-block px-4 py-2 text-sm font-medium text-black border border-black rounded-md hover:bg-black hover:text-white transition-colors"
                             >
-                                Book Nows
-                            </a>
+                                Book Now
+                            </Link>
                         </div>
                     </div>
 
@@ -153,12 +153,12 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                             our digital platform.
                         </p>
                         <div className="mt-auto">
-                            <a
-                                href={route('patient.medrecords')}
+                            <Link
+                                href="/patient/medical-records"
                                 className="inline-block px-4 py-2 text-sm font-medium text-black border border-black rounded-md hover:bg-black hover:text-white transition-colors"
                             >
                                 Access Records
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
@@ -185,7 +185,9 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                             Vaccination Schedules
                         </h3>
                         <p className="text-gray-700 mb-4 leading-relaxed flex-grow">
-                            View upcoming vaccination campaigns, register for immunizations, and receive reminders for your family's vaccination appointments.
+                            View upcoming vaccination campaigns, register for
+                            immunizations, and receive reminders for your
+                            family's vaccination appointments.
                         </p>
                         <div className="mt-auto">
                             <a
