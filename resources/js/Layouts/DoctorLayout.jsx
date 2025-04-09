@@ -7,7 +7,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "@/components/tempo/admin/include/Sidebar";
+import Sidebar from "@/components/tempo/doctor/include/Sidebar";
 import StatisticsOverview from "@/components/tempo/admin/include/StatisticsOverview";
 import ModuleCards from "@/components/tempo/admin/include/ModuleCards";
 import ActivityFeed from "@/components/tempo/admin/include/ActivityFeed";
@@ -22,15 +22,15 @@ import {
 import { Badge } from "@/components/tempo/components/ui/badge";
 import { usePage } from "@inertiajs/react";
 
-import Sidebar2 from "@/components/tempo/doctor/include/Sidebar";
-
 export default function AdminLayout({ header, children, tools }) {
-    const role = usePage().props.auth.role;
     // const [activePage, setActivePage] = useState("dashboard"); // Default: 'dashboard'
     return (
         <div className="flex h-screen bg-background">
             {/* Sidebar */}
-            {role == 7 ? <Sidebar /> : <Sidebar2 />}
+            <Sidebar
+            // activePage={activePage}
+            // setActivePage={setActivePage}
+            />
             {/* Main Content */}
             <div className="flex-1 overflow-auto">
                 {/* Header */}

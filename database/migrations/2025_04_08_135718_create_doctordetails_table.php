@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('expyears')->comment('Years of experience');
             $table->string('licenseno');
             $table->double('avrating')->comment('average rating');
+            $table->integer('status')->default(1)->comment('1=Available,2=Inactive,3=On Leave,4=In Consultation')->change();
             $table->timestamps();
         });
     }

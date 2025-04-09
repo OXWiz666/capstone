@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminDoctorMiddleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\DoctorMiddleware;
 use App\Http\Middleware\GuestMiddleware;
@@ -41,7 +42,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'Doctor' => DoctorMiddleware::class,
             'Pharmacist' => PharmacistMiddleware::class,
             'Patient' => PatientMiddlware::class,
-            'Admin' => AdminMiddleware::class
+            'Admin' => AdminMiddleware::class,
+            'AdminDoctor' => AdminDoctorMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

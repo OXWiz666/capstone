@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\doctor_details;
 use App\Models\password_reset_tokens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,7 @@ use Inertia\Inertia;
 
 
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\DB;
 use function Laravel\Prompts\password;
 
 class AuthController extends Controller
@@ -35,7 +36,7 @@ class AuthController extends Controller
 
         switch(Auth::user()->roleID){ // For Route . ->name()
              case "1":
-                return redirect()->route('doctor.home');
+                return redirect()->route('admin.appointments');
             case "4":
                 return redirect()->route('midwife.dashboard');
             case "5":
@@ -229,27 +230,47 @@ class AuthController extends Controller
             'gender' => "required|in:M,F",
             'birth' => "required|date"
         ]);
+        //dd($request);
+        //$isAdmin = $request->input('isAdmin', 'false'); // Get isAdmin from request data
+        try{
+            DB::beginTransaction();
+            $newUser = new User();
+            $newUser->firstname = $request->first_name;
+            $newUser->lastname = $request->last_name;
+            $newUser->email = $request->email;
+            $newUser->password = Hash::make($request->password);
+            $newUser->contactno = $request->contactNumber;
+            if($request->isAdmin != 'true'){
+                $newUser->roleID = 5;
+            }else{
+                $newUser->roleID = 1;
+            }
 
-        $newUser = new User();
-        $newUser->firstname = $request->first_name;
-        $newUser->lastname = $request->last_name;
-        $newUser->email = $request->email;
-        $newUser->password = Hash::make($request->password);
-        $newUser->contactno = $request->contactNumber;
-        $newUser->roleID = 5;
-        $newUser->questionID = $request->securityQuestion;
-        $newUser->answer = $request->securityAnswer;
-        $newUser->gender = $request->gender;
-        $newUser->birth = $request->birth;
-        $newUser->save();
+            $newUser->questionID = $request->securityQuestion;
+            $newUser->answer = $request->securityAnswer;
+            $newUser->gender = $request->gender;
+            $newUser->birth = $request->birth;
+            $newUser->save();
 
-        return Inertia::render("Auth/Login2",[
-            "flash" => [
-                "message" => "Registered Successfully!",
-                "icon" => "success",
-                "title" => "Success!"
-            ]
-        ]);
+            if($request->isAdmin != 'true'){
+                return Inertia::render("Auth/Login2",[
+                    "flash" => [
+                        "message" => "Registered Successfully!",
+                        "icon" => "success",
+                        "title" => "Success!"
+                    ]
+                ]);
+            }else{
+                doctor_details::insert([
+                    'user_id' => $newUser->id
+                ]);
+            }
+            DB::commit();
+        }
+        catch(\Exception $er){
+            DB::rollBack();
+        }
+        // return redirect()->back()->with('success', 'Registration successful');
         //return redirect()->route('login')->with('success','Registered Successfully!');
     }
 

@@ -4,17 +4,11 @@ import { motion } from "framer-motion";
 import StatisticsOverview from "@/components/tempo/admin/include/StatisticsOverview";
 import ModuleCards from "@/components/tempo/admin/include/ModuleCards";
 import ActivityFeed from "@/components/tempo/admin/include/ActivityFeed";
-import AdminLayout from "@/Layouts/AdminLayout";
-// import { Bell, User, Search } from "lucide-react";
-// import { Button } from "@/components/tempo/components/ui/button";
-// import { Input } from "@/components/tempo/components/ui/input";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/tempo/components/ui/avatar";
-// import { Badge } from "@/components/tempo/components/ui/badge";
+import DoctorLayout from "@/Layouts/DoctorLayout";
 
 export default function Dashboard({}) {
     return (
-        <AdminLayout header="Dashboard">
-            {/* Main Content Area */}
+        <DoctorLayout header="Doctor">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -53,6 +47,6 @@ export default function Dashboard({}) {
                     <ActivityFeed />
                 </section>
             </motion.div>
-        </AdminLayout>
+        </DoctorLayout>
     );
 }
