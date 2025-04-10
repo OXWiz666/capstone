@@ -76,13 +76,6 @@ const Sidebar = ({ activePage, userRole = "Admin" }) => {
             roles: ["Admin", "Pharmacist"],
         },
         {
-            title: "SMS System",
-            icon: <MessageSquare className="h-5 w-5" />,
-            path: "/sms",
-            id: "sms",
-            roles: ["Admin"],
-        },
-        {
             title: "Reports",
             icon: <BarChart3 className="h-5 w-5" />,
             route: "admin.reports",

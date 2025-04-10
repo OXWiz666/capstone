@@ -30,7 +30,7 @@ export default function AdminLayout({ header, children, tools }) {
     return (
         <div className="flex h-screen bg-background">
             {/* Sidebar */}
-            {role == 7 ? <Sidebar /> : <Sidebar2 />}
+            {role.id == 7 ? <Sidebar /> : <Sidebar2 />}
             {/* Main Content */}
             <div className="flex-1 overflow-auto">
                 {/* Header */}
