@@ -23,6 +23,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use function Laravel\Prompts\password;
 
+use App\Services\ActivityLogger;
+use App\Notifications\SystemNotification;
+
 class AuthController extends Controller
 {
 
@@ -36,7 +39,7 @@ class AuthController extends Controller
 
         switch(Auth::user()->roleID){ // For Route . ->name()
              case "1":
-                return redirect()->route('admin.appointments');
+                return redirect()->route('doctor.home');
             case "4":
                 return redirect()->route('midwife.dashboard');
             case "5":
@@ -252,7 +255,24 @@ class AuthController extends Controller
             $newUser->birth = $request->birth;
             $newUser->save();
 
+
+
             if($request->isAdmin != 'true'){
+
+
+                ActivityLogger::log('New User Created!: ' . $newUser->firstname . " " . $newUser->lastname,
+                $newUser,['ip' => $request->ip()]);
+
+
+                $admins = User::where('roleID', '7')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new SystemNotification(
+                        "New user registered: {$newUser->email}",
+                        'new_user',
+                        '#'
+                    ));
+                }
+
                 return Inertia::render("Auth/Login2",[
                     "flash" => [
                         "message" => "Registered Successfully!",
@@ -264,6 +284,19 @@ class AuthController extends Controller
                 doctor_details::insert([
                     'user_id' => $newUser->id
                 ]);
+
+                ActivityLogger::log('Created new Doctor: Dr. ' . $newUser->firstname . " " . $newUser->lastname,
+                $newUser,['ip' => $request->ip()]);
+
+
+                $admins = User::where('roleID', '7')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new SystemNotification(
+                        "New Doctor registered: {$newUser->email}",
+                        'new_user',
+                        '#'
+                    ));
+                }
             }
             DB::commit();
         }

@@ -35,7 +35,7 @@ import {
     Shield,
 } from "lucide-react";
 import LandingLayout from "@/Layouts/LandingLayout";
-import { Head, useForm,router } from '@inertiajs/react';
+import { Head, useForm, router } from "@inertiajs/react";
 
 //import { useAuth } from "../../contexts/AuthContext";
 
@@ -230,7 +230,7 @@ const MedicalRecordsPage = () => {
                                         <FileText className="mr-2 h-5 w-5" />
                                         Medical Records
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         variant={
                                             activeTab === "prescriptions"
                                                 ? "secondary"
@@ -244,7 +244,7 @@ const MedicalRecordsPage = () => {
                                     >
                                         <Pill className="mr-2 h-5 w-5" />
                                         Prescriptions
-                                    </Button>
+                                    </Button> */}
                                     <Button
                                         variant={
                                             activeTab === "lab"
@@ -311,8 +311,6 @@ const MedicalRecordsPage = () => {
                                         <CardTitle>
                                             {activeTab === "records"
                                                 ? "Medical Records"
-                                                : activeTab === "prescriptions"
-                                                ? "Prescriptions"
                                                 : activeTab === "lab"
                                                 ? "Laboratory Results"
                                                 : activeTab === "immunizations"
@@ -365,9 +363,9 @@ const MedicalRecordsPage = () => {
                                         <TabsTrigger value="records">
                                             Medical Records
                                         </TabsTrigger>
-                                        <TabsTrigger value="prescriptions">
+                                        {/* <TabsTrigger value="prescriptions">
                                             Prescriptions
-                                        </TabsTrigger>
+                                        </TabsTrigger> */}
                                         <TabsTrigger value="lab">
                                             Lab Results
                                         </TabsTrigger>
@@ -580,6 +578,7 @@ const MedicalRecordsPage = () => {
                                                                                     {
                                                                                         med.frequency
                                                                                     }
+
                                                                                     ,
                                                                                     for{" "}
                                                                                     {
@@ -787,8 +786,11 @@ const MedicalRecordsPage = () => {
                                     For emergency services, please call the
                                     health center directly
                                 </div>
-                                <Button variant="outline" size="sm"
-                                onClick={(e) => router.visit('/contact')}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => router.visit("/contact")}
+                                >
                                     Need Help?
                                 </Button>
                             </CardFooter>

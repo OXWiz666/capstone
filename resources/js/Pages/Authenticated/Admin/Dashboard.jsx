@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 //import Sidebar from "@/components/tempo/admin/include/Sidebar";
 import StatisticsOverview from "@/components/tempo/admin/include/StatisticsOverview";
 import ModuleCards from "@/components/tempo/admin/include/ModuleCards";
 import ActivityFeed from "@/components/tempo/admin/include/ActivityFeed";
 import AdminLayout from "@/Layouts/AdminLayout";
+import { usePage } from "@inertiajs/react";
 // import { Bell, User, Search } from "lucide-react";
 // import { Button } from "@/components/tempo/components/ui/button";
 // import { Input } from "@/components/tempo/components/ui/input";
@@ -12,6 +13,16 @@ import AdminLayout from "@/Layouts/AdminLayout";
 // import { Badge } from "@/components/tempo/components/ui/badge";
 
 export default function Dashboard({}) {
+    const notifs = usePage().props.auth.notifications;
+
+    const [activities, setActivities] = useState([]);
+    useEffect(() => {
+        console.log("notifs", notifs);
+        if (notifs) {
+            setActivities(notifs);
+        }
+    }, [notifs]);
+
     return (
         <AdminLayout header="Dashboard">
             {/* Main Content Area */}
@@ -50,7 +61,7 @@ export default function Dashboard({}) {
                     <h3 className="text-xl font-semibold mb-4 text-primary">
                         Recent Activities
                     </h3>
-                    <ActivityFeed />
+                    <ActivityFeed activities={activities} />
                 </section>
             </motion.div>
         </AdminLayout>

@@ -28,7 +28,7 @@ export default function Dashboard({}) {
                     <h3 className="text-xl font-semibold mb-4 text-primary">
                         {/* Overview */}
                     </h3>
-                    <StatisticsOverview />
+                    <StatisticsOverview/>
                 </section>
 
                 {/* Module Cards */}

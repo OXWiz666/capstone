@@ -27,14 +27,14 @@ const Sidebar = ({ activePage, userRole = "Admin" }) => {
     const [collapsed, setCollapsed] = useState(false);
 
     const menuItems = [
-        // {
-        //     title: "Dashboard",
-        //     icon: <Home className="h-5 w-5" />,
-        //     route: "doctor.home",
-        //     path: "/doctor",
-        //     id: "dashboard",
-        //     roles: ["Admin", "Doctor", "Pharmacist"],
-        // },
+        {
+            title: "Dashboard",
+            icon: <Home className="h-5 w-5" />,
+            route: "doctor.home",
+            path: "/doctor",
+            id: "dashboard",
+            roles: ["Admin", "Doctor", "Pharmacist"],
+        },
         {
             title: "Appointments",
             icon: <Calendar className="h-5 w-5" />,
