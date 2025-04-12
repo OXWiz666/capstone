@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AppointmentsController;
+use App\Http\Controllers\Admin\DoctorsController;
+use App\Http\Controllers\Admin\HealthProgramsController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\PatientsController;
+use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
@@ -50,7 +56,7 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/services/vaccinations', [VaccineController::class, 'index'])->name('services.vaccinations');
     Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
 
-
+    Route::get('/appointments',[PatientController::class,'appointments'])->name('patient.appoint');
     //Route::get('/dashboard/test', [TestDbControllerrr::class, 'index'])->name('dashboard.test');
 
     // Contact Routes
@@ -61,20 +67,46 @@ Route::middleware(['auth','Patient'])->group(function(){
     Route::prefix('patient')->group(function(){
         Route::get('/profile',[PatientController::class,'profile'])->name('patient.profile');
         Route::post('/profile/update',[PatientController::class,'update'])->name('patient.profile.update');
+        Route::get('/medical-records',[PatientController::class,'medicalrecords'])->name('patient.medrecords');
+
+        Route::get('/appointments/history',[PatientController::class,'appointmentshistory'])->name('patient.appoint.history');
+        ## Appointment
+        Route::post('/appointment/create',[PatientController::class,'storeAppointment'])->name('patient.appoint.create');
     });
 });
 
 Route::middleware(['auth','Doctor'])->group(function(){
-    Route::prefix('Doctor')->group(function(){
-        Route::get('/',DoctorDashboard::class)->name('doctor.home');
+    Route::prefix('doctor')->group(function(){
+        Route::get('/',[DoctorController::class,'index'])->name('doctor.home');
+        //Route::get('/appointments',[AppointmentsController::class,'index'])->name('doctor.appointments');
     });
 });
 
 Route::middleware(['auth','Admin'])->group(function(){
     Route::prefix('admin')->group(function(){
         Route::get('/',[AdminDashboardController::class,'index'])->name('admin');
+
+
+        Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
+        Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
+        Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
+        Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
+
+
+        Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     });
 });
+
+Route::middleware(['auth','AdminDoctor'])->group(function() {
+    Route::prefix('auth')->group(function(){
+
+        Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
+        Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
+        Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
+        Route::get('/patients',[PatientsController::class,'index'])->name('admin.patients');
+    });
+});
+
 
 Route::middleware(['auth'])->group(function () {
     Route::match(['POST','GET'],'/logout', function (Request $request) {

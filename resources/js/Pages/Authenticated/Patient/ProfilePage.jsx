@@ -103,6 +103,7 @@ const ProfilePage = ({ errors }) => {
             bloodType: user__.bloodtype,
             allergies: "None",
             medications: "None",
+            gender: user__.gender,
         });
 
     // Handle input changes
@@ -439,7 +440,7 @@ const ProfilePage = ({ errors }) => {
                                                         required
                                                     />
                                                 </div>
-                                                <div className="space-y-2">
+                                                <div className=" space-y-2">
                                                     <Label htmlFor="birthdate">
                                                         Date of Birth
                                                     </Label>
@@ -452,7 +453,27 @@ const ProfilePage = ({ errors }) => {
                                                         required
                                                     />
                                                 </div>
+                                                <div className="grid grid-cols-3 gap-4">
+                                                    <div className=" space-y-2">
+                                                        <Label htmlFor="birthdate">
+                                                            Gender
+                                                        </Label>
+                                                        <Input
+                                                            id="gender"
+                                                            type="text"
+                                                            value={data.gender}
+                                                            disabled={
+                                                                !isEditing
+                                                            }
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            required
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
+
                                             <div className="space-y-2 mt-4">
                                                 <Label htmlFor="address">
                                                     Address

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\doctor_details;
 use App\Models\password_reset_tokens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,8 +20,11 @@ use Inertia\Inertia;
 
 
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\DB;
 use function Laravel\Prompts\password;
+
+use App\Services\ActivityLogger;
+use App\Notifications\SystemNotification;
 
 class AuthController extends Controller
 {
@@ -225,27 +229,82 @@ class AuthController extends Controller
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
             'securityQuestion' => 'required|min:1|max:5',
-            'securityAnswer' => 'required'
+            'securityAnswer' => 'required',
+            'gender' => "required|in:M,F",
+            'birth' => "required|date"
         ]);
+        //dd($request);
+        //$isAdmin = $request->input('isAdmin', 'false'); // Get isAdmin from request data
+        try{
+            DB::beginTransaction();
+            $newUser = new User();
+            $newUser->firstname = $request->first_name;
+            $newUser->lastname = $request->last_name;
+            $newUser->email = $request->email;
+            $newUser->password = Hash::make($request->password);
+            $newUser->contactno = $request->contactNumber;
+            if($request->isAdmin != 'true'){
+                $newUser->roleID = 5;
+            }else{
+                $newUser->roleID = 1;
+            }
 
-        $newUser = new User();
-        $newUser->firstname = $request->first_name;
-        $newUser->lastname = $request->last_name;
-        $newUser->email = $request->email;
-        $newUser->password = Hash::make($request->password);
-        $newUser->contactno = $request->contactNumber;
-        $newUser->roleID = 5;
-        $newUser->questionID = $request->securityQuestion;
-        $newUser->answer = $request->securityAnswer;
-        $newUser->save();
+            $newUser->questionID = $request->securityQuestion;
+            $newUser->answer = $request->securityAnswer;
+            $newUser->gender = $request->gender;
+            $newUser->birth = $request->birth;
+            $newUser->save();
 
-        return Inertia::render("Auth/Login2",[
-            "flash" => [
-                "message" => "Registered Successfully!",
-                "icon" => "success",
-                "title" => "Success!"
-            ]
-        ]);
+
+
+            if($request->isAdmin != 'true'){
+
+                $message = 'New User Created!: ' . $newUser->firstname . " " . $newUser->lastname;
+
+                ActivityLogger::log($message,
+                $newUser,['ip' => $request->ip()]);
+
+
+                $admins = User::where('roleID', '7')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new SystemNotification(
+                        $message,
+                        'new_user',
+                        '#'
+                    ));
+                }
+
+                return Inertia::render("Auth/Login2",[
+                    "flash" => [
+                        "message" => "Registered Successfully!",
+                        "icon" => "success",
+                        "title" => "Success!"
+                    ]
+                ]);
+            }else{
+                doctor_details::insert([
+                    'user_id' => $newUser->id
+                ]);
+
+                ActivityLogger::log('Created new Doctor: Dr. ' . $newUser->firstname . " " . $newUser->lastname,
+                $newUser,['ip' => $request->ip()]);
+
+
+                $admins = User::where('roleID', '7')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new SystemNotification(
+                        "New Doctor registered: {$newUser->email}",
+                        'new_user',
+                        '#'
+                    ));
+                }
+            }
+            DB::commit();
+        }
+        catch(\Exception $er){
+            DB::rollBack();
+        }
+        // return redirect()->back()->with('success', 'Registration successful');
         //return redirect()->route('login')->with('success','Registered Successfully!');
     }
 

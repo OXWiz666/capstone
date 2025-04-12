@@ -3,9 +3,14 @@ import { Link, usePage, Head, useForm } from "@inertiajs/react";
 import LoginLayout from "@/Layouts/LoginLayout";
 import { toast } from "react-toastify";
 import NavLink from "@/Components/NavLink";
-import { EnvelopeClosedIcon, LockClosedIcon, Cross2Icon, ArrowLeftIcon } from "@radix-ui/react-icons";
+import {
+    EnvelopeClosedIcon,
+    LockClosedIcon,
+    Cross2Icon,
+    ArrowLeftIcon,
+} from "@radix-ui/react-icons";
 
-export default function Login2({}) {
+export default function Login2({ flash }) {
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing } = useForm({
         email: "",
@@ -30,6 +35,12 @@ export default function Login2({}) {
     //       alert_toast('Error', errors.error, 'error');
     //     }
     //   }, [errors]);
+
+    useEffect(() => {
+        if (flash) {
+            alert_toast(flash.title, flash.message, flash.icon);
+        }
+    }, [flash]);
 
     return (
         <LoginLayout>
@@ -60,7 +71,7 @@ export default function Login2({}) {
                             alt="Logo"
                         />
                         <h2 className="mt-4 text-3xl font-extrabold text-gray-900 tracking-tight">
-                            Welcome back
+                            Welcome
                         </h2>
                         <p className="mt-2 text-sm text-gray-600">
                             Sign in to your account to continue
@@ -86,7 +97,7 @@ export default function Login2({}) {
                             </div>
                         </div>
                     )}
-                    {/* {Object.keys(errors).length > 0 && (    
+                    {/* {Object.keys(errors).length > 0 && (
             <div className="bg-red-50 border-l-4 border-red-400 p-4 ro  unded-md">
               <div className="flex items-center">
                 <div className="flex-shrink-0">

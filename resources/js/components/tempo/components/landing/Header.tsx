@@ -331,7 +331,6 @@ const Header = ({
                                     Logout
                                 </Link>
                             )}
-
                         </div>
                     </nav>
                 </div>
@@ -350,9 +349,7 @@ const Header = ({
                         <li className="relative">
                             <button
                                 onClick={() =>
-                                    setServicesDropdownOpen(
-                                        (prev) => !prev
-                                    )
+                                    setServicesDropdownOpen((prev) => !prev)
                                 }
                                 className={`nav-link group inline-flex h-8 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-gray-100 hover:text-gray-900 relative ${
                                     servicesDropdownOpen
@@ -391,7 +388,7 @@ const Header = ({
                                 >
                                     <div className="space-y-2">
                                         <Link
-                                            href="#"
+                                            href="/appointments"
                                             className="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300 transform hover:translate-x-1"
                                         >
                                             <svg
@@ -416,7 +413,7 @@ const Header = ({
                                             </div>
                                         </Link>
                                         <Link
-                                            href="#"
+                                            href="/patient/medical-records"
                                             className="group flex items-center rounded-lg p-3 hover:bg-gray-50 transition-all duration-300 transform hover:translate-x-1"
                                         >
                                             <svg
@@ -461,8 +458,8 @@ const Header = ({
                                                     Seasonal Programs
                                                 </p>
                                                 <p className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
-                                                    View seasonal programs
-                                                    and availability
+                                                    View seasonal programs and
+                                                    availability
                                                 </p>
                                             </div>
                                         </Link>
@@ -528,8 +525,7 @@ const Header = ({
                                 }`}
                             >
                                 <span>
-                                    {user__.firstname}{" "}
-                                    {user__.lastname}
+                                    {user__.firstname} {user__.lastname}
                                 </span>
                                 <svg
                                     className={`ml-1 h-4 w-4 transition-transform duration-300 ${
@@ -549,7 +545,7 @@ const Header = ({
                                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50">
                                     <div className="p-2">
                                         <Link
-                                            href={route('patient.profile')}
+                                            href={route("patient.profile")}
                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300"
                                         >
                                             Profile

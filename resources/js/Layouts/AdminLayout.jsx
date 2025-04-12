@@ -5,7 +5,7 @@
 // import { Link, usePage } from "@inertiajs/react";
 // import { useState } from "react";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
 import StatisticsOverview from "@/components/tempo/admin/include/StatisticsOverview";
@@ -14,21 +14,31 @@ import ActivityFeed from "@/components/tempo/admin/include/ActivityFeed";
 import { Bell, User, Search } from "lucide-react";
 import { Button } from "@/components/tempo/components/ui/button";
 import { Input } from "@/components/tempo/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/tempo/components/ui/avatar";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/tempo/components/ui/avatar";
 import { Badge } from "@/components/tempo/components/ui/badge";
 import { usePage } from "@inertiajs/react";
 
-export default function AdminLayout({ header, children }) {
+import Sidebar2 from "@/components/tempo/doctor/include/Sidebar";
+
+export default function AdminLayout({ header, children, tools }) {
+    const role = usePage().props.auth.role;
+    // const [activePage, setActivePage] = useState("dashboard"); // Default: 'dashboard'
     return (
         <div className="flex h-screen bg-background">
             {/* Sidebar */}
-            <Sidebar />
+            {role.id == 7 ? <Sidebar /> : <Sidebar2 />}
             {/* Main Content */}
             <div className="flex-1 overflow-auto">
                 {/* Header */}
                 <header className="sticky top-0 z-10 border-b bg-white p-4 flex justify-between items-center shadow-sm">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold">Dashboard</h1>
+                        {header && (
+                            <h1 className="text-2xl font-bold">{header}</h1>
+                        )}
                         <div className="relative max-w-md hidden md:block">
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
@@ -40,6 +50,7 @@ export default function AdminLayout({ header, children }) {
                     </div>
 
                     <div className="flex items-center gap-4">
+                        {tools}
                         <Button
                             variant="ghost"
                             size="icon"
@@ -61,7 +72,8 @@ export default function AdminLayout({ header, children }) {
                             </Avatar>
                             <div className="hidden md:block">
                                 <p className="text-sm font-medium">
-                                    {usePage().props.auth.user?.firstname} {usePage().props.auth.user?.lastname}
+                                    {usePage().props.auth.user?.firstname}{" "}
+                                    {usePage().props.auth.user?.lastname}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
                                     {usePage().props.auth.role?.roletype}
@@ -71,9 +83,7 @@ export default function AdminLayout({ header, children }) {
                     </div>
                 </header>
 
-                <main className="p-6 bg-accent/20">
-                            {children}
-                </main>
+                <main className="p-6 bg-accent/20">{children}</main>
             </div>
         </div>
     );

@@ -16,7 +16,9 @@ export default function Dashboard(){
             <HeroSection/>
             <ServiceSection/>
             <BenefitSection/>
-            <TestimonialsSection/>
+            <TestimonialsSection
+            title="What Our Community Says"
+            subtitle="Hear from residents who have experienced our digital healthcare services"/>
             <ContactSection/>
             <Footer/>
         </div>
