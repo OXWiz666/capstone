@@ -12,17 +12,19 @@ import { usePage } from "@inertiajs/react";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/tempo/components/ui/avatar";
 // import { Badge } from "@/components/tempo/components/ui/badge";
 
-export default function Dashboard({}) {
+export default function Dashboard({ totalPatients, patientGrowthPercentage }) {
     const notifs = usePage().props.auth.notifications;
 
     const [activities, setActivities] = useState([]);
-    useEffect(() => {
-        console.log("notifs", notifs);
-        if (notifs) {
-            setActivities(notifs);
-        }
-    }, [notifs]);
 
+    const [patients, setPatients] = useState({
+        total: totalPatients,
+        growth: patientGrowthPercentage,
+    });
+
+    useEffect(() => {
+        console.log("notipatientsfs", patients);
+    }, [patients]);
     return (
         <AdminLayout header="Dashboard">
             {/* Main Content Area */}
@@ -45,7 +47,7 @@ export default function Dashboard({}) {
                     <h3 className="text-xl font-semibold mb-4 text-primary">
                         {/* Overview */}
                     </h3>
-                    <StatisticsOverview />
+                    <StatisticsOverview patients={patients} />
                 </section>
 
                 {/* Module Cards */}

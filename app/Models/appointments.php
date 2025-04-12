@@ -10,6 +10,16 @@ class appointments extends Model
 {
     //
     protected $table = 'appointments'; // Explicit table name if needed
+
+    protected $fillable = [
+        'user_id',
+        'phone',
+        'date',
+        'time',
+        'servicetype_id',
+        'notes'
+    ];
+
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }

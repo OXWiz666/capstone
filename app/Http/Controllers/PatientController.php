@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\appointments;
 use App\Models\servicetypes;
+use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -68,7 +71,7 @@ class PatientController extends Controller
     public function appointmentshistory(){
         $appointments =
         appointments::with(['service','user'])
-        ->where('user_id',Auth::user()->id)->paginate(5);
+        ->where('user_id',Auth::user()->id)->orderByDesc('created_at')->paginate(5);
 
         return Inertia::render('Authenticated/Patient/Appointments/AppointmentHistory',[
             'appointments' => $appointments,
@@ -83,15 +86,51 @@ class PatientController extends Controller
             'service' => 'required|exists:servicetypes,id',
             'notes' => 'required|min:10'
         ]);
+        //dd($request);
+        try{
+            DB::beginTransaction();
 
-        appointments::insert([
-            'user_id' => Auth::user()->id,
-            'phone' => $request->phone,
-            'date' => \Carbon\Carbon::parse( $request->date)->format('Y-m-d'),
-            'time' => \Carbon\Carbon::parse($request->time)->format('H:i:s'),
-            'servicetype_id' => $request->service,
-            'notes' => $request->notes,
-        ]);
+                $appoint = appointments::create([
+                    'user_id' => Auth::user()->id,
+                    'phone' => $request->phone,
+                    'date' => \Carbon\Carbon::parse( $request->date)->format('Y-m-d'),
+                    'time' => \Carbon\Carbon::parse($request->time)->format('H:i:s'),
+                    'servicetype_id' => $request->service,
+                    'notes' => $request->notes,
+                ]);
 
+                if($appoint){
+                    $appoint->load(['service','user','user.role']);
+                    $message = "Scheduled {$appoint->service->servicename} at {$appoint->date} {$appoint->time}.";
+
+                    //dd($message);
+
+                    ActivityLogger::log($message . " ({$appoint->user->firstname} {$appoint->user->lastname})",$appoint,
+                    ['ip' => $request->ip()]);
+
+                    $recipients = User::where('roleID', '7')->orWhere('roleID','1')->get();
+
+                    foreach($recipients as $recipient){
+                        $recipient->notify(new SystemNotification(
+                            $message,
+                                "{$appoint->user->firstname} {$appoint->user->lastname} ({$appoint->user->role->roletype})",
+                            "new_appointment",
+                            "#"
+                        ));
+                    }
+                }
+
+            DB::commit();
+
+            //return response()->noContent();
+        }
+        catch(\Exception $er){
+
+            //dd($er);
+            DB::rollBack();
+
+            //Log::error("Appointment creation failed: " . $e->getMessage());
+            //return redirect()->back()->with('error', 'Failed to create appointment');
+        }
     }
 }

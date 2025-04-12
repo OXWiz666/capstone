@@ -16,6 +16,7 @@ class SystemNotification extends Notification
      */
     public function __construct(
         public string $message,
+        public string $title = '',
         public string $type = 'info',
         public ?string $actionUrl = null
     )
@@ -36,6 +37,7 @@ class SystemNotification extends Notification
     public function toDatabase($notifiable){
         return [
             'message' => $this->message,
+            'title' => $this->title,
             'type' => $this->type,
             'action_url' => $this->actionUrl,
             'time' => now()->toDateTimeString(),

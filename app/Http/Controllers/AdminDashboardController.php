@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -29,9 +30,26 @@ class AdminDashboardController extends Controller
         //     'stats' => $stats,
         //     'user' => $user
         // ]);
+       $currentMonthPatients = User::where('roleID', '5')
+        ->whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->count();
+
+        // Get previous month's patients
+        $previousMonthPatients = User::where('roleID', '5')
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
+
+        // Calculate percentage change (handle division by zero)
+        $percentageChange = 0;
+        if ($previousMonthPatients > 0) {
+            $percentageChange = (($currentMonthPatients - $previousMonthPatients) / $previousMonthPatients) * 100;
+        }
 
         return Inertia::render("Authenticated/Admin/Dashboard",[
-            
+            'totalPatients' => User::where('roleID', '5')->count(),
+            'patientGrowthPercentage' => round($percentageChange, 2)
         ]);
     }
     /**

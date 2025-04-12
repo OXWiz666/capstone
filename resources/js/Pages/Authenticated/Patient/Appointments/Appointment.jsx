@@ -31,7 +31,7 @@ import {
     Shield,
 } from "lucide-react";
 import LandingLayout from "@/Layouts/LandingLayout";
-import { Head, useForm, router } from "@inertiajs/react";
+import { Head, useForm, router, Link } from "@inertiajs/react";
 import { Button } from "@/components/tempo/components/ui/button";
 
 import {
@@ -43,6 +43,7 @@ import {
 import AppointmentLayout from "../Appointments/AppointmentLayout";
 
 import Sidebar from "./Sidebar";
+import PrimaryButton from "@/components/PrimaryButton";
 export default function Appointment({ services }) {
     //const [activeTab, setActiveTab] = useState(ActiveTAB);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -183,6 +184,10 @@ export default function Appointment({ services }) {
                             </CardContent>
                         </Card>
                     )}
+
+                    <PrimaryButton className=" float-right">
+                        <Link onClick="window.location.reload()">Back</Link>
+                    </PrimaryButton>
                 </div>
             ) : (
                 <div>

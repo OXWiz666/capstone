@@ -259,15 +259,16 @@ class AuthController extends Controller
 
             if($request->isAdmin != 'true'){
 
+                $message = 'New User Created!: ' . $newUser->firstname . " " . $newUser->lastname;
 
-                ActivityLogger::log('New User Created!: ' . $newUser->firstname . " " . $newUser->lastname,
+                ActivityLogger::log($message,
                 $newUser,['ip' => $request->ip()]);
 
 
                 $admins = User::where('roleID', '7')->get();
                 foreach ($admins as $admin) {
                     $admin->notify(new SystemNotification(
-                        "New user registered: {$newUser->email}",
+                        $message,
                         'new_user',
                         '#'
                     ));

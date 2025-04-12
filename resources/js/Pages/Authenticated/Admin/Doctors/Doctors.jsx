@@ -100,6 +100,44 @@ export default function Doctors({ doctors, questions }) {
         });
     };
 
+    const getStatusBadge = (num) => {
+        if (!num) return null;
+
+        switch (num) {
+            case 1:
+                return (
+                    <Badge variant="default" className="bg-green-500">
+                        Available
+                    </Badge>
+                );
+            case 2:
+                return (
+                    <Badge
+                        variant="destructive"
+                        className=" text-white bg-gray-500"
+                    >
+                        Inactive
+                    </Badge>
+                );
+            case 3:
+                return (
+                    <Badge
+                        variant="outline"
+                        className=" text-white bg-amber-500"
+                    >
+                        On Leave
+                    </Badge>
+                );
+            case 4:
+                return (
+                    <Badge variant="outline" className="text-white bg-blue-500">
+                        In Consultation
+                    </Badge>
+                );
+            default:
+                return null;
+        }
+    };
     return (
         <>
             <AdminLayout header="Doctors" tools={tools()}>
@@ -233,7 +271,9 @@ export default function Doctors({ doctors, questions }) {
                                                         {d.user?.email}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {d.status}
+                                                        {getStatusBadge(
+                                                            d.status
+                                                        )}
                                                     </TableCell>
                                                     <TableCell>
                                                         Action

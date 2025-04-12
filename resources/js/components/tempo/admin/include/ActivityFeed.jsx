@@ -124,6 +124,7 @@ const ActivityFeed = ({
             <CardContent>
                 <ScrollArea className="h-[300px] pr-4">
                     <div className="space-y-4">
+                        {displayActivities.length < 1 && <div>No Record</div>}
                         {displayActivities.map((activity, i) => (
                             <div key={i} className="relative">
                                 <div className="flex items-start gap-4">
@@ -133,7 +134,7 @@ const ActivityFeed = ({
                                     <div className="flex-1 space-y-1">
                                         <div className="flex items-center justify-between">
                                             <p className="text-sm font-medium">
-                                                {activity.data.message}
+                                                {activity.data.title}
                                             </p>
                                             <div className="flex items-center gap-2">
                                                 {/* {getStatusBadge(activity.status)} */}
@@ -143,8 +144,8 @@ const ActivityFeed = ({
                                             </div>
                                         </div>
                                         <p className="text-sm text-muted-foreground">
-                                            description here
-                                            {/* {activity.description} */}
+                                            {/* description here */}
+                                            {activity.data.message}
                                         </p>
 
                                         {/* {activity.user && (

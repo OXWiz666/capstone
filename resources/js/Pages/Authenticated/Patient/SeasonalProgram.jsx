@@ -270,22 +270,24 @@ const SeasonalProgramDashboard = () => {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <Calendar
-                                        mode="single"
-                                        selected={selectedDate}
-                                        onSelect={setSelectedDate}
-                                        className="rounded-md border mx-auto"
-                                        modifiers={{
-                                            hasSchedule: scheduleDates,
-                                        }}
-                                        modifiersStyles={{
-                                            hasSchedule: {
-                                                fontWeight: "bold",
-                                                backgroundColor:
-                                                    "rgba(59, 130, 246, 0.1)",
-                                            },
-                                        }}
-                                    />
+                                    <div className="w-[340px] rounded-md border">
+                                        <Calendar
+                                            mode="single"
+                                            selected={selectedDate}
+                                            onSelect={setSelectedDate}
+                                            className="rounded-md border mx-auto"
+                                            modifiers={{
+                                                hasSchedule: scheduleDates,
+                                            }}
+                                            modifiersStyles={{
+                                                hasSchedule: {
+                                                    fontWeight: "bold",
+                                                    backgroundColor:
+                                                        "rgba(59, 130, 246, 0.1)",
+                                                },
+                                            }}
+                                        />
+                                    </div>
                                     <div className="mt-4 flex items-center justify-center gap-4">
                                         <div className="flex items-center">
                                             <div className="w-3 h-3 rounded-full bg-blue-100 mr-2"></div>
