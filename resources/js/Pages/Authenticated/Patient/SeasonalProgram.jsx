@@ -14,7 +14,6 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/tempo/components/ui/tabs";
-import { Calendar } from "@/components/tempo/components/ui/calendar";
 import { Badge } from "@/components/tempo/components/ui/badge";
 import { Separator } from "@/components/tempo/components/ui/separator";
 import { Progress } from "@/components/tempo/components/ui/progress";
@@ -33,6 +32,7 @@ import {
     Stethoscope,
 } from "lucide-react";
 import LandingLayout from "@/Layouts/LandingLayout";
+import CustomCalendar from "@/components/CustomCalendar";
 
 const SeasonalProgramDashboard = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -270,22 +270,11 @@ const SeasonalProgramDashboard = () => {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="w-[340px] rounded-md border">
-                                        <Calendar
-                                            mode="single"
-                                            selected={selectedDate}
-                                            onSelect={setSelectedDate}
-                                            className="rounded-md border mx-auto"
-                                            modifiers={{
-                                                hasSchedule: scheduleDates,
-                                            }}
-                                            modifiersStyles={{
-                                                hasSchedule: {
-                                                    fontWeight: "bold",
-                                                    backgroundColor:
-                                                        "rgba(59, 130, 246, 0.1)",
-                                                },
-                                            }}
+                                    <div className="flex flex-col items-center">
+                                        <CustomCalendar
+                                            selectedDate={selectedDate}
+                                            onDateSelect={setSelectedDate}
+                                            hasPrograms={scheduleDates}
                                         />
                                     </div>
                                     <div className="mt-4 flex items-center justify-center gap-4">
