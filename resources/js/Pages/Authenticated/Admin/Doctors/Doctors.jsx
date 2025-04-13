@@ -43,7 +43,17 @@ import Modal2 from "@/components/CustomModal";
 
 import AdminLayout from "@/Layouts/AdminLayout";
 import PrimaryButton from "@/components/PrimaryButton";
+import { Dropdown } from "react-day-picker";
 
+import Label from "@/components/InputLabel";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/tempo/components/ui/dialog";
 export default function Doctors({ doctors, questions }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -138,6 +148,13 @@ export default function Doctors({ doctors, questions }) {
                 return null;
         }
     };
+
+    const [view, setIsView] = useState(false);
+
+    const CloseModalView = (e) => {
+        setIsView(false);
+    };
+
     return (
         <>
             <AdminLayout header="Doctors" tools={tools()}>
@@ -276,7 +293,14 @@ export default function Doctors({ doctors, questions }) {
                                                         )}
                                                     </TableCell>
                                                     <TableCell>
-                                                        Action
+                                                        <PrimaryButton
+                                                            className=" btn-sm"
+                                                            onClick={() =>
+                                                                setIsView(true)
+                                                            }
+                                                        >
+                                                            Edit
+                                                        </PrimaryButton>
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
@@ -811,6 +835,44 @@ export default function Doctors({ doctors, questions }) {
                         >
                             Register
                         </PrimaryButton>
+                    </form>
+                </Modal2>
+
+                <Modal2 isOpen={view} maxWidth="sm" onClose={CloseModalView}>
+                    <form onSubmit={handleSubmit}>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                    htmlFor="supplier"
+                                    className="text-right"
+                                >
+                                    Status
+                                </Label>
+                                <Select value="act">
+                                    <SelectTrigger className="col-span-3">
+                                        <SelectValue placeholder="Select supplier" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="act">
+                                            Active
+                                        </SelectItem>
+                                        <SelectItem>Inactive</SelectItem>
+                                        <SelectItem>In Consultation</SelectItem>
+                                        <SelectItem>On Leave</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={CloseModalView}
+                            >
+                                Cancel
+                            </Button>
+                            <Button type="submit">Save</Button>
+                        </DialogFooter>
                     </form>
                 </Modal2>
             </AdminLayout>

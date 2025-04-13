@@ -67,14 +67,14 @@ const Sidebar = ({ activePage, userRole = "Admin" }) => {
             id: "programs",
             roles: ["Admin", "Doctor"],
         },
-        {
-            title: "Inventory",
-            icon: <Package className="h-5 w-5" />,
-            route: "admin.inventory",
-            path: "/admin/inventory",
-            id: "inventory",
-            roles: ["Admin", "Pharmacist"],
-        },
+        // {
+        //     title: "Inventory",
+        //     icon: <Package className="h-5 w-5" />,
+        //     route: "admin.inventory",
+        //     path: "/admin/inventory",
+        //     id: "inventory",
+        //     roles: ["Admin", "Pharmacist"],
+        // },
         {
             title: "Reports",
             icon: <BarChart3 className="h-5 w-5" />,

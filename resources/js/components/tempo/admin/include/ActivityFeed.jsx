@@ -25,6 +25,9 @@ import {
     Calendar,
 } from "lucide-react";
 
+// utils/formatTime.js
+import moment from "moment";
+
 // interface ActivityItem {
 //   id: string;
 //   type:
@@ -139,7 +142,9 @@ const ActivityFeed = ({
                                             <div className="flex items-center gap-2">
                                                 {/* {getStatusBadge(activity.status)} */}
                                                 <span className="text-xs text-muted-foreground">
-                                                    {activity.data.time}
+                                                    {moment(
+                                                        activity.created_at
+                                                    ).format("h:mm A")}
                                                 </span>
                                             </div>
                                         </div>

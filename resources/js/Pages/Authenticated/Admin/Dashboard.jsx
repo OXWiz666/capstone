@@ -15,7 +15,7 @@ import { usePage } from "@inertiajs/react";
 export default function Dashboard({ totalPatients, patientGrowthPercentage }) {
     const notifs = usePage().props.auth.notifications;
 
-    const [activities, setActivities] = useState([]);
+    const [activities, setActivities] = useState(notifs);
 
     const [patients, setPatients] = useState({
         total: totalPatients,
@@ -23,8 +23,8 @@ export default function Dashboard({ totalPatients, patientGrowthPercentage }) {
     });
 
     useEffect(() => {
-        console.log("notipatientsfs", patients);
-    }, [patients]);
+        console.log("notipatientsfs", notifs);
+    }, [notifs]);
     return (
         <AdminLayout header="Dashboard">
             {/* Main Content Area */}

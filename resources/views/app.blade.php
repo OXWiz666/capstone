@@ -96,13 +96,27 @@
 
 
     <script>
-        window.alert_toast = function(title, text, icon = 'success') {
-            Swal.fire({
+        window.alert_toast = async function(
+            title,
+            text,
+            icon = 'success',
+            showCancelButton = false,
+            confirmText = 'Confirm',
+            confirmButtonColor = '#3085d6',
+            cancelButtonColor = '#d33'
+        ) {
+            const result = await Swal.fire({
                 title: title,
                 text: text,
-                icon: icon
+                icon: icon,
+                showCancelButton: showCancelButton,
+                confirmButtonColor: confirmButtonColor,
+                cancelButtonColor: cancelButtonColor,
+                confirmButtonText: confirmText
             });
-        }
+
+            return result.isConfirmed;
+        };
     </script>
 </body>
 

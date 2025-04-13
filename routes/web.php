@@ -88,7 +88,7 @@ Route::middleware(['auth','Admin'])->group(function(){
 
 
         Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
-        Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
+
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
         Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
 

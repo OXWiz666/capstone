@@ -24,6 +24,7 @@ import { cn } from "@/components/tempo/lib/utils"; //
 // At the top with other imports
 import { addDays } from "date-fns";
 import { usePage, useForm } from "@inertiajs/react";
+import CustomCalendar from "@/components/CustomCalendar";
 
 const AppointmentForm = ({
     onSubmit = () => {},
@@ -190,6 +191,10 @@ const AppointmentForm = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <Label>Appointment Date</Label>
+                        {/* <CustomCalendar
+                            selectedDate={formData.date}
+                            onDateSelect={handleDateChange}
+                        /> */}
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button

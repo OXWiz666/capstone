@@ -62,19 +62,28 @@ export default function Appointment({ services }) {
             gender: "",
             birth: "",
         });
-    const handleSubmit = (data) => {
+    async function handleSubmit(data) {
         // In a real application, you would send this data to your backend
         setData(data);
         console.log("Appointment data submitted:", data);
-        post(route("patient.appoint.create"), {
-            onSuccess: () => {
-                setIsSubmitted(true);
-            },
-            onFinish: () => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            },
-        });
-    };
+
+        const isConfirmed = await alert_toast(
+            "Confirmation",
+            "Are you sure you want to confirm this appointment?",
+            "warning", // Note: lowercase 'warning'
+            true
+        );
+        if (isConfirmed) {
+            post(route("patient.appoint.create"), {
+                onSuccess: () => {
+                    setIsSubmitted(true);
+                },
+                onFinish: () => {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                },
+            });
+        }
+    }
 
     return (
         <AppointmentLayout>

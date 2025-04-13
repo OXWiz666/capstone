@@ -92,6 +92,7 @@ const ProfilePage = ({ errors }) => {
     const { data, setData, post, patch, processing, recentlySuccessful } =
         useForm({
             firstname: user__.firstname,
+            middlename: user__.middlename,
             lastname: user__.lastname,
             email: user__.email,
             avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=juan",
@@ -390,7 +391,7 @@ const ProfilePage = ({ errors }) => {
                                         className="space-y-4"
                                     >
                                         <form onSubmit={handleSubmit}>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-3 gap-4">
                                                 <div className="space-y-2">
                                                     <Label htmlFor="name">
                                                         First Name
@@ -398,6 +399,18 @@ const ProfilePage = ({ errors }) => {
                                                     <Input
                                                         id="firstname"
                                                         value={data.firstname}
+                                                        onChange={handleChange}
+                                                        disabled={!isEditing}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="middlename">
+                                                        Middle Name
+                                                    </Label>
+                                                    <Input
+                                                        id="middlename"
+                                                        value={data.middlename}
                                                         onChange={handleChange}
                                                         disabled={!isEditing}
                                                         required
@@ -415,6 +428,8 @@ const ProfilePage = ({ errors }) => {
                                                         required
                                                     />
                                                 </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 mt-2 md:grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <Label htmlFor="email">
                                                         Email
