@@ -195,7 +195,7 @@ export default function Appointment({ services }) {
                     )}
 
                     <PrimaryButton className=" float-right">
-                        <Link onClick="window.location.reload()">Back</Link>
+                        <Link href="/appointments">Back</Link>
                     </PrimaryButton>
                 </div>
             ) : (

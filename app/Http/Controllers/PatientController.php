@@ -91,7 +91,7 @@ class PatientController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:h:i A',
             'service' => 'required|exists:servicetypes,id',
-            'notes' => 'required|min:10'
+            //'notes' => 'required|min:10'
         ]);
         //dd($request);
         try{
@@ -103,7 +103,7 @@ class PatientController extends Controller
                     'date' => \Carbon\Carbon::parse( $request->date)->format('Y-m-d'),
                     'time' => \Carbon\Carbon::parse($request->time)->format('H:i:s'),
                     'servicetype_id' => $request->service,
-                    'notes' => $request->notes,
+                    //'notes' => $request->notes,
                 ]);
 
                 if($appoint){

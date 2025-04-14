@@ -310,7 +310,7 @@ const AppointmentForm = ({
                     <InputError message={errors.service} />
                 </div>
 
-                <div>
+                {/* <div>
                     <Label htmlFor="notes">Additional Notes</Label>
                     <Textarea
                         id="notes"
@@ -321,7 +321,7 @@ const AppointmentForm = ({
                         className="min-h-[100px]"
                     />
                     <InputError message={errors.notes} />
-                </div>
+                </div> */}
             </div>
 
             {usePage().props.auth.user ? (
