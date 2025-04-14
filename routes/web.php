@@ -91,6 +91,7 @@ Route::middleware(['auth','Admin'])->group(function(){
 
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
         Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
+        Route::post('/doctors/update-status/{id}',[DoctorsController::class,'updateStatus'])->name('doctor.update.status');
 
 
         Route::post('/register', [AuthController::class, 'register'])->name('register.submit');

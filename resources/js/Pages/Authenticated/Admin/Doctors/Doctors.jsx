@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/react";
+import axios from 'axios';
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
+import { toast } from "react-toastify";
 import {
     Search,
     Filter,
@@ -54,8 +56,29 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/tempo/components/ui/dialog";
+
+// Helper function for toast notifications
+const alert_toast = (title, message, type) => {
+    toast[type](message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+    });
+};
+
 export default function Doctors({ doctors, questions }) {
+    const { flash } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Handle flash messages from the server
+    useEffect(() => {
+        if (flash && flash.message) {
+            alert_toast(flash.title, flash.message, flash.icon);
+        }
+    }, [flash]);
 
     const tools = () => {
         return (
@@ -110,21 +133,58 @@ export default function Doctors({ doctors, questions }) {
         });
     };
 
-    const getStatusBadge = (num) => {
-        if (!num) return null;
+    // State for the selected doctor and status
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(1);
 
-        switch (num) {
+    // Function to open the status change modal
+    const openStatusModal = (doctor) => {
+        setSelectedDoctor(doctor);
+        setSelectedStatus(doctor.status);
+        setIsView(true);
+    };
+
+    // Function to update doctor status
+    const updateDoctorStatus = (e) => {
+        e.preventDefault();
+        console.log('Updating doctor status:', selectedDoctor.id, 'to', selectedStatus);
+        
+        // Use Axios directly for a simpler approach
+        axios.post(route("doctor.update.status", { id: selectedDoctor.id }), {
+            status: selectedStatus
+        })
+        .then(response => {
+            console.log('Status updated successfully', response);
+            CloseModalView();
+            alert_toast("Success!", "Status updated successfully!", "success");
+            // Reload the page to see the updated status
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error updating status:', error);
+            alert_toast("Error!", "Failed to update status. Please try again.", "error");
+        });
+    };
+    const getStatusBadge = (doctor) => {
+        if (!doctor || !doctor.status) return null;
+        
+        const status = doctor.status;
+
+        switch (status) {
             case 1:
                 return (
-                    <Badge variant="default" className="bg-green-500">
+                    <Badge
+                        variant="solid"
+                        className="bg-green-500 text-white rounded-full px-4 py-2 text-sm font-semibold"
+                    >
                         Available
                     </Badge>
                 );
             case 2:
                 return (
                     <Badge
-                        variant="destructive"
-                        className=" text-white bg-gray-500"
+                        variant="outline"
+                        className="text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm font-semibold"
                     >
                         Inactive
                     </Badge>
@@ -133,14 +193,17 @@ export default function Doctors({ doctors, questions }) {
                 return (
                     <Badge
                         variant="outline"
-                        className=" text-white bg-amber-500"
+                        className="text-amber-700 bg-amber-200 border border-amber-300 rounded-full px-4 py-2 text-sm font-semibold"
                     >
                         On Leave
                     </Badge>
                 );
             case 4:
                 return (
-                    <Badge variant="outline" className="text-white bg-blue-500">
+                    <Badge
+                        variant="outline"
+                        className="text-blue-700 bg-blue-200 border border-blue-300 rounded-full px-4 py-2 text-sm font-semibold"
+                    >
                         In Consultation
                     </Badge>
                 );
@@ -153,6 +216,8 @@ export default function Doctors({ doctors, questions }) {
 
     const CloseModalView = (e) => {
         setIsView(false);
+        if (e) e.stopPropagation();
+        setSelectedDoctor(null);
     };
 
     return (
@@ -288,16 +353,12 @@ export default function Doctors({ doctors, questions }) {
                                                         {d.user?.email}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {getStatusBadge(
-                                                            d.status
-                                                        )}
+                                                        {getStatusBadge(d)}
                                                     </TableCell>
                                                     <TableCell>
                                                         <PrimaryButton
                                                             className=" btn-sm"
-                                                            onClick={() =>
-                                                                setIsView(true)
-                                                            }
+                                                            onClick={() => openStatusModal(d)}
                                                         >
                                                             Edit
                                                         </PrimaryButton>
@@ -503,9 +564,7 @@ export default function Doctors({ doctors, questions }) {
                                         >
                                             <path
                                                 fillRule="evenodd"
-                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                clipRule="evenodd"
-                                            />
+                                                d="M6 2a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                                         </svg>
                                     </div>
                                     <input
@@ -839,26 +898,29 @@ export default function Doctors({ doctors, questions }) {
                 </Modal2>
 
                 <Modal2 isOpen={view} maxWidth="sm" onClose={CloseModalView}>
-                    <form onSubmit={handleSubmit}>
+                    <div className="py-4">
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label
-                                    htmlFor="supplier"
+                                    htmlFor="status"
                                     className="text-right"
                                 >
                                     Status
                                 </Label>
-                                <Select value="act">
+                                <Select 
+                                    value={selectedStatus?.toString()} 
+                                    onValueChange={(value) => setSelectedStatus(parseInt(value))}
+                                >
                                     <SelectTrigger className="col-span-3">
-                                        <SelectValue placeholder="Select supplier" />
+                                        <SelectValue placeholder="Select status" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="act">
-                                            Active
+                                        <SelectItem value="1">
+                                            Available
                                         </SelectItem>
-                                        <SelectItem>Inactive</SelectItem>
-                                        <SelectItem>In Consultation</SelectItem>
-                                        <SelectItem>On Leave</SelectItem>
+                                        <SelectItem value="2">Inactive</SelectItem>
+                                        <SelectItem value="4">In Consultation</SelectItem>
+                                        <SelectItem value="3">On Leave</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -871,9 +933,14 @@ export default function Doctors({ doctors, questions }) {
                             >
                                 Cancel
                             </Button>
-                            <Button type="submit">Save</Button>
+                            <Button 
+                                type="button"
+                                onClick={updateDoctorStatus}
+                            >
+                                Save
+                            </Button>
                         </DialogFooter>
-                    </form>
+                    </div>
                 </Modal2>
             </AdminLayout>
         </>
