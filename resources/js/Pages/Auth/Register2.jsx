@@ -14,6 +14,7 @@ import { CalendarIcon, Clock } from "lucide-react";
 export default function Register({ roles, questions, errors }) {
     const { data, setData, post, processing } = useForm({
         first_name: "",
+        middlename: "",
         last_name: "",
         contactNumber: "",
         email: "",
@@ -23,6 +24,7 @@ export default function Register({ roles, questions, errors }) {
         securityAnswer: "",
         gender: "",
         birth: "",
+        isAdmin: "false",
     });
 
     const [showPositionDropdown, setShowPositionDropdown] = useState(false);
@@ -122,6 +124,46 @@ export default function Register({ roles, questions, errors }) {
                                         onChange={(e) =>
                                             setData(
                                                 "first_name",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Middle Name */}
+                            <div>
+                                <label
+                                    htmlFor="first_name"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Middle Name
+                                </label>
+                                <div className="mt-1 relative rounded-md shadow-sm">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg
+                                            className="h-5 w-5 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="middlename"
+                                        name="middlename"
+                                        placeholder="ex. Mezuko"
+                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                                        value={data.middlename}
+                                        onChange={(e) =>
+                                            setData(
+                                                "middlename",
                                                 e.target.value
                                             )
                                         }
@@ -269,7 +311,7 @@ export default function Register({ roles, questions, errors }) {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">
-                                    Gender
+                                    Sex
                                 </label>
                                 <div className="mt-1 relative rounded-md shadow-sm">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -296,7 +338,7 @@ export default function Register({ roles, questions, errors }) {
                                         }
                                     >
                                         <option value="" disabled hidden>
-                                            Select Gender
+                                            Select
                                         </option>
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>

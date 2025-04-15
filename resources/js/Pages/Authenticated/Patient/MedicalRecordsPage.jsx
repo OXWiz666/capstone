@@ -273,7 +273,7 @@ const MedicalRecordsPage = () => {
                                         <Shield className="mr-2 h-5 w-5" />
                                         Immunization Records
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         variant={
                                             activeTab === "vitals"
                                                 ? "secondary"
@@ -285,7 +285,7 @@ const MedicalRecordsPage = () => {
                                     >
                                         <Activity className="mr-2 h-5 w-5" />
                                         Vital Signs History
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             </CardContent>
                             <CardFooter>
@@ -313,9 +313,10 @@ const MedicalRecordsPage = () => {
                                                 ? "Medical Records"
                                                 : activeTab === "lab"
                                                 ? "Laboratory Results"
-                                                : activeTab === "immunizations"
-                                                ? "Immunization Records"
-                                                : "Vital Signs History"}
+                                                    ? activeTab ===
+                                                      "immunizations"
+                                                    : "Immunization Records"
+                                                : ""}
                                         </CardTitle>
                                         <CardDescription>
                                             {activeTab === "records"
@@ -372,9 +373,9 @@ const MedicalRecordsPage = () => {
                                         <TabsTrigger value="immunizations">
                                             Immunizations
                                         </TabsTrigger>
-                                        <TabsTrigger value="vitals">
+                                        {/* <TabsTrigger value="vitals">
                                             Vital Signs
-                                        </TabsTrigger>
+                                        </TabsTrigger> */}
                                     </TabsList>
 
                                     <TabsContent

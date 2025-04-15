@@ -26,6 +26,7 @@ class PatientController extends Controller
     public function update(Request $request){
         $cred = $request->validate([
             'firstname' => 'required|min:3',
+            'middlename' => 'required|min:3',
             'lastname' => 'required|min:3',
             'email' => [
                 'required',
@@ -44,16 +45,22 @@ class PatientController extends Controller
             'gender' => "required|in:M,F"
         ]);
 
-        User::where('id',Auth::user()->id)->update([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
-            'contactno' => $request->phone,
-            'address' => $request->address,
-            'birth' => $request->birthdate,
-            'bloodtype' => $request->bloodType,
-            'gender' => $request->gender
-        ]);
+        $user = User::find(Auth::user()->id);
+        if($user){
+            $user->update([
+                'firstname' => $request->firstname,
+                'middlename' => $request->middlename,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'contactno' => $request->phone,
+                'address' => $request->address,
+                'birth' => $request->birthdate,
+                'bloodtype' => $request->bloodType,
+                'gender' => $request->gender
+            ]);
+        }
+
+        ActivityLogger::log("User updated profile information.",$user,['ip',request()->ip()]);
     }
 
     public function medicalrecords(){
@@ -84,7 +91,7 @@ class PatientController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:h:i A',
             'service' => 'required|exists:servicetypes,id',
-            'notes' => 'required|min:10'
+            //'notes' => 'required|min:10'
         ]);
         //dd($request);
         try{
@@ -96,12 +103,13 @@ class PatientController extends Controller
                     'date' => \Carbon\Carbon::parse( $request->date)->format('Y-m-d'),
                     'time' => \Carbon\Carbon::parse($request->time)->format('H:i:s'),
                     'servicetype_id' => $request->service,
-                    'notes' => $request->notes,
+                    //'notes' => $request->notes,
                 ]);
 
                 if($appoint){
                     $appoint->load(['service','user','user.role']);
-                    $message = "Scheduled {$appoint->service->servicename} at {$appoint->date} {$appoint->time}.";
+                    $time = \Carbon\Carbon::parse($appoint->time)->format('H:m A');
+                    $message = "Scheduled {$appoint->service->servicename} at {$appoint->date} {$time}.";
 
                     //dd($message);
 

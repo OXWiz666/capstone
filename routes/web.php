@@ -34,7 +34,7 @@ use Inertia\Inertia;
 Route::middleware(['Guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+
     Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
@@ -43,6 +43,10 @@ Route::middleware(['Guest'])->group(function () {
     Route::get('/forgotpw-post/reset/{token}',[AuthController::class,'showResetPassword'])->name('forgotpw.reset.get');
 
     Route::post('/forgotpw/reset/{token}',[AuthController::class,'ResetPassword'])->name('forgotpw.reset.post');
+});
+
+Route::middleware(['AdminGuest'])->group(function (){
+    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 });
 
 Route::middleware(['GuestOrPatient'])->group(function () {
@@ -88,12 +92,13 @@ Route::middleware(['auth','Admin'])->group(function(){
 
 
         Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
-        Route::get('/inventory',[InventoryController::class,'index'])->name('admin.inventory');
+
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
         Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
+        Route::post('/doctors/update-status/{id}',[DoctorsController::class,'updateStatus'])->name('doctor.update.status');
 
-
-        Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+        Route::post('/registerdoctor/create',[AuthController::class,'registerDoctor'])->name('admin.register.doctor');
+        //Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     });
 });
 

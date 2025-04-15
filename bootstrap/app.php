@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminDoctorMiddleware;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AdminOrGuest;
 use App\Http\Middleware\DoctorMiddleware;
 use App\Http\Middleware\GuestMiddleware;
 use Illuminate\Foundation\Application;
@@ -43,7 +44,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'Pharmacist' => PharmacistMiddleware::class,
             'Patient' => PatientMiddlware::class,
             'Admin' => AdminMiddleware::class,
-            'AdminDoctor' => AdminDoctorMiddleware::class
+            'AdminDoctor' => AdminDoctorMiddleware::class,
+            'AdminGuest' => AdminOrGuest::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

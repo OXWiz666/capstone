@@ -42,6 +42,14 @@ class AdminDashboardController extends Controller
             ->count();
 
         // Calculate percentage change (handle division by zero)
+        $past = $previousMonthPatients;
+        $current = $currentMonthPatients;
+
+        // $growth = 0;
+        // if ($past > 0){
+        //     $growth = (((($current - $past) / $past) * 100) / $past) * 100;
+        // }
+
         $percentageChange = 0;
         if ($previousMonthPatients > 0) {
             $percentageChange = (($currentMonthPatients - $previousMonthPatients) / $previousMonthPatients) * 100;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     Card,
     CardContent,
@@ -24,6 +24,10 @@ import {
     AlertTriangle,
     Calendar,
 } from "lucide-react";
+
+// utils/formatTime.js
+import moment from "moment";
+import PrimaryButton from "@/components/PrimaryButton";
 
 // interface ActivityItem {
 //   id: string;
@@ -116,6 +120,11 @@ const ActivityFeed = ({
 }) => {
     const displayActivities = activities; //activities.slice(0, maxItems);
 
+    useEffect(() => {
+        if (displayActivities) {
+            console.log(displayActivities);
+        }
+    }, [displayActivities]);
     return (
         <Card className="w-full bg-white border-r-4 border-r-primary">
             <CardHeader className="pb-2">
@@ -138,8 +147,16 @@ const ActivityFeed = ({
                                             </p>
                                             <div className="flex items-center gap-2">
                                                 {/* {getStatusBadge(activity.status)} */}
+                                                {activity.data.type ==
+                                                    "new_appointment" && (
+                                                    <PrimaryButton>
+                                                        Reschedule
+                                                    </PrimaryButton>
+                                                )}
                                                 <span className="text-xs text-muted-foreground">
-                                                    {activity.data.time}
+                                                    {moment(
+                                                        activity.created_at
+                                                    ).format("h:mm A")}
                                                 </span>
                                             </div>
                                         </div>

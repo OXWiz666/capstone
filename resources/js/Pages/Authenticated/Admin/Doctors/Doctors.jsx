@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/react";
+import axios from "axios";
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
+import { toast } from "react-toastify";
 import {
     Search,
     Filter,
@@ -43,9 +45,40 @@ import Modal2 from "@/components/CustomModal";
 
 import AdminLayout from "@/Layouts/AdminLayout";
 import PrimaryButton from "@/components/PrimaryButton";
+import { Dropdown } from "react-day-picker";
+
+import Label from "@/components/InputLabel";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/tempo/components/ui/dialog";
+
+// Helper function for toast notifications
+const alert_toast = (title, message, type) => {
+    toast[type](message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+    });
+};
 
 export default function Doctors({ doctors, questions }) {
+    const { flash } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Handle flash messages from the server
+    useEffect(() => {
+        if (flash && flash.message) {
+            alert_toast(flash.title, flash.message, flash.icon);
+        }
+    }, [flash]);
 
     const tools = () => {
         return (
@@ -61,20 +94,21 @@ export default function Doctors({ doctors, questions }) {
             </>
         );
     };
+
     const { data, setData, post, processing, errors, clearErrors, reset } =
         useForm({
             first_name: "",
+            middlename: "",
             last_name: "",
             contactNumber: "",
             email: "",
             password: "",
             confirmPassword: "",
-            securityQuestion: "",
-            securityAnswer: "",
             gender: "",
             birth: "",
             isAdmin: "true",
         });
+
     const OpenModal = (e) => {
         setIsModalOpen(true);
     };
@@ -92,29 +126,83 @@ export default function Doctors({ doctors, questions }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         //alert("wew");
-        post(route("register.submit"), {
+        post(route("admin.register.doctor"), {
             onSuccess: (r) => {
                 CloseModal();
-                alert_toast("Success!", "Registered Successfully!", "success");
+                alert_toast(
+                    "Success!",
+                    "Doctor has been registered successfully!",
+                    "success"
+                );
+            },
+        });
+    };
+    // State for the selected doctor and status
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(1);
+
+    // Function to open the status change modal
+    const openStatusModal = (doctor) => {
+        setDataDoctor("status", doctor.status.toString());
+        setSelectedDoctor(doctor);
+        setSelectedStatus(doctor.status);
+        setIsView(true);
+    };
+
+    const {
+        data: dataDoctor,
+        setData: setDataDoctor,
+        post: postDoctor,
+        processing: processingDoctor,
+        errors: errorsDoctor,
+        clearErrors: clearErrDoctor,
+        reset: resetDoctor,
+    } = useForm({
+        status: "",
+    });
+
+    const CloseModalView = (e) => {
+        setIsView(false);
+        //if (e) e.stopPropagation();
+        //setSelectedDoctor(null);
+    };
+    // Function to update doctor status
+    const updateDoctorStatus = (e) => {
+        e.preventDefault();
+        //console.log(dataDoctor, selectedStatus);
+
+        postDoctor(route("doctor.update.status", { id: selectedDoctor.id }), {
+            onSuccess: (res) => {
+                CloseModalView();
+                alert_toast(
+                    "Success!",
+                    "Doctor status updated successfully",
+                    "success"
+                );
             },
         });
     };
 
-    const getStatusBadge = (num) => {
-        if (!num) return null;
+    const getStatusBadge = (doctor) => {
+        if (!doctor || !doctor.status) return null;
 
-        switch (num) {
+        const status = doctor.status;
+
+        switch (status) {
             case 1:
                 return (
-                    <Badge variant="default" className="bg-green-500">
+                    <Badge
+                        variant="solid"
+                        className="bg-green-500 text-white rounded-full px-4 py-2 text-sm font-semibold"
+                    >
                         Available
                     </Badge>
                 );
             case 2:
                 return (
                     <Badge
-                        variant="destructive"
-                        className=" text-white bg-gray-500"
+                        variant="outline"
+                        className="text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm font-semibold"
                     >
                         Inactive
                     </Badge>
@@ -123,14 +211,17 @@ export default function Doctors({ doctors, questions }) {
                 return (
                     <Badge
                         variant="outline"
-                        className=" text-white bg-amber-500"
+                        className="text-amber-700 bg-amber-200 border border-amber-300 rounded-full px-4 py-2 text-sm font-semibold"
                     >
                         On Leave
                     </Badge>
                 );
             case 4:
                 return (
-                    <Badge variant="outline" className="text-white bg-blue-500">
+                    <Badge
+                        variant="outline"
+                        className="text-blue-700 bg-blue-200 border border-blue-300 rounded-full px-4 py-2 text-sm font-semibold"
+                    >
                         In Consultation
                     </Badge>
                 );
@@ -138,6 +229,9 @@ export default function Doctors({ doctors, questions }) {
                 return null;
         }
     };
+
+    const [view, setIsView] = useState(false);
+
     return (
         <>
             <AdminLayout header="Doctors" tools={tools()}>
@@ -271,12 +365,19 @@ export default function Doctors({ doctors, questions }) {
                                                         {d.user?.email}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {getStatusBadge(
-                                                            d.status
-                                                        )}
+                                                        {getStatusBadge(d)}
                                                     </TableCell>
                                                     <TableCell>
-                                                        Action
+                                                        <PrimaryButton
+                                                            className=" btn-sm"
+                                                            onClick={() =>
+                                                                openStatusModal(
+                                                                    d
+                                                                )
+                                                            }
+                                                        >
+                                                            Edit
+                                                        </PrimaryButton>
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
@@ -352,6 +453,46 @@ export default function Doctors({ doctors, questions }) {
                                         onChange={(e) =>
                                             setData(
                                                 "first_name",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            {/* First Name */}
+                            <div>
+                                <label
+                                    htmlFor="middle_name"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Middle Name
+                                </label>
+                                <div className="mt-1 relative rounded-md shadow-sm">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg
+                                            className="h-5 w-5 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="middlename"
+                                        name="middlename"
+                                        placeholder="ex. Juan"
+                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                                        value={data.middlename}
+                                        onChange={(e) =>
+                                            setData(
+                                                "middlename",
                                                 e.target.value
                                             )
                                         }
@@ -479,8 +620,7 @@ export default function Doctors({ doctors, questions }) {
                                         >
                                             <path
                                                 fillRule="evenodd"
-                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                clipRule="evenodd"
+                                                d="M6 2a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
                                             />
                                         </svg>
                                     </div>
@@ -627,181 +767,16 @@ export default function Doctors({ doctors, questions }) {
                             </div>
 
                             {/* Security Question Dropdown */}
-                            <div className="relative">
-                                <label
-                                    htmlFor="securityQuestion"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Security Question
-                                </label>
-                                <div className="mt-1 relative">
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowSecurityDropdown(
-                                                !showSecurityDropdown
-                                            )
-                                        }
-                                        className={`relative w-full bg-gray-50 pl-10 pr-10 py-3 text-left cursor-pointer rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 ease-in-out hover:bg-gray-100 ${
-                                            showSecurityDropdown
-                                                ? "ring-2 ring-black"
-                                                : ""
-                                        }`}
-                                    >
-                                        <span className="block truncate">
-                                            {selectedQuestion ||
-                                                "Select a security question"}
-                                        </span>
-                                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg
-                                                className="h-5 w-5 text-gray-400"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20"
-                                                fill="currentColor"
-                                            >
-                                                <path
-                                                    fillRule="evenodd"
-                                                    d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
-                                                    clipRule="evenodd"
-                                                />
-                                            </svg>
-                                        </span>
-                                        <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-                                            <svg
-                                                className={`h-5 w-5 text-gray-400 transform transition-transform duration-200 ${
-                                                    showSecurityDropdown
-                                                        ? "rotate-180"
-                                                        : ""
-                                                }`}
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20"
-                                                fill="currentColor"
-                                            >
-                                                <path
-                                                    fillRule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clipRule="evenodd"
-                                                />
-                                            </svg>
-                                        </span>
-                                    </button>
-
-                                    {showSecurityDropdown && (
-                                        <div
-                                            className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 border border-gray-200"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            <select
-                                                id="securityQuestion"
-                                                name="securityQuestion"
-                                                className="sr-only"
-                                                value={data.securityQuestion}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "securityQuestion",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            >
-                                                <option value="">
-                                                    Select a security question
-                                                </option>
-                                                {questions.map((question) => (
-                                                    <option
-                                                        key={question.id}
-                                                        value={question.id}
-                                                    >
-                                                        {question.question}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            {questions.map((question) => (
-                                                <button
-                                                    type="button"
-                                                    key={question.id}
-                                                    onClick={() => {
-                                                        setSelectedQuestion(
-                                                            question.question
-                                                        );
-                                                        setData(
-                                                            "securityQuestion",
-                                                            question.id
-                                                        );
-                                                        setShowSecurityDropdown(
-                                                            false
-                                                        );
-                                                    }}
-                                                    className={`w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors cursor-pointer flex items-center space-x-2 ${
-                                                        selectedQuestion ===
-                                                        question.question
-                                                            ? "bg-gray-50"
-                                                            : ""
-                                                    }`}
-                                                >
-                                                    <span className="flex-1">
-                                                        {question.question}
-                                                    </span>
-                                                    {selectedQuestion ===
-                                                        question.question && (
-                                                        <svg
-                                                            className="h-4 w-4 text-black"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewBox="0 0 20 20"
-                                                            fill="currentColor"
-                                                        >
-                                                            <path
-                                                                fillRule="evenodd"
-                                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                                clipRule="evenodd"
-                                                            />
-                                                        </svg>
-                                                    )}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
 
                             {/* Security Answer */}
-                            <div>
+                            {/* <div>
                                 <label
                                     htmlFor="securityAnswer"
                                     className="block text-sm font-medium text-gray-700"
                                 >
                                     Security Answer
                                 </label>
-                                <div className="mt-1 relative rounded-md shadow-sm">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg
-                                            className="h-5 w-5 text-gray-400"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        id="securityAnswer"
-                                        name="securityAnswer"
-                                        placeholder="Your answer"
-                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
-                                        value={data.securityAnswer}
-                                        onChange={(e) =>
-                                            setData(
-                                                "securityAnswer",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Submit Button */}
@@ -812,6 +787,58 @@ export default function Doctors({ doctors, questions }) {
                             Register
                         </PrimaryButton>
                     </form>
+                </Modal2>
+
+                <Modal2 isOpen={view} maxWidth="sm" onClose={CloseModalView}>
+                    <div className="py-4">
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="status" className="text-right">
+                                    Status
+                                </Label>
+                                <Select
+                                    value={dataDoctor.status}
+                                    onValueChange={(value) => {
+                                        setDataDoctor("status", value);
+                                    }}
+                                >
+                                    <SelectTrigger className="col-span-3">
+                                        <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="1">
+                                            Available
+                                        </SelectItem>
+                                        <SelectItem value="2">
+                                            Inactive
+                                        </SelectItem>
+                                        <SelectItem value="4">
+                                            In Consultation
+                                        </SelectItem>
+                                        <SelectItem value="3">
+                                            On Leave
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={CloseModalView}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="button"
+                                disabled={processingDoctor}
+                                onClick={updateDoctorStatus}
+                            >
+                                Save
+                            </Button>
+                        </DialogFooter>
+                    </div>
                 </Modal2>
             </AdminLayout>
         </>
