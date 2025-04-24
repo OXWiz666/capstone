@@ -65,7 +65,7 @@ export default function Appointment({ services }) {
     async function handleSubmit(data) {
         // In a real application, you would send this data to your backend
         setData(data);
-        console.log("Appointment data submitted:", data);
+        //console.log("Appointment data submitted:", data);
 
         const isConfirmed = await alert_toast(
             "Confirmation",

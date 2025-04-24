@@ -84,6 +84,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Scripts -->
+
+
+    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+    <script>
+        var pusher = new Pusher("524b456f84bd545d6e41", {
+            cluster: "ap1",
+        });
+    </script>
+
+
     @routes
     @viteReactRefresh
     @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])

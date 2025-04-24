@@ -94,6 +94,7 @@ const ProfilePage = ({ errors }) => {
             firstname: user__.firstname,
             middlename: user__.middlename,
             lastname: user__.lastname,
+            suffix: user__.suffix,
             email: user__.email,
             avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=juan",
             phone: user__.contactno,
@@ -101,7 +102,7 @@ const ProfilePage = ({ errors }) => {
             medicalInfo: "No known allergies. Last check-up: March 2023",
             birthdate: user__.birth,
             emergencyContact: user__.emercont?.[0]?.contactno,
-            bloodType: user__.bloodtype,
+            bloodtype: user__.bloodtype,
             allergies: "None",
             medications: "None",
             gender: user__.gender,
@@ -429,7 +430,43 @@ const ProfilePage = ({ errors }) => {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="grid grid-cols-1 mt-2 md:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 mt-2 md:grid-cols-3 gap-4">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <Label htmlFor="suffix">
+                                                            Suffix
+                                                        </Label>
+                                                        <Input
+                                                            id="suffix"
+                                                            type="text"
+                                                            value={data.suffix}
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            disabled={
+                                                                !isEditing
+                                                            }
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label htmlFor="bloodtype">
+                                                            Blood Type
+                                                        </Label>
+                                                        <Input
+                                                            id="bloodtype"
+                                                            type="text"
+                                                            value={
+                                                                data.bloodtype
+                                                            }
+                                                            onChange={
+                                                                handleChange
+                                                            }
+                                                            disabled={
+                                                                !isEditing
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <div className="space-y-2">
                                                     <Label htmlFor="email">
                                                         Email
@@ -443,6 +480,7 @@ const ProfilePage = ({ errors }) => {
                                                         required
                                                     />
                                                 </div>
+
                                                 <div className="space-y-2">
                                                     <Label htmlFor="phone">
                                                         Phone Number
@@ -498,7 +536,6 @@ const ProfilePage = ({ errors }) => {
                                                     value={data.address}
                                                     onChange={handleChange}
                                                     disabled={!isEditing}
-                                                    required
                                                 />
                                             </div>
                                             {isEditing && (

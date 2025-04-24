@@ -1,5 +1,5 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
 import {
@@ -26,15 +26,15 @@ import {
     AvatarImage,
 } from "@/components/tempo/components/ui/avatar";
 import { Badge } from "@/components/tempo/components/ui/badge";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/tempo/components/ui/table";
+// import {
+//     Table,
+//     TableBody,
+//     TableCaption,
+//     TableCell,
+//     TableHead,
+//     TableHeader,
+//     TableRow,
+// } from "@/components/tempo/components/ui/table";
 import {
     Select,
     SelectContent,
@@ -44,6 +44,17 @@ import {
 } from "@/components/tempo/components/ui/select";
 
 import Modal from "@/components/CustomModal";
+import {
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    TableCell,
+    TableCaption,
+    SortableTable,
+    SortableTableHead,
+} from "@/components/tempo/components/ui/table2";
+import { usePage, router } from "@inertiajs/react";
 
 // Mock data for appointments
 const mockAppointments = [
@@ -104,7 +115,7 @@ const mockAppointments = [
     },
 ];
 
-export default function appointments({ Appoints }) {
+export default function appointments({ Appoints, appointments_ }) {
     const [appointments, setAppointments] = useState(Appoints);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -208,6 +219,8 @@ export default function appointments({ Appoints }) {
     const closeModal = (e) => {
         setIsModalOpen(false);
     };
+
+    const { links } = usePage().props.appointments_;
     return (
         <AdminLayout header="Appointments" tools={tools()}>
             <motion.div
@@ -249,7 +262,114 @@ export default function appointments({ Appoints }) {
 
                     {/* Table */}
                     <div className="rounded-md border">
-                        <Table>
+                        {/* $appointments = appointments::get();
+        $appointments->load('user');
+        $appointments->load('service');
+        return Inertia::render('Authenticated/Admin/Appointments',[
+            'Appoints' => $appointments
+        ]); */}
+                        <SortableTable
+                            data={appointments}
+                            defaultSort={{
+                                key: "user.firstname",
+                                direction: "asc",
+                            }}
+                        >
+                            {({ sortedData }) => (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <SortableTableHead
+                                                sortKey="user.firstname"
+                                                sortable
+                                            >
+                                                Patient
+                                            </SortableTableHead>
+                                            <SortableTableHead sortKey="date">
+                                                Date & Time
+                                            </SortableTableHead>
+                                            <SortableTableHead>
+                                                Doctor
+                                            </SortableTableHead>
+                                            <SortableTableHead sortKey="service.servicename">
+                                                Purpose
+                                            </SortableTableHead>
+                                            <SortableTableHead sortKey="status">
+                                                Status
+                                            </SortableTableHead>
+                                            <SortableTableHead>
+                                                Actions
+                                            </SortableTableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {sortedData.map((aa, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-3">
+                                                        <Avatar>
+                                                            <AvatarImage
+                                                                //   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${appointment.avatar}`}
+                                                                alt={
+                                                                    aa.user
+                                                                        ?.firstname
+                                                                }
+                                                            />
+                                                            <AvatarFallback>
+                                                                {aa.user?.firstname
+                                                                    .split(" ")
+                                                                    .map(
+                                                                        (n) =>
+                                                                            n[0]
+                                                                    )
+                                                                    .join("")}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <div className="font-medium">
+                                                                {
+                                                                    aa.user
+                                                                        ?.firstname
+                                                                }{" "}
+                                                                {
+                                                                    aa.user
+                                                                        ?.lastname
+                                                                }
+                                                            </div>
+                                                            <div className="text-sm text-muted-foreground">
+                                                                {aa.user_id}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {/* moment(
+                                                                                                            activity.created_at
+                                                                                                        ).format("h:mm A") */}
+                                                    <div className="font-medium">
+                                                        {new Date(
+                                                            aa.date
+                                                        ).toLocaleDateString()}
+                                                    </div>
+                                                    <div className="text-sm text-muted-foreground">
+                                                        {aa.time}
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>Not Set</TableCell>
+                                                <TableCell>
+                                                    {aa.service?.servicename}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {getStatusBadge(aa.status)}
+                                                </TableCell>
+                                                <TableCell>Actions</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            )}
+                        </SortableTable>
+                        {/* <Table>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead
@@ -386,9 +506,38 @@ export default function appointments({ Appoints }) {
                                     </TableRow>
                                 )}
                             </TableBody>
-                        </Table>
+                        </Table> */}
                     </div>
                 </div>
+                <CardFooter>
+                    <div className="text-sm text-muted-foreground">
+                        Showing {doctors.from} to {doctors.to} of{" "}
+                        {doctors.total} Results
+                    </div>
+                    <div className="flex ml-2 space-x-2">
+                        {links.map((link, index) => (
+                            <Button
+                                key={index}
+                                variant={link.active ? "default" : "outline"}
+                                size="sm"
+                                disabled={!link.url || link.active}
+                                onClick={() => {
+                                    if (link.url) {
+                                        router.get(link.url);
+                                    }
+                                }}
+                            >
+                                {link.label.includes("Previous") ? (
+                                    <ChevronLeft className="h-4 w-4" />
+                                ) : link.label.includes("Next") ? (
+                                    <ChevronRight className="h-4 w-4" />
+                                ) : (
+                                    link.label
+                                )}
+                            </Button>
+                        ))}
+                    </div>
+                </CardFooter>
             </motion.div>
             <Modal
                 isOpen={isModalOpen}

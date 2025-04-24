@@ -38,6 +38,10 @@ import Sidebar from "./Sidebar";
 import AppointmentLayout from "../Appointments/AppointmentLayout";
 export default function AppointmentHistory({ appointments }) {
     const { links } = usePage().props.appointments; // Get pagination links
+
+    // useEffect(() => {
+    //     console.log(links);
+    // }, [links]);
     return (
         <AppointmentLayout>
             <div className="mb-8">

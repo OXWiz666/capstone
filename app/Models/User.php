@@ -35,7 +35,9 @@ class User extends Authenticatable
                 'questionID' ,
                 'answer' ,
                 'gender' ,
-                'birth'
+                'birth',
+                'suffix',
+                'bloodtype'
     ];
 
     /**
@@ -68,4 +70,6 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(roles::class,'roleID');
     }
+
+    
 }

@@ -267,61 +267,53 @@ const AppointmentForm = ({
                         <InputError message={errors.time} />
                     </div>
                 </div>
-
-                <div>
-                    <Label>Service Type</Label>
-                    <Select
-                        value={formData.service?.toString()} // Ensure string value
-                        onValueChange={(selectedId) => {
-                            const service = serviceLookup[selectedId];
-                            if (service) {
-                                handleSelectChange("service", service.id);
-                                handleSelectChange(
-                                    "servicename",
-                                    service.servicename
-                                );
-                                //  handleSelectChange("customAttr", service.customAttribute);
-                            } // handleSelectChange("servicename", selectedService?.servicename || "");
-                        }}
-                        required
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select service">
-                                {formData.service
-                                    ? services.find(
-                                          (s) =>
-                                              s.id.toString() ===
-                                              formData.service.toString()
-                                      )?.servicename
-                                    : "Select service"}
-                            </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                            {services.map((service) => (
-                                <SelectItem
-                                    key={service.id} // Use service.id as key
-                                    value={service.id} // Ensure string value
-                                >
-                                    {service.servicename}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={errors.service} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Service Type</Label>
+                        <Select
+                            value={formData.service?.toString()} // Ensure string value
+                            onValueChange={(selectedId) => {
+                                const service = serviceLookup[selectedId];
+                                if (service) {
+                                    handleSelectChange("service", service.id);
+                                    handleSelectChange(
+                                        "servicename",
+                                        service.servicename
+                                    );
+                                    //  handleSelectChange("customAttr", service.customAttribute);
+                                } // handleSelectChange("servicename", selectedService?.servicename || "");
+                            }}
+                            required
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select service">
+                                    {formData.service
+                                        ? services.find(
+                                              (s) =>
+                                                  s.id.toString() ===
+                                                  formData.service.toString()
+                                          )?.servicename
+                                        : "Select service"}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {services.map((service) => (
+                                    <SelectItem
+                                        key={service.id} // Use service.id as key
+                                        value={service.id} // Ensure string value
+                                    >
+                                        {service.servicename}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.service} />
+                    </div>
+                    <div>
+                        <Label>Service Type</Label>
+                        <Select></Select>
+                    </div>
                 </div>
-
-                {/* <div>
-                    <Label htmlFor="notes">Additional Notes</Label>
-                    <Textarea
-                        id="notes"
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                        placeholder="Please provide any additional information about your appointment request"
-                        className="min-h-[100px]"
-                    />
-                    <InputError message={errors.notes} />
-                </div> */}
             </div>
 
             {usePage().props.auth.user ? (

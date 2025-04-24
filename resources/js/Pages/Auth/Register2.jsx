@@ -16,6 +16,7 @@ export default function Register({ roles, questions, errors }) {
         first_name: "",
         middlename: "",
         last_name: "",
+        suffix: "",
         contactNumber: "",
         email: "",
         password: "",
@@ -203,6 +204,43 @@ export default function Register({ roles, questions, errors }) {
                                         value={data.last_name}
                                         onChange={(e) =>
                                             setData("last_name", e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Suffix */}
+                            <div>
+                                <label
+                                    htmlFor="last_name"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Suffix
+                                </label>
+                                <div className="mt-1 relative rounded-md shadow-sm">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg
+                                            className="h-5 w-5 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="suffix"
+                                        name="suffix"
+                                        placeholder="ex. Jr."
+                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                                        value={data.suffix}
+                                        onChange={(e) =>
+                                            setData("suffix", e.target.value)
                                         }
                                     />
                                 </div>

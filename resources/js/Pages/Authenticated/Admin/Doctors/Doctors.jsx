@@ -13,6 +13,8 @@ import {
     Download,
     AlertTriangle,
     RefreshCw,
+    ChevronLeft,
+    ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/tempo/components/ui/button";
 import { Input } from "@/components/tempo/components/ui/input";
@@ -56,6 +58,14 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/tempo/components/ui/dialog";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/tempo/components/ui/card";
 
 // Helper function for toast notifications
 const alert_toast = (title, message, type) => {
@@ -69,7 +79,7 @@ const alert_toast = (title, message, type) => {
     });
 };
 
-export default function Doctors({ doctors, questions }) {
+export default function Doctors({ doctorsitems, doctors, questions }) {
     const { flash } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -100,6 +110,7 @@ export default function Doctors({ doctors, questions }) {
             first_name: "",
             middlename: "",
             last_name: "",
+            suffix: "",
             contactNumber: "",
             email: "",
             password: "",
@@ -134,6 +145,10 @@ export default function Doctors({ doctors, questions }) {
                     "Doctor has been registered successfully!",
                     "success"
                 );
+                router.reload({
+                    only: ["auth"],
+                    preserveScroll: true,
+                });
             },
         });
     };
@@ -171,16 +186,19 @@ export default function Doctors({ doctors, questions }) {
         e.preventDefault();
         //console.log(dataDoctor, selectedStatus);
 
-        postDoctor(route("doctor.update.status", { id: selectedDoctor.id }), {
-            onSuccess: (res) => {
-                CloseModalView();
-                alert_toast(
-                    "Success!",
-                    "Doctor status updated successfully",
-                    "success"
-                );
-            },
-        });
+        postDoctor(
+            route("doctor.update.status", { doctor: selectedDoctor.id }),
+            {
+                onSuccess: (res) => {
+                    CloseModalView();
+                    alert_toast(
+                        "Success!",
+                        "Doctor status updated successfully",
+                        "success"
+                    );
+                },
+            }
+        );
     };
 
     const getStatusBadge = (doctor) => {
@@ -231,6 +249,11 @@ export default function Doctors({ doctors, questions }) {
     };
 
     const [view, setIsView] = useState(false);
+
+    const { links } = usePage().props.doctors; // Get pagination links
+    // useEffect(() => {
+    //     console.log("doctors", links);
+    // }, [links]);
 
     return (
         <>
@@ -300,7 +323,7 @@ export default function Doctors({ doctors, questions }) {
 
                         <div className="rounded-md border">
                             <SortableTable
-                                data={doctors}
+                                data={doctorsitems}
                                 defaultSort={{
                                     key: "user.firstname",
                                     direction: "asc",
@@ -387,6 +410,37 @@ export default function Doctors({ doctors, questions }) {
                             </SortableTable>
                         </div>
                     </div>
+                    <CardFooter>
+                        <div className="text-sm text-muted-foreground">
+                            Showing {doctors.from} to {doctors.to} of{" "}
+                            {doctors.total} Results
+                        </div>
+                        <div className="flex ml-2 space-x-2">
+                            {links.map((link, index) => (
+                                <Button
+                                    key={index}
+                                    variant={
+                                        link.active ? "default" : "outline"
+                                    }
+                                    size="sm"
+                                    disabled={!link.url || link.active}
+                                    onClick={() => {
+                                        if (link.url) {
+                                            router.get(link.url);
+                                        }
+                                    }}
+                                >
+                                    {link.label.includes("Previous") ? (
+                                        <ChevronLeft className="h-4 w-4" />
+                                    ) : link.label.includes("Next") ? (
+                                        <ChevronRight className="h-4 w-4" />
+                                    ) : (
+                                        link.label
+                                    )}
+                                </Button>
+                            ))}
+                        </div>
+                    </CardFooter>
                 </motion.div>
                 <Modal2 isOpen={isModalOpen} onClose={CloseModal}>
                     {Object.keys(errors).length > 0 && (
@@ -532,6 +586,43 @@ export default function Doctors({ doctors, questions }) {
                                         value={data.last_name}
                                         onChange={(e) =>
                                             setData("last_name", e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Suffix */}
+                            <div>
+                                <label
+                                    htmlFor="last_name"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Suffix
+                                </label>
+                                <div className="mt-1 relative rounded-md shadow-sm">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg
+                                            className="h-5 w-5 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="suffix"
+                                        name="suffix"
+                                        placeholder="ex. Jr."
+                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                                        value={data.suffix}
+                                        onChange={(e) =>
+                                            setData("suffix", e.target.value)
                                         }
                                     />
                                 </div>

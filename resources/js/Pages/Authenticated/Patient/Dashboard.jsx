@@ -8,9 +8,11 @@ import Footer from "@/components/tempo/components/landing/Footer";
 import { usePage } from "@inertiajs/react";
 import LandingLayout from "@/Layouts/LandingLayout";
 
+import PusherListener from "@/components/pusher";
 export default function Dashboard() {
     return (
         <LandingLayout footer={true}>
+            <PusherListener />
             <HeroSection />
             <ServiceSection />
             <BenefitSection />

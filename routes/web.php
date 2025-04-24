@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Broadcast;
 
 // Auth Routes
 
@@ -51,6 +52,7 @@ Route::middleware(['AdminGuest'])->group(function (){
 
 Route::middleware(['GuestOrPatient'])->group(function () {
     // Home Routes
+    // Route::get('/',function(){ return view('reset-pw'); });
     Route::get('/', [LandingPageController::class, 'index'])->name('home');
     Route::get('/services', [LandingPageController::class, 'services'])->name('services');
     Route::get('/about', [LandingPageController::class, 'about'])->name('about');
@@ -95,7 +97,7 @@ Route::middleware(['auth','Admin'])->group(function(){
 
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
         Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
-        Route::post('/doctors/update-status/{id}',[DoctorsController::class,'updateStatus'])->name('doctor.update.status');
+        Route::post('/doctors/update-status/{doctor}',[DoctorsController::class,'updateStatus'])->name('doctor.update.status');
 
         Route::post('/registerdoctor/create',[AuthController::class,'registerDoctor'])->name('admin.register.doctor');
         //Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
@@ -104,7 +106,7 @@ Route::middleware(['auth','Admin'])->group(function(){
 
 Route::middleware(['auth','AdminDoctor'])->group(function() {
     Route::prefix('auth')->group(function(){
-
+        Route::post('/appointments/resched/{appointment}',[AppointmentsController::class,'reschedule'])->name('admin.resched');
         Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
         Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
         Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
@@ -112,6 +114,7 @@ Route::middleware(['auth','AdminDoctor'])->group(function() {
     });
 });
 
+Broadcast::routes(['middleware' => ['web', 'auth']]); // For traditional web auth
 
 Route::middleware(['auth'])->group(function () {
     Route::match(['POST','GET'],'/logout', function (Request $request) {

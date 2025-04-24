@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
     Card,
     CardContent,
@@ -33,6 +33,9 @@ import {
 } from "lucide-react";
 import LandingLayout from "@/Layouts/LandingLayout";
 import CustomCalendar from "@/components/CustomCalendar";
+
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const SeasonalProgramDashboard = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -226,6 +229,32 @@ const SeasonalProgramDashboard = () => {
             default:
                 return "Other";
         }
+    };
+
+    const cardRef = useRef();
+
+    const [downloading, setIsDownloading] = useState(false);
+    const downloadRec = () => {
+        const input = cardRef.current;
+
+        setIsDownloading(true);
+        html2canvas(input, {
+            scale: 2, // Higher quality
+            logging: false,
+            useCORS: true,
+        })
+            .then((canvas) => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF("p", "mm", "a4");
+                const imgWidth = 210; // A4 width in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+                pdf.save("program-records.pdf");
+            })
+            .finally(() => {
+                setIsDownloading(false);
+            });
     };
 
     return (
@@ -575,7 +604,7 @@ const SeasonalProgramDashboard = () => {
                     </TabsContent>
 
                     <TabsContent value="records" className="space-y-6">
-                        <Card>
+                        <Card ref={cardRef}>
                             <CardHeader>
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div>
@@ -718,7 +747,12 @@ const SeasonalProgramDashboard = () => {
                                     </span>{" "}
                                     {programRecords.length}
                                 </div>
-                                <Button variant="outline" size="sm">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={downloadRec}
+                                    disabled={downloading}
+                                >
                                     Download Records
                                 </Button>
                             </CardFooter>

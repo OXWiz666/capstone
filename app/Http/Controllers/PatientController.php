@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendNotification;
 use App\Models\appointments;
 use App\Models\servicetypes;
 use App\Notifications\SystemNotification;
@@ -25,9 +26,9 @@ class PatientController extends Controller
 
     public function update(Request $request){
         $cred = $request->validate([
-            'firstname' => 'required|min:3',
-            'middlename' => 'required|min:3',
-            'lastname' => 'required|min:3',
+            'firstname' => 'required|min:2',
+            'middlename' => 'required|min:2',
+            'lastname' => 'required|min:2',
             'email' => [
                 'required',
                 'min:3',
@@ -39,9 +40,8 @@ class PatientController extends Controller
                 'numeric',
                 Rule::unique('users', 'contactno')->ignore(Auth::user()->id,'id')
             ],
-            'address' => 'required|min:3',
+            // 'address' => 'required|min:3',
             'birthdate' => 'required',
-            'bloodType' => 'required|min:1',
             'gender' => "required|in:M,F"
         ]);
 
@@ -51,11 +51,12 @@ class PatientController extends Controller
                 'firstname' => $request->firstname,
                 'middlename' => $request->middlename,
                 'lastname' => $request->lastname,
+                'suffix' => $request->suffix,
                 'email' => $request->email,
                 'contactno' => $request->phone,
                 'address' => $request->address,
                 'birth' => $request->birthdate,
-                'bloodtype' => $request->bloodType,
+                'bloodtype' => $request->bloodtype,
                 'gender' => $request->gender
             ]);
         }
@@ -116,16 +117,21 @@ class PatientController extends Controller
                     ActivityLogger::log($message . " ({$appoint->user->firstname} {$appoint->user->lastname})",$appoint,
                     ['ip' => $request->ip()]);
 
-                    $recipients = User::where('roleID', '7')->orWhere('roleID','1')->get();
+                    $recipients = User::whereIn('roleID', ['7','1'])->get();
 
                     foreach($recipients as $recipient){
                         $recipient->notify(new SystemNotification(
                             $message,
                                 "{$appoint->user->firstname} {$appoint->user->lastname} ({$appoint->user->role->roletype})",
                             "new_appointment",
-                            "#"
+                            "#",
+                            $appoint->id
                         ));
+
+                        event(new SendNotification($recipient->id));
                     }
+
+
                 }
 
             DB::commit();
