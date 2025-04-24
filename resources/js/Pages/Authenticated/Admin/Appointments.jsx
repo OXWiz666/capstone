@@ -1,6 +1,6 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { inertia, motion } from "framer-motion";
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
 import {
     Search,
@@ -9,6 +9,11 @@ import {
     ChevronDown,
     ChevronUp,
     Download,
+    ChevronLeft,
+    ChevronRight,
+    Pencil,
+    Trash2,
+    Eye,
 } from "lucide-react";
 import {
     Card,
@@ -54,8 +59,10 @@ import {
     SortableTable,
     SortableTableHead,
 } from "@/components/tempo/components/ui/table2";
-import { usePage, router } from "@inertiajs/react";
-
+import { usePage, router, useForm } from "@inertiajs/react";
+import PrimaryButton from "@/components/PrimaryButton";
+import DangerButton from "@/components/DangerButton";
+import Label from "@/components/InputLabel";
 // Mock data for appointments
 const mockAppointments = [
     {
@@ -204,6 +211,12 @@ export default function appointments({ Appoints, appointments_ }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [appointment_, setAppointment_] = useState({});
+
+    const { data, setData, processing, recentlySuccessful, errors, post } =
+        useForm({
+            status: null,
+        });
+
     const openModal = (e, appointment) => {
         //alert('wew')
         fetch(`/auth/appointment/get/${appointment}`)
@@ -211,6 +224,8 @@ export default function appointments({ Appoints, appointments_ }) {
             .then((data) => {
                 //console.log(data);
                 setAppointment_(data);
+
+                setData("status", data.status);
             });
         setIsModalOpen(true);
         //console.log(id);
@@ -218,6 +233,33 @@ export default function appointments({ Appoints, appointments_ }) {
 
     const closeModal = (e) => {
         setIsModalOpen(false);
+    };
+
+    const SaveStatus = (e) => {
+        e.preventDefault();
+        post(
+            route("admin.appointment.status.update", {
+                appointment: appointment_.id,
+            }),
+            {
+                onSuccess: () => {
+                    closeModal();
+                    // inertia.get(route("admin.appointments"), {
+                    //     only: ["appointments"],
+                    // });
+                    alert_toast(
+                        "Success!",
+                        "Status updated successfully!",
+                        "success"
+                    );
+                    router.reload({
+                        only: ["Appoints"],
+                        preserveScroll: true,
+                    });
+                    // router.visit(window.location.pathname);
+                },
+            }
+        );
     };
 
     const { links } = usePage().props.appointments_;
@@ -262,12 +304,6 @@ export default function appointments({ Appoints, appointments_ }) {
 
                     {/* Table */}
                     <div className="rounded-md border">
-                        {/* $appointments = appointments::get();
-        $appointments->load('user');
-        $appointments->load('service');
-        return Inertia::render('Authenticated/Admin/Appointments',[
-            'Appoints' => $appointments
-        ]); */}
                         <SortableTable
                             data={appointments}
                             defaultSort={{
@@ -362,157 +398,34 @@ export default function appointments({ Appoints, appointments_ }) {
                                                 <TableCell>
                                                     {getStatusBadge(aa.status)}
                                                 </TableCell>
-                                                <TableCell>Actions</TableCell>
+                                                <TableCell className="">
+                                                    <PrimaryButton
+                                                        onClick={(e) => {
+                                                            openModal(e, aa.id);
+                                                        }}
+                                                        className=" m-1"
+                                                    >
+                                                        <Eye />
+                                                    </PrimaryButton>
+                                                    <PrimaryButton className=" m-1">
+                                                        <Pencil />
+                                                    </PrimaryButton>
+                                                    <DangerButton className=" m-1">
+                                                        <Trash2 />
+                                                    </DangerButton>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
                             )}
                         </SortableTable>
-                        {/* <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead
-                                        className="cursor-pointer"
-                                        onClick={() =>
-                                            requestSort("user?.firstname")
-                                        }
-                                    >
-                                        <div className="flex items-center">
-                                            Patient
-                                            {sortConfig.key ===
-                                                "user?.firstname" && (
-                                                <span className="ml-1">
-                                                    {sortConfig.direction ===
-                                                    "ascending" ? (
-                                                        <ChevronUp className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronDown className="h-4 w-4" />
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableHead>
-                                    <TableHead
-                                        className="cursor-pointer"
-                                        onClick={() => requestSort("date")}
-                                    >
-                                        <div className="flex items-center">
-                                            Date & Time
-                                            {sortConfig.key === "date" && (
-                                                <span className="ml-1">
-                                                    {sortConfig.direction ===
-                                                    "ascending" ? (
-                                                        <ChevronUp className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronDown className="h-4 w-4" />
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableHead>
-                                    <TableHead>Doctor</TableHead>
-                                    <TableHead>Purpose</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">
-                                        Actions
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {sortedAppointments.length > 0 ? (
-                                    sortedAppointments.map((appointment) => (
-                                        <TableRow key={appointment.id}>
-                                            <TableCell>
-                                                <div className="flex items-center gap-3">
-                                                    <Avatar>
-                                                        <AvatarImage
-                                                            //   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${appointment.avatar}`}
-                                                            alt={
-                                                                appointment.user
-                                                                    ?.firstname
-                                                            }
-                                                        />
-                                                        <AvatarFallback>
-                                                            {appointment.user?.firstname
-                                                                .split(" ")
-                                                                .map(
-                                                                    (n) => n[0]
-                                                                )
-                                                                .join("")}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                    <div>
-                                                        <div className="font-medium">
-                                                            {
-                                                                appointment.user
-                                                                    ?.firstname
-                                                            }
-                                                        </div>
-                                                        <div className="text-sm text-muted-foreground">
-                                                            {
-                                                                appointment.user_id
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="font-medium">
-                                                    {new Date(
-                                                        appointment.date
-                                                    ).toLocaleDateString()}
-                                                </div>
-                                                <div className="text-sm text-muted-foreground">
-                                                    {appointment.time}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>DOCTOR</TableCell>
-                                            <TableCell>
-                                                {
-                                                    appointment.service
-                                                        ?.servicename
-                                                }
-                                            </TableCell>
-                                            <TableCell>
-                                                {getStatusBadge(
-                                                    appointment.status
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <Button
-                                                    variant="ghost"
-                                                    onClick={(e) =>
-                                                        openModal(
-                                                            e,
-                                                            appointment.id
-                                                        )
-                                                    }
-                                                    size="sm"
-                                                >
-                                                    View
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={6}
-                                            className="text-center h-24 text-muted-foreground"
-                                        >
-                                            No appointments found
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table> */}
                     </div>
                 </div>
-                <CardFooter>
+                <CardFooter className="  mt-2">
                     <div className="text-sm text-muted-foreground">
-                        Showing {doctors.from} to {doctors.to} of{" "}
-                        {doctors.total} Results
+                        Showing {appointments_.from} to {appointments_.to} of{" "}
+                        {appointments_.total} Results
                     </div>
                     <div className="flex ml-2 space-x-2">
                         {links.map((link, index) => (
@@ -611,16 +524,49 @@ export default function appointments({ Appoints, appointments_ }) {
                         {/* {data.notes && (
 
                     )} */}
-                        <div>
-                            <p className="text-sm font-medium text-gray-500">
-                                Additional Notes
-                            </p>
-                            <p className="text-gray-900">
-                                {appointment_.notes}
-                            </p>
-                        </div>
                     </CardContent>
                 </Card>
+                <CardFooter>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                                {/* < className="h-4 w-4 text-muted-foreground" /> */}
+                                <span className="text-sm font-medium">
+                                    Status:
+                                </span>
+                            </div>
+                            <Select
+                                value={data.status}
+                                onValueChange={(e) => {
+                                    setData("status", e);
+                                }}
+                                id="axz"
+                            >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value={1}>Scheduled</SelectItem>
+                                    <SelectItem value={2}>Completed</SelectItem>
+                                    <SelectItem value={3}>Cancelled</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={closeModal}
+                            >
+                                Cancel
+                            </Button>
+                            <PrimaryButton
+                                disabled={processing}
+                                onClick={SaveStatus}
+                            >
+                                Save
+                            </PrimaryButton>
+                        </div>
+                    </div>
+                </CardFooter>
             </Modal>
         </AdminLayout>
     );

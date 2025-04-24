@@ -84,6 +84,9 @@ Route::middleware(['auth','Patient'])->group(function(){
 Route::middleware(['auth','Doctor'])->group(function(){
     Route::prefix('doctor')->group(function(){
         Route::get('/',[DoctorController::class,'index'])->name('doctor.home');
+
+
+
         //Route::get('/appointments',[AppointmentsController::class,'index'])->name('doctor.appointments');
     });
 });
@@ -111,6 +114,8 @@ Route::middleware(['auth','AdminDoctor'])->group(function() {
         Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
         Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
         Route::get('/patients',[PatientsController::class,'index'])->name('admin.patients');
+
+        Route::post('/appointment/status/update/{appointment}',[AppointmentsController::class,'UpdateStatus'])->name('admin.appointment.status.update');
     });
 });
 

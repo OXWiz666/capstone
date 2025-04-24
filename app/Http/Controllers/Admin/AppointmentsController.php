@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 //use App\Models\Appointment;
 use App\Models\appointments;
+use Exception;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -36,6 +37,26 @@ class AppointmentsController extends Controller
     public function GetAppointment(appointments $appointment){
         $appointment->load(['user','service']);
         return response()->json($appointment);
+    }
+
+    public function UpdateStatus(Request $request, appointments $appointment){
+        $request->validate([
+            'status' => 'required|in:1,2,3,4'
+        ]);
+
+        //dd($appointment);
+        try{
+            DB::beginTransaction();
+
+            $appointment->update([
+                'status' => $request->status
+            ]);
+
+            DB::commit();
+        }
+        catch(\Exception $er){
+            DB::rollBack();
+        }
     }
 
     public function reschedule(Request $request, appointments $appointment){

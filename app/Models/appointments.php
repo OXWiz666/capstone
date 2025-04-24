@@ -17,7 +17,8 @@ class appointments extends Model
         'date',
         'time',
         'servicetype_id',
-        'notes'
+        'notes',
+        'status'
     ];
 
     public function user(){
