@@ -25,7 +25,7 @@ class AppointmentsController extends Controller
         $appointments->load('user');
         $appointments->load('service');
         return Inertia::render('Authenticated/Admin/Appointments',[
-            'Appoints' => $appointments->items(),
+            //'Appoints' => $appointments->items(),
             'appointments_' => $appointments
         ]);
     }
@@ -41,16 +41,43 @@ class AppointmentsController extends Controller
 
     public function UpdateStatus(Request $request, appointments $appointment){
         $request->validate([
-            'status' => 'required|in:1,2,3,4'
+            'status' => 'required|in:1,4,5'
         ]);
 
         //dd($appointment);
+        $stat = '';
+        //1=scheduled=2=completed,3=cancelled,4=declined,5=confirmed
+        switch($request->status){
+            case 1:
+                $stat = 'Scheduled';
+            break;
+            case 2:
+                $stat = 'Completed';
+            break;
+            case 3:
+                $stat = 'Cancelled';
+            break;
+            case 4:
+                $stat = 'Declined';
+            break;
+            case 5:
+                $stat = 'Confirmed';
+            break;
+        }
+
         try{
             DB::beginTransaction();
 
             $appointment->update([
                 'status' => $request->status
             ]);
+
+            $user = Auth::user();
+            $mssg_forAdmins = "{$user->firstname} {$user->lastname} ({$user->role->roletype}) has {$stat} patient's appointment.";
+
+            NotifSender::SendNotif(false,[1,7],$mssg_forAdmins,"Appointment Updated!",'admin_appointment_update');
+
+            NotifSender::SendNotif(true,[$appointment->user_id],"{$user->firstname} {$user->lastname} ({$user->role->roletype}) has {$stat} your appointment.","Appointment Updated!",'admin_appointment_update');
 
             DB::commit();
         }

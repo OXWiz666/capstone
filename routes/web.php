@@ -112,7 +112,7 @@ Route::middleware(['auth','AdminDoctor'])->group(function() {
         Route::post('/appointments/resched/{appointment}',[AppointmentsController::class,'reschedule'])->name('admin.resched');
         Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
         Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
-        Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
+        //Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
         Route::get('/patients',[PatientsController::class,'index'])->name('admin.patients');
 
         Route::post('/appointment/status/update/{appointment}',[AppointmentsController::class,'UpdateStatus'])->name('admin.appointment.status.update');

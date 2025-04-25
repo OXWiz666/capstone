@@ -216,7 +216,7 @@ const ProfilePage = ({ errors }) => {
                                         <User className="mr-2 h-5 w-5" />
                                         Personal Information
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         variant={
                                             activeTab === "medical"
                                                 ? "secondary"
@@ -230,7 +230,7 @@ const ProfilePage = ({ errors }) => {
                                     >
                                         <FileText className="mr-2 h-5 w-5" />
                                         Medical Information
-                                    </Button>
+                                    </Button> */}
                                     <Button
                                         variant={
                                             activeTab === "appointments"
@@ -340,12 +340,12 @@ const ProfilePage = ({ errors }) => {
                                         >
                                             Personal Information
                                         </TabsTrigger>
-                                        <TabsTrigger
+                                        {/* <TabsTrigger
                                             value="medical"
                                             className="text-xs sm:text-sm "
                                         >
                                             Medical Information
-                                        </TabsTrigger>
+                                        </TabsTrigger> */}
                                         <TabsTrigger
                                             value="appointments"
                                             className="text-xs sm:text-sm "
@@ -547,89 +547,6 @@ const ProfilePage = ({ errors }) => {
                                                     {processing
                                                         ? "Saving..."
                                                         : "Save Changes"}
-                                                </Button>
-                                            )}
-                                        </form>
-                                    </TabsContent>
-
-                                    <TabsContent
-                                        value="medical"
-                                        className="space-y-4"
-                                    >
-                                        <form onSubmit={handleSubmit}>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <Label htmlFor="bloodType">
-                                                        Blood Type
-                                                    </Label>
-                                                    <Input
-                                                        id="bloodType"
-                                                        value={data.bloodType}
-                                                        onChange={handleChange}
-                                                        disabled={!isEditing}
-                                                    />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <Label htmlFor="emergencyContact">
-                                                        Emergency Contact
-                                                    </Label>
-                                                    <Input
-                                                        id="emergencyContact"
-                                                        value={
-                                                            data.emergencyContact
-                                                        }
-                                                        onChange={handleChange}
-                                                        placeholder="Name and phone number"
-                                                        disabled={!isEditing}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2 mt-4">
-                                                <Label htmlFor="allergies">
-                                                    Allergies
-                                                </Label>
-                                                <Textarea
-                                                    id="allergies"
-                                                    value={data.allergies}
-                                                    onChange={handleChange}
-                                                    disabled={!isEditing}
-                                                    placeholder="List any allergies"
-                                                />
-                                            </div>
-                                            <div className="space-y-2 mt-4">
-                                                <Label htmlFor="medications">
-                                                    Current Medications
-                                                </Label>
-                                                <Textarea
-                                                    id="medications"
-                                                    value={data.medications}
-                                                    onChange={handleChange}
-                                                    disabled={!isEditing}
-                                                    placeholder="List any current medications"
-                                                />
-                                            </div>
-                                            <div className="space-y-2 mt-4">
-                                                <Label htmlFor="medicalInfo">
-                                                    Additional Medical
-                                                    Information
-                                                </Label>
-                                                <Textarea
-                                                    id="medicalInfo"
-                                                    rows={4}
-                                                    value={data.medicalInfo}
-                                                    onChange={handleChange}
-                                                    disabled={!isEditing}
-                                                />
-                                            </div>
-                                            {isEditing && (
-                                                <Button
-                                                    type="submit"
-                                                    className="mt-4"
-                                                    disabled={processing}
-                                                >
-                                                    {processing
-                                                        ? "Saving..."
-                                                        : "Save Medical Information"}
                                                 </Button>
                                             )}
                                         </form>

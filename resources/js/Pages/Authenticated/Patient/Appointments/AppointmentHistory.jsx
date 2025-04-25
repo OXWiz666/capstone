@@ -42,6 +42,51 @@ export default function AppointmentHistory({ appointments }) {
     // useEffect(() => {
     //     console.log(links);
     // }, [links]);
+
+    const getStatusBadge = (status) => {
+        //	1=scheduled=2=completed,3=cancelled,4=declined,5=confirmed
+        switch (status) {
+            case 1:
+                return (
+                    <div className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full flex items-center">
+                        <Clock9 className="h-3 w-3 mr-1" />
+                        Scheduled
+                    </div>
+                );
+            case 2:
+                return (
+                    <div className="text-xs bg-green-600 text-white px-2 py-1 rounded-full flex items-center">
+                        <Check className="h-3 w-3 mr-1" />
+                        Completed
+                    </div>
+                );
+                break;
+            case 3:
+                return (
+                    <div className="text-xs bg-red-500 text-white px-2 py-1 rounded-full flex items-center">
+                        <X className="h-3 w-3 mr-1" />
+                        Cancelled
+                    </div>
+                );
+                break;
+            case 4:
+                return (
+                    <div className="text-xs bg-red-600 text-white px-2 py-1 rounded-full flex items-center">
+                        <X className="h-3 w-3 mr-1" />
+                        Declined
+                    </div>
+                );
+                break;
+            case 5:
+                return (
+                    <div className="text-xs bg-green-600 text-white px-2 py-1 rounded-full flex items-center">
+                        <Check className="h-3 w-3 mr-1" />
+                        Confirmed
+                    </div>
+                );
+                break;
+        }
+    };
     return (
         <AppointmentLayout>
             <div className="mb-8">
@@ -105,7 +150,7 @@ export default function AppointmentHistory({ appointments }) {
                                                 {a.notes}
                                             </p>
                                             <div className="flex flex-wrap gap-2 mt-2">
-                                                {a.status == 1 ? (
+                                                {/* {a.status == 1 ? (
                                                     <div className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full flex items-center">
                                                         <Clock9 className="h-3 w-3 mr-1" />
                                                         Scheduled
@@ -120,7 +165,8 @@ export default function AppointmentHistory({ appointments }) {
                                                         <X className="h-3 w-3 mr-1" />
                                                         Cancelled
                                                     </div>
-                                                )}
+                                                )} */}
+                                                {getStatusBadge(a.status)}
                                             </div>
                                         </div>
                                     ))}

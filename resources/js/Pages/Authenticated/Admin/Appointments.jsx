@@ -63,6 +63,7 @@ import { usePage, router, useForm } from "@inertiajs/react";
 import PrimaryButton from "@/components/PrimaryButton";
 import DangerButton from "@/components/DangerButton";
 import Label from "@/components/InputLabel";
+import InputError from "@/components/InputError";
 // Mock data for appointments
 const mockAppointments = [
     {
@@ -122,8 +123,8 @@ const mockAppointments = [
     },
 ];
 
-export default function appointments({ Appoints, appointments_ }) {
-    const [appointments, setAppointments] = useState(Appoints);
+export default function appointments({ appointments_ }) {
+    const [appointments, setAppointments] = useState(appointments_.data);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [sortConfig, setSortConfig] = useState({
@@ -187,11 +188,15 @@ export default function appointments({ Appoints, appointments_ }) {
     const getStatusBadge = (status) => {
         switch (status) {
             case 2:
-                return <Badge className="bg-green-500">Completed</Badge>;
+                return <Badge className="bg-green-600">Completed</Badge>;
             case 1:
                 return <Badge className="bg-blue-500">Scheduled</Badge>;
             case 3:
                 return <Badge className="bg-red-500">Cancelled</Badge>;
+            case 4:
+                return <Badge className="bg-red-600">Declined</Badge>;
+            case 5:
+                return <Badge className="bg-green-500">Confirmed</Badge>;
             default:
                 return <Badge>{status} ew</Badge>;
         }
@@ -234,6 +239,11 @@ export default function appointments({ Appoints, appointments_ }) {
     const closeModal = (e) => {
         setIsModalOpen(false);
     };
+    const { inertia } = usePage();
+
+    useEffect(() => {
+        setAppointments(appointments_.data);
+    }, [appointments_]);
 
     const SaveStatus = (e) => {
         e.preventDefault();
@@ -252,17 +262,14 @@ export default function appointments({ Appoints, appointments_ }) {
                         "Status updated successfully!",
                         "success"
                     );
-                    router.reload({
-                        only: ["Appoints"],
-                        preserveScroll: true,
-                    });
-                    // router.visit(window.location.pathname);
+                    router.reload({ only: ["appointments_"] });
                 },
             }
         );
     };
 
     const { links } = usePage().props.appointments_;
+
     return (
         <AdminLayout header="Appointments" tools={tools()}>
             <motion.div
@@ -547,17 +554,19 @@ export default function appointments({ Appoints, appointments_ }) {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value={1}>Scheduled</SelectItem>
-                                    <SelectItem value={2}>Completed</SelectItem>
-                                    <SelectItem value={3}>Cancelled</SelectItem>
+                                    <SelectItem value={5}>Confirm</SelectItem>
+                                    <SelectItem value={4}>Decline</SelectItem>
+                                    {/* <SelectItem value={2}>Completed</SelectItem>
+                                    <SelectItem value={3}>Cancelled</SelectItem> */}
                                 </SelectContent>
                             </Select>
-                            <Button
+                            {/* <Button
                                 type="button"
                                 variant="outline"
                                 onClick={closeModal}
                             >
                                 Cancel
-                            </Button>
+                            </Button> */}
                             <PrimaryButton
                                 disabled={processing}
                                 onClick={SaveStatus}
@@ -566,6 +575,7 @@ export default function appointments({ Appoints, appointments_ }) {
                             </PrimaryButton>
                         </div>
                     </div>
+                    <InputError message={errors.status} />
                 </CardFooter>
             </Modal>
         </AdminLayout>
