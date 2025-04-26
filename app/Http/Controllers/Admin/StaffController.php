@@ -16,13 +16,26 @@ use App\Notifications\SystemNotification;
 use App\Events\SendNotification;
 use App\Models\doctor_status;
 
-class DoctorsController extends Controller
+class StaffController extends Controller
 {
     //
     public function index(){
+
+        $staff = User::whereNot('roleID','5')->get();
+        $admins = User::where('roleID','7')->get();
+        $doctors = User::where('roleID','1')->get();
+        $pharmacists = User::where('roleID','6')->get();
+        return Inertia::render("Authenticated/Admin/Staff/Overview",[
+            'staffcount' => $staff->count(),
+            'admincount' => $admins->count(),
+            'pharmacistcount' => $pharmacists->count(),
+            'doctorscount' => $doctors->count(),
+        ]);
+    }
+    public function doctors(){
         $doctors = doctor_details::with(['user','specialty','department'])->paginate(10);
         $questions = securityquestions::get();
-        return Inertia::render("Authenticated/Admin/Doctors/Doctors",[
+        return Inertia::render("Authenticated/Admin/Staff/Doctors",[
             'doctorsitems' => $doctors->items(),
             'doctors' => $doctors,
             'questions' => $questions

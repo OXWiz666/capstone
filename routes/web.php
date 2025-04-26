@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HealthProgramsController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\PatientsController;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ContactController;
@@ -99,10 +100,15 @@ Route::middleware(['auth','Admin'])->group(function(){
         Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
 
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
-        Route::get('/doctors',[DoctorsController::class,'index'])->name('admin.doctors');
-        Route::post('/doctors/update-status/{doctor}',[DoctorsController::class,'updateStatus'])->name('doctor.update.status');
 
-        Route::post('/registerdoctor/create',[AuthController::class,'registerDoctor'])->name('admin.register.doctor');
+        Route::prefix('staff')->group(function(){
+            Route::get('/overview',[StaffController::class,'index'])->name('admin.staff.overview');
+            Route::get('/doctors',[StaffController::class,'doctors'])->name('admin.staff.doctors');
+        });
+        Route::post('/doctors/update-status/{doctor}',[StaffController::class,'updateStatus'])->name('doctor.update.status');
+
+        Route::post('/registerstaff/create',[AuthController::class,'registerStaff'])->name('admin.staff.register');
+        //Route::post('/registerdoctor/create',[AuthController::class,'registerDoctor'])->name('admin.register.doctor');
         //Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     });
 });

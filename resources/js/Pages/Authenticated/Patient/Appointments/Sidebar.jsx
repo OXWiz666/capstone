@@ -89,13 +89,6 @@ export default function Sidebar({ activeTab }) {
                             )}
                         </div>
                     </CardContent>
-                    {/* <CardFooter>
-                        <Button variant="outline" className="w-full" onClick={()=>
-                            (window.location.href = "/profile")}
-                            >
-                            View Profile
-                        </Button>
-                    </CardFooter> */}
                 </Card>
             </div>
         </>

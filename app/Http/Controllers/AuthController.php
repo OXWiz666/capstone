@@ -26,6 +26,7 @@ use function Laravel\Prompts\password;
 
 use App\Services\ActivityLogger;
 use App\Notifications\SystemNotification;
+use App\Services\NotifSender;
 
 class AuthController extends Controller
 {
@@ -281,6 +282,59 @@ class AuthController extends Controller
         }
         // return redirect()->back()->with('success', 'Registration successful');
         //return redirect()->route('login')->with('success','Registered Successfully!');
+    }
+
+    public function registerStaff(Request $request){
+        $request->validate([
+            'first_name'=> "required|min:2",
+            'middlename'=> "required|min:2",
+            'last_name'=> "required|min:2",
+            //'suffix'=> "required|min:2",
+            'contactNumber'=> "required|min:11|numeric",
+            'email'=> "required|email|unique:users,email",
+            'password'=> "required|min:3",
+            'confirmPassword'=> "required|same:password",
+            'gender'=> "required|in:M,F",
+            'birth'=> "required|date",
+
+            //'isAdmin'=> "true",
+            'role'=> 'required|in:1,7,6',
+        ]);
+
+
+        try{
+            DB::beginTransaction();
+
+            $newUser = User::create([
+                'firstname' => $request->first_name,
+                'middlename' => $request->middlename,
+                'lastname' => $request->last_name,
+                'suffix' => $request->suffix ?? null,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'contactno' => $request->contactNumber,
+                'roleID' => $request->role,
+                // 'questionID' => $request->securityQuestion ?? null,
+                // 'answer' => $request->securityAnswer ?? null,
+                'gender' => $request->gender,
+                'birth' => $request->birth,
+            ]);
+
+            if($newUser->roleID == 1){ //check if doctor
+                doctor_details::create([
+                    'user_id' => $newUser->id
+                ]);
+
+                $mssg = "";
+            }
+
+            NotifSender::SendNotif(false,[1,7,6],$mssg,'New staff registered!','new_staff');
+
+            DB::commit();
+        }
+        catch(\Exception $er){
+            DB::rollBack();
+        }
     }
 
     public function registerDoctor(Request $request)

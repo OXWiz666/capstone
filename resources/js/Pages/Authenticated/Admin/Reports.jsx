@@ -52,10 +52,11 @@ const Reports = () => {
             },
             {
                 label: "Dataset 2",
-                data: [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+                data: [30, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
                 borderColor: "rgb(54, 162, 235)",
-                backgroundColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgb(255, 255, 255)",
                 stack: "combined",
+                type: "line",
             },
         ],
     };
@@ -94,24 +95,7 @@ const Reports = () => {
             // Create new chart
             chartInstance.current = new Chart(ctx, {
                 type: "bar",
-                data: {
-                    labels: data?.labels || [
-                        "Red",
-                        "Blue",
-                        "Yellow",
-                        "Green",
-                        "Purple",
-                        "Orange",
-                    ],
-                    datasets: [
-                        {
-                            label: "# of Patients",
-                            data: data?.values || [12, 19, 3, 5, 2, 3],
-                            borderWidth: 1,
-                            backgroundColor: "rgba(54, 162, 235, 0.5)",
-                        },
-                    ],
-                },
+                data: data,
                 options: {
                     responsive: true,
                     scales: { y: { beginAtZero: true } },
