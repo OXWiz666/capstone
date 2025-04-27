@@ -8,7 +8,7 @@ import {
     Activity,
     AlertTriangle,
 } from "lucide-react";
-import StaffLayout from "./StaffLayout";
+import ServicesLayout from "./ServicesLayout";
 import SideBar from "./Sidebar";
 // interface StatisticCardProps {
 //   title: string;
@@ -77,13 +77,13 @@ const Overview = ({
     todayAppointments = 32,
     activePrograms = 8,
     inventoryAlerts = 5,
-    staffcount,
-    admincount,
-    pharmacistcount,
+    staffcount = 0,
+    admincount = 0,
+    pharmacistcount = 0,
 }) => {
     //console.log(staffcount);
     return (
-        <StaffLayout>
+        <ServicesLayout>
             <div>
                 <h1 className="text-3xl font-bold mb-2">Overview</h1>
                 {/* <p className="text-gray-600">
@@ -93,11 +93,11 @@ const Overview = ({
                         </p> */}
                 <p className="text-muted-foreground"></p>
             </div>
-            <div className="flex flex-col xl:flex-row gap-4">
+            <div className="flex flex-col lg:flex-row gap-4">
                 <SideBar activeTab={"overview"} />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-4">
                     <StatisticCard
-                        title="Total Staff Registered"
+                        title="Total Services"
                         value={staffcount}
                         icon={<Users className="h-5 w-5 text-primary" />}
                         change={{
@@ -107,31 +107,31 @@ const Overview = ({
                     />
 
                     <StatisticCard
-                        title="Total Admins"
+                        title="Total Sub-Services"
                         value={admincount}
                         icon={<Users className="h-5 w-5 text-primary" />}
                         change={{ value: 8, isPositive: true }}
                     />
 
                     <StatisticCard
-                        title="Total Pharmacists"
+                        title="Active Services"
                         value={pharmacistcount}
                         icon={<Users className="h-5 w-5 text-primary" />}
                         change={{ value: 0, isPositive: true }}
                     />
 
-                    {/* <StatisticCard
-                        title="Inventory Alerts"
+                    <StatisticCard
+                        title="Inactive Services"
                         value={inventoryAlerts}
                         icon={
                             <AlertTriangle className="h-5 w-5 text-primary" />
                         }
                         change={{ value: 2, isPositive: false }}
                         bgColor={inventoryAlerts > 0 ? "bg-red-50" : "bg-white"}
-                    /> */}
+                    />
                 </div>
             </div>
-        </StaffLayout>
+        </ServicesLayout>
     );
 };
 

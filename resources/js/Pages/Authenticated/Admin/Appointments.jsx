@@ -346,6 +346,11 @@ export default function appointments({ appointments_ }) {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
+                                        {sortedData.length <= 0 && (
+                                            <div className=" m-5">
+                                                No Records Available.
+                                            </div>
+                                        )}
                                         {sortedData.map((aa, i) => (
                                             <TableRow key={i}>
                                                 <TableCell>

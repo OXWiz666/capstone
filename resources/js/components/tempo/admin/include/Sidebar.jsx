@@ -15,6 +15,7 @@ import {
     Home,
     Stethoscope,
     UsersRound,
+    Layers,
 } from "lucide-react";
 import { cn } from "@/components/tempo/lib/utils";
 import { Button } from "@/components/tempo/components/ui/button";
@@ -58,6 +59,14 @@ const Sidebar = ({ activePage, userRole = "Admin" }) => {
             icon: <Calendar className="h-5 w-5" />,
             route: "admin.appointments",
             path: "/auth/appointments",
+            id: "appointments",
+            roles: ["Admin", "Doctor"],
+        },
+        {
+            title: "Services",
+            icon: <Layers className="h-5 w-5" />,
+            route: "admin.services*",
+            path: route("admin.services.overview"),
             id: "appointments",
             roles: ["Admin", "Doctor"],
         },

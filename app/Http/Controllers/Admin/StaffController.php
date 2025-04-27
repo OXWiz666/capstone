@@ -50,7 +50,7 @@ class StaffController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function updateStatus(Request $request, doctor_details $doctor)
-{
+    {
     try {
         DB::beginTransaction();
 

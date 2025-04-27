@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     Card,
     CardContent,
@@ -199,6 +199,9 @@ const SeasonalProgramDashboard = () => {
     // Get dates with schedules for calendar highlighting
     const scheduleDates = programSchedules.map((schedule) => schedule.date);
 
+    useEffect(() => {
+        console.log("scheds: ", scheduleDates[0]);
+    }, [scheduleDates]);
     // Get program type icon
     const getProgramTypeIcon = (type, className = "h-4 w-4 mr-1") => {
         switch (type) {

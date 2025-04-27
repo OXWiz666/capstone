@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HealthProgramsController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\PatientsController;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
@@ -106,6 +107,11 @@ Route::middleware(['auth','Admin'])->group(function(){
             Route::get('/doctors',[StaffController::class,'doctors'])->name('admin.staff.doctors');
         });
         Route::post('/doctors/update-status/{doctor}',[StaffController::class,'updateStatus'])->name('doctor.update.status');
+
+        Route::prefix('services')->group(function(){
+            Route::get('/overview',[ServicesController::class,'index'])->name('admin.services.overview');
+            Route::get('/services',[ServicesController::class,'services'])->name('admin.services.services');
+        });
 
         Route::post('/registerstaff/create',[AuthController::class,'registerStaff'])->name('admin.staff.register');
         //Route::post('/registerdoctor/create',[AuthController::class,'registerDoctor'])->name('admin.register.doctor');

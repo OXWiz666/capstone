@@ -84,7 +84,7 @@ export default function Sidebar({ activeTab }) {
                                 >
                                     <Clipboard className="mr-2 h-5 w-5" />
                                     {/* <Pill className="mr-2 h-5 w-5" /> */}
-                                    Appointment History
+                                    My Appointments
                                 </Button>
                             )}
                         </div>

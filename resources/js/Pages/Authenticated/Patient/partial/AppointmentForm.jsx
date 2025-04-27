@@ -187,86 +187,6 @@ const AppointmentForm = ({
                         <InputError message={errors.phone} />
                     </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <Label>Appointment Date</Label>
-                        {/* <CustomCalendar
-                            selectedDate={formData.date}
-                            onDateSelect={handleDateChange}
-                        /> */}
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                        "w-full justify-start text-left font-normal",
-                                        !formData.date &&
-                                            "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {formData.date ? (
-                                        format(formData.date, "PPP")
-                                    ) : (
-                                        <span>Select date</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                            >
-                                <Calendar
-                                    mode="single"
-                                    selected={formData.date}
-                                    onSelect={handleDateChange}
-                                    initialFocus
-                                    disabled={(date) => {
-                                        // Disable past dates and weekends
-                                        const today = new Date();
-                                        today.setHours(0, 0, 0, 0);
-                                        const day = date.getDay();
-                                        return date < today || day === 0; // 0 is Sunday
-                                    }}
-                                />
-                            </PopoverContent>
-                        </Popover>
-                        <InputError message={errors.date} />
-                    </div>
-
-                    <div>
-                        <Label>Appointment Time</Label>
-                        <Select
-                            value={formData.time}
-                            onValueChange={(value) =>
-                                handleSelectChange("time", value)
-                            }
-                            required
-                        >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select time">
-                                    {formData.time ? (
-                                        <div className="flex items-center">
-                                            <Clock className="mr-2 h-4 w-4" />
-                                            {formData.time}
-                                        </div>
-                                    ) : (
-                                        "Select time"
-                                    )}
-                                </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent>
-                                {timeSlots.map((time) => (
-                                    <SelectItem key={time} value={time}>
-                                        {time}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <InputError message={errors.time} />
-                    </div>
-                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <Label>Service Type</Label>
@@ -310,8 +230,124 @@ const AppointmentForm = ({
                         <InputError message={errors.service} />
                     </div>
                     <div>
-                        <Label>Service Type</Label>
-                        <Select></Select>
+                        <Label>Service Sub Type</Label>
+                        <Select
+                            value={formData.service?.toString()} // Ensure string value
+                            onValueChange={(selectedId) => {
+                                const service = serviceLookup[selectedId];
+                                if (service) {
+                                    handleSelectChange("service", service.id);
+                                    handleSelectChange(
+                                        "servicename",
+                                        service.servicename
+                                    );
+                                    //  handleSelectChange("customAttr", service.customAttribute);
+                                } // handleSelectChange("servicename", selectedService?.servicename || "");
+                            }}
+                            required
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select service">
+                                    {formData.service
+                                        ? services.find(
+                                              (s) =>
+                                                  s.id.toString() ===
+                                                  formData.service.toString()
+                                          )?.servicename
+                                        : "Select service"}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {services.map((service) => (
+                                    <SelectItem
+                                        key={service.id} // Use service.id as key
+                                        value={service.id} // Ensure string value
+                                    >
+                                        {service.servicename}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Appointment Date</Label>
+                        <CustomCalendar
+                            selectedDate={formData.date}
+                            onDateSelect={handleDateChange}
+                            //hasPrograms={}
+                        />
+                        {/* <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !formData.date &&
+                                            "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {formData.date ? (
+                                        format(formData.date, "PPP")
+                                    ) : (
+                                        <span>Select date</span>
+                                    )}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                            >
+                                <Calendar
+                                    mode="single"
+                                    selected={formData.date}
+                                    onSelect={handleDateChange}
+                                    initialFocus
+                                    disabled={(date) => {
+                                        // Disable past dates and weekends
+                                        const today = new Date();
+                                        today.setHours(0, 0, 0, 0);
+                                        const day = date.getDay();
+                                        return date < today || day === 0; // 0 is Sunday
+                                    }}
+                                />
+                            </PopoverContent>
+                        </Popover> */}
+                        <InputError message={errors.date} />
+                    </div>
+
+                    <div>
+                        <Label>Appointment Time</Label>
+                        <Select
+                            value={formData.time}
+                            onValueChange={(value) =>
+                                handleSelectChange("time", value)
+                            }
+                            required
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select time">
+                                    {formData.time ? (
+                                        <div className="flex items-center">
+                                            <Clock className="mr-2 h-4 w-4" />
+                                            {formData.time}
+                                        </div>
+                                    ) : (
+                                        "Select time"
+                                    )}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {timeSlots.map((time) => (
+                                    <SelectItem key={time} value={time}>
+                                        {time}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.time} />
                     </div>
                 </div>
             </div>

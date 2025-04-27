@@ -100,7 +100,7 @@ export default function StaffLayout({ children }) {
                     className="flex items-center gap-2"
                 >
                     <PlusCircle className="h-4 w-4" />
-                    <span>Add New</span>
+                    <span>Add Staff</span>
                 </Button>
             </>
         );

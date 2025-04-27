@@ -90,7 +90,7 @@ export default function AppointmentHistory({ appointments }) {
     return (
         <AppointmentLayout>
             <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Appointment History</h1>
+                <h1 className="text-3xl font-bold mb-2">My Appointments</h1>
                 <p className="text-gray-600">
                     Book your visit to Barangay Calumpang Health Center. Please
                     fill out the form below with your information and preferred
@@ -104,7 +104,7 @@ export default function AppointmentHistory({ appointments }) {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <CardTitle className="text-lg">
-                                    Appointment History
+                                    My Appointments
                                 </CardTitle>
                             </div>
                             <CardDescription>
@@ -114,6 +114,11 @@ export default function AppointmentHistory({ appointments }) {
                         <CardContent>
                             <div className="rounded-md border">
                                 <div className="divide-y">
+                                    {appointments.data.length <= 0 && (
+                                        <div className=" m-5">
+                                            No Appointments.
+                                        </div>
+                                    )}
                                     {appointments.data.map((a, i) => (
                                         <div
                                             key={i}
