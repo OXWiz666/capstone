@@ -58,6 +58,8 @@ export default function Appointment({ services }) {
             time: "",
             service: "",
             servicename: "",
+            subservice: "",
+            subservicename: "",
             notes: "",
             gender: "",
             birth: "",

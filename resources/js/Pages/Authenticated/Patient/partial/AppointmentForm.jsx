@@ -33,6 +33,8 @@ const AppointmentForm = ({
     errors,
     processing,
     services = [],
+
+    programs,
 }) => {
     const user = usePage().props.auth.user;
 
@@ -58,6 +60,7 @@ const AppointmentForm = ({
         acc[service.id] = service;
         return acc;
     }, {});
+
     const [date, setDate] = useState(new Date());
 
     // Separate handler for date changes
@@ -80,7 +83,7 @@ const AppointmentForm = ({
     };
 
     const handleSelectChange = (name, value) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value ?? null }));
     };
 
     const handleSubmit = (e) => {
@@ -114,6 +117,16 @@ const AppointmentForm = ({
     //     "Dental Services",
     //   ];
 
+    const [subservices, setSubServices] = useState([]);
+
+    const subServiceLookup = subservices?.reduce((acc, subservice) => {
+        acc[subservice.id] = subservice;
+        return acc;
+    }, {});
+
+    useEffect(() => {
+        console.log(subservices);
+    }, [subservices]);
     return (
         <form
             onSubmit={handleSubmit}
@@ -200,10 +213,18 @@ const AppointmentForm = ({
                                         "servicename",
                                         service.servicename
                                     );
+
+                                    handleSelectChange("subservice", "");
+                                    handleSelectChange("subservicename", "");
                                     //  handleSelectChange("customAttr", service.customAttribute);
                                 } // handleSelectChange("servicename", selectedService?.servicename || "");
+
+                                fetch(`/patient/get-sub-services/${selectedId}`)
+                                    .then((resp) => resp.json())
+                                    .then((data) => {
+                                        setSubServices(data);
+                                    });
                             }}
-                            required
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select service">
@@ -232,42 +253,45 @@ const AppointmentForm = ({
                     <div>
                         <Label>Service Sub Type</Label>
                         <Select
-                            value={formData.service?.toString()} // Ensure string value
+                            value={formData.subservice?.toString()} // Ensure string value
                             onValueChange={(selectedId) => {
-                                const service = serviceLookup[selectedId];
-                                if (service) {
-                                    handleSelectChange("service", service.id);
-                                    handleSelectChange(
-                                        "servicename",
-                                        service.servicename
-                                    );
-                                    //  handleSelectChange("customAttr", service.customAttribute);
-                                } // handleSelectChange("servicename", selectedService?.servicename || "");
+                                const subservice = subServiceLookup[selectedId];
+                                console.log(subservice);
+                                // handleSelectChange({
+                                //     subservice: subservice.id,
+                                //     subservicename: subservice.subservicename,
+                                // });
+                                // Correct - call separately for each field
+                                handleSelectChange(
+                                    "subservice",
+                                    subservice.id ?? null
+                                );
+                                handleSelectChange(
+                                    "subservicename",
+                                    subservice.subservicename ?? null
+                                );
                             }}
-                            required
                         >
                             <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select service">
-                                    {formData.service
-                                        ? services.find(
+                                <SelectValue placeholder="Select Sub Service">
+                                    {formData.subservice
+                                        ? subservices.find(
                                               (s) =>
                                                   s.id.toString() ===
-                                                  formData.service.toString()
-                                          )?.servicename
-                                        : "Select service"}
+                                                  formData.subservice.toString()
+                                          )?.subservicename
+                                        : "Select Sub-Service"}
                                 </SelectValue>
                             </SelectTrigger>
                             <SelectContent>
-                                {services.map((service) => (
-                                    <SelectItem
-                                        key={service.id} // Use service.id as key
-                                        value={service.id} // Ensure string value
-                                    >
-                                        {service.servicename}
+                                {subservices?.map((ss, i) => (
+                                    <SelectItem key={i} value={ss.id}>
+                                        {ss.subservicename}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
+                        <InputError message={errors.subservice} />
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

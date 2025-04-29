@@ -130,7 +130,11 @@ const CustomCalendar = ({ selectedDate, onDateSelect, hasPrograms = [] }) => {
                     return (
                         <button
                             key={i}
-                            onClick={() => onDateSelect(day)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onDateSelect(day);
+                            }}
+                            type="button"
                             className={`
                 h-9 w-9 mx-auto flex items-center justify-center rounded-full text-sm
                 ${!isCurrentMonth ? "text-gray-400" : ""}
