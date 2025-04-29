@@ -245,19 +245,7 @@ const MedicalRecordsPage = () => {
                                         <Pill className="mr-2 h-5 w-5" />
                                         Prescriptions
                                     </Button> */}
-                                    <Button
-                                        variant={
-                                            activeTab === "lab"
-                                                ? "secondary"
-                                                : "ghost"
-                                        }
-                                        className="w-full justify-start"
-                                        size="lg"
-                                        onClick={() => setActiveTab("lab")}
-                                    >
-                                        <Clipboard className="mr-2 h-5 w-5" />
-                                        Lab Results
-                                    </Button>
+
                                     <Button
                                         variant={
                                             activeTab === "immunizations"
@@ -348,10 +336,6 @@ const MedicalRecordsPage = () => {
                                         <Button variant="outline" size="icon">
                                             <Filter className="h-4 w-4" />
                                         </Button>
-                                        <Button variant="outline" size="sm">
-                                            <Download className="h-4 w-4 mr-2" />
-                                            Export
-                                        </Button>
                                     </div>
                                 </div>
                             </CardHeader>
@@ -367,9 +351,6 @@ const MedicalRecordsPage = () => {
                                         {/* <TabsTrigger value="prescriptions">
                                             Prescriptions
                                         </TabsTrigger> */}
-                                        <TabsTrigger value="lab">
-                                            Lab Results
-                                        </TabsTrigger>
                                         <TabsTrigger value="immunizations">
                                             Immunizations
                                         </TabsTrigger>

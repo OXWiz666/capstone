@@ -9,7 +9,11 @@ import {
     Download,
     Edit,
     Trash2,
+    CrossIcon,
 } from "lucide-react";
+
+import { Cross2Icon } from "@radix-ui/react-icons";
+
 import { Button } from "@/components/tempo/components/ui/button";
 import { Input } from "@/components/tempo/components/ui/input";
 import {
@@ -43,12 +47,15 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    DialogOverlay,
 } from "@/components/tempo/components/ui/dialog";
 import { Label } from "@/components/tempo/components/ui/label";
 import { Textarea } from "@/components/tempo/components/ui/textarea";
 
 import SideBar from "./Sidebar";
 import ServicesLayout from "./ServicesLayout";
+import { useForm, router } from "@inertiajs/react";
+import moment from "moment";
 // Mock data for services
 const mockServices = [
     {
@@ -135,13 +142,15 @@ const Services = ({ services_ }) => {
     });
 
     useEffect(() => {
-        console.log(services_);
+        setServices(services_);
+
+        console.log("services: ", services_);
     }, [services_]);
 
     const [isServiceDialogOpen, setIsServiceDialogOpen] = useState(false);
-    const [isSubServiceDialogOpen, setIsSubServiceDialogOpen] = useState(false);
+
     const [selectedService, setSelectedService] = useState(null);
-    const [expandedService, setExpandedService] = useState(null);
+    const [expandedService, setExpandedService] = useState(false);
 
     // New service form state
     const [newService, setNewService] = useState({
@@ -191,12 +200,16 @@ const Services = ({ services_ }) => {
         setSortConfig({ key, direction });
     };
 
+    const [selectedServiceID, setSelectedServiceID] = useState(null);
+
     // Toggle service expansion
     const toggleServiceExpansion = (serviceId) => {
         if (expandedService === serviceId) {
             setExpandedService(null);
+            setSelectedServiceID(null);
         } else {
             setExpandedService(serviceId);
+            setSelectedServiceID(serviceId);
         }
     };
 
@@ -214,18 +227,33 @@ const Services = ({ services_ }) => {
 
     // Handle recurrence date selection
     const handleRecurrenceDateChange = (day) => {
-        const currentDates = [...newSubService.recurrenceDates];
-        if (currentDates.includes(day)) {
-            setNewSubService({
-                ...newSubService,
-                recurrenceDates: currentDates.filter((d) => d !== day),
-            });
-        } else {
-            setNewSubService({
-                ...newSubService,
-                recurrenceDates: [...currentDates, day],
-            });
-        }
+        // const currentDates = [...newSubService.recurrenceDates];
+        // if (currentDates.includes(day)) {
+        //     // setNewSubService({
+        //     //     ...newSubService,
+        //     //     recurrenceDates: currentDates.filter((d) => d !== day),
+        //     // });
+        //     setDataDays({
+        //         ...dataDays,
+        //         days: currentDates.filter((d) => d !== day),
+        //     });
+        // } else {
+        //     // setNewSubService({
+        //     //     ...newSubService,
+        //     //     recurrenceDates: [...currentDates, day],
+        //     // });
+        //     setDataDays({
+        //         ...dataDays,
+        //         days: [...currentDates, day],
+        //     });
+        // }
+
+        setDataDays((prev) => ({
+            ...prev,
+            days: prev.days.includes(day)
+                ? prev.days.filter((d) => d !== day)
+                : [...prev.days, day],
+        }));
     };
 
     // Add new service
@@ -241,39 +269,20 @@ const Services = ({ services_ }) => {
         setIsServiceDialogOpen(false);
     };
 
-    // Add new sub-service
     const addSubService = () => {
-        if (!selectedService) return;
-
-        const service = services.find((s) => s.id === selectedService);
-        if (!service) return;
-
-        const newSubServiceObj = {
-            id: `SUB${String(
-                services.reduce((acc, s) => acc + s.subServices.length, 0) + 1
-            ).padStart(3, "0")}`,
-            ...newSubService,
-        };
-
-        const updatedServices = services.map((s) => {
-            if (s.id === selectedService) {
-                return {
-                    ...s,
-                    subServices: [...s.subServices, newSubServiceObj],
-                };
-            }
-            return s;
+        post(route("admin.services.subservice.create"), {
+            preserveScroll: true,
+            preserveState: true,
+            only: ["services_"], // Only reload these props
+            onSuccess: () => {
+                setIsServiceDialogOpen(false);
+                alert_toast("Success", "Sub-Service added successfully!");
+                // router.reload(route("admin.services.services"), {
+                //     only: ["services_"],
+                //     preserveScroll: true,
+                // });
+            },
         });
-
-        setServices(updatedServices);
-        setNewSubService({
-            name: "",
-            description: "",
-            duration: 30,
-            price: 0,
-            recurrenceDates: [],
-        });
-        setIsSubServiceDialogOpen(false);
     };
 
     // Get status badge color
@@ -288,15 +297,120 @@ const Services = ({ services_ }) => {
         }
     };
 
+    const {
+        data,
+        setData,
+        processing,
+        post,
+        recentlySuccessful,
+        clearErrors,
+        errors,
+    } = useForm({
+        serviceid: "",
+        subservicename: "",
+    });
+
+    const [IsEditDaysOpen, setIsEditDaysOpen] = useState(false);
+
+    const {
+        data: dataDays,
+        setData: setDataDays,
+        post: postDays,
+        processing: processDays,
+        errors: errorsDays,
+    } = useForm({
+        days: newSubService.recurrenceDates,
+        serviceid: selectedServiceID,
+    });
+
+    const saveDays = () => {
+        postDays(route("admin.services.days.update"), {
+            preserveScroll: true,
+            preserveState: true,
+            replace: true,
+            only: ["services_"], // Only reload these props
+            onSuccess: () => {
+                setIsEditDaysOpen(false);
+                alert_toast("Success!", "Successfully Updated!", "success");
+            },
+        });
+    };
+
+    const generateTimeArray = [
+        "09:00 AM",
+        "09:30 AM",
+        "10:00 AM",
+        "10:30 AM",
+        "11:00 AM",
+        "11:30 AM",
+        "01:00 PM",
+        "01:30 PM",
+        "02:00 PM",
+        "02:30 PM",
+        "03:00 PM",
+        "03:30 PM",
+        "04:00 PM",
+    ];
+
+    const [timeArr, setTimeArr] = useState([]);
+    const [selectedSubService, setSelectedSubService] = useState({});
+    const [isSubServiceDialogOpen, setIsSubServiceDialogOpen] = useState(false);
+
+    //const [IsSubServiceDialogOpen, setIsSubServiceDialogOpen] = useState(false);
+    const {
+        data: dataTime,
+        setData: setDataTime,
+        processing: procTime,
+        post: postTime,
+        recentlySuccessful: recentSuccessfulTime,
+        clearErrors: clearerrorsTime,
+        errors: errorsTime,
+    } = useForm({
+        times: timeArr,
+        subservice_id: selectedSubService,
+    });
+
+    const handleTimeChange = (time) => {
+        setDataTime((prev) => ({
+            ...prev,
+            times: prev.times.includes(time)
+                ? prev.times.filter((t) => t !== time)
+                : [...prev.times, time],
+        }));
+    };
+
+    const saveTime = (e) => {
+        postTime(route("admin.services.time.update"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsSubServiceDialogOpen(false);
+                alert_toast("Success!", "Successfully Updated!", "success");
+            },
+        });
+    };
+
+    const days_ = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ];
+
+    useEffect(() => {
+        console.log("datatime; ", dataTime);
+    }, [dataTime]);
+
     return (
         <ServicesLayout>
-            <div>
-                <h1 className="text-3xl font-bold mb-2">Overview</h1>
-                {/* <p className="text-gray-600">
-                            Book your visit to Barangay Calumpang Health Center.
-                            Please fill out the form below with your information
-                            and preferred appointment details.
-                        </p> */}
+            <div className=" mb-5">
+                <h1 className="text-3xl font-bold mb-2">Services</h1>
+                <p className="text-gray-600">
+                    These are the services to be used in the Appointment
+                    Schedules.
+                </p>
                 <p className="text-muted-foreground"></p>
             </div>
             <div className="flex flex-col lg:flex-row gap-4">
@@ -338,227 +452,287 @@ const Services = ({ services_ }) => {
 
                     {/* Table */}
                     <div className="rounded-md border">
-                        {/* <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[40px]"></TableHead>
-                                    <TableHead
-                                        className="cursor-pointer"
-                                        onClick={() => requestSort("name")}
-                                    >
-                                        <div className="flex items-center">
-                                            Service Name
-                                            {sortConfig.key === "name" && (
-                                                <span className="ml-1">
-                                                    {sortConfig.direction ===
-                                                    "ascending" ? (
-                                                        <ChevronUp className="h-4 w-4" />
-                                                    ) : (
-                                                        <ChevronDown className="h-4 w-4" />
-                                                    )}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </TableHead>
-                                    <TableHead>Description</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Sub-services</TableHead>
-                                    <TableHead className="text-right">
-                                        Actions
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {sortedServices.length > 0 ? (
-                                    sortedServices.map((service) => (
-                                        <React.Fragment key={service.id}>
-                                            <TableRow>
-                                                <TableCell>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={() =>
-                                                            toggleServiceExpansion(
-                                                                service.id
-                                                            )
-                                                        }
-                                                    >
-                                                        {expandedService ===
-                                                        service.id ? (
-                                                            <ChevronUp className="h-4 w-4" />
-                                                        ) : (
-                                                            <ChevronDown className="h-4 w-4" />
-                                                        )}
-                                                    </Button>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="font-medium">
-                                                        {service.name}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {service.description}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {getStatusBadge(
-                                                        service.status
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {service.subServices.length}{" "}
-                                                    sub-services
-                                                </TableCell>
-                                                <TableCell className="text-right">
-                                                    <div className="flex justify-end gap-2">
-                                                        <Dialog
-                                                            open={
-                                                                isSubServiceDialogOpen &&
-                                                                selectedService ===
+                        <SortableTable
+                            data={services}
+                            defaultSort={{
+                                key: "servicename",
+                                direction: "asc",
+                            }}
+                        >
+                            {({ sortedData }) => (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <SortableTableHead></SortableTableHead>
+                                            <SortableTableHead
+                                                sortKey="servicename"
+                                                sortable
+                                            >
+                                                Service Name
+                                            </SortableTableHead>
+                                            <SortableTableHead
+                                                sortKey="status"
+                                                sortable
+                                            >
+                                                Status
+                                            </SortableTableHead>
+                                            <SortableTableHead>
+                                                Available Days
+                                            </SortableTableHead>
+                                            <SortableTableHead
+                                                sortKey="servicename"
+                                                sortable
+                                            >
+                                                Sub Services
+                                            </SortableTableHead>
+                                            <SortableTableHead>
+                                                Actions
+                                            </SortableTableHead>
+                                        </TableRow>
+                                    </TableHeader>
+
+                                    <TableBody>
+                                        {sortedData.map((service, i) => (
+                                            <React.Fragment>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={() =>
+                                                                toggleServiceExpansion(
                                                                     service.id
+                                                                )
                                                             }
-                                                            onOpenChange={(
-                                                                open
-                                                            ) => {
-                                                                setIsSubServiceDialogOpen(
-                                                                    open
-                                                                );
-                                                                if (open)
-                                                                    setSelectedService(
-                                                                        service.id
-                                                                    );
-                                                            }}
                                                         >
-                                                            <DialogTrigger
-                                                                asChild
-                                                            >
-                                                                <Button
-                                                                    variant="outline"
-                                                                    size="sm"
-                                                                    onClick={() =>
-                                                                        setSelectedService(
-                                                                            service.id
-                                                                        )
-                                                                    }
+                                                            {expandedService ===
+                                                            service.id ? (
+                                                                <ChevronUp className="h-4 w-4" />
+                                                            ) : (
+                                                                <ChevronDown className="h-4 w-4" />
+                                                            )}
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {service.servicename}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {getStatusBadge(
+                                                            service.status
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell className=" grid gap-1">
+                                                        {service?.servicedays?.map(
+                                                            (day, i) => (
+                                                                <Badge
+                                                                    key={i}
+                                                                    className={`bg-primary`}
                                                                 >
-                                                                    Add
-                                                                    Sub-service
-                                                                </Button>
-                                                            </DialogTrigger>
-                                                            <DialogContent>
-                                                                <DialogHeader>
-                                                                    <DialogTitle>
+                                                                    {day.day}
+                                                                </Badge>
+                                                            )
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {service?.subservices
+                                                            .length <= 0 ? (
+                                                            <div>
+                                                                No Sub Services
+                                                            </div>
+                                                        ) : (
+                                                            <div>
+                                                                {
+                                                                    service
+                                                                        ?.subservices
+                                                                        .length
+                                                                }{" "}
+                                                                Service
+                                                                {service
+                                                                    ?.subservices
+                                                                    .length > 1
+                                                                    ? "s"
+                                                                    : ""}
+                                                            </div>
+                                                        )}
+                                                        {/* {service?.subservices.map(
+                                                            (sub, i) => {
+                                                                return (
+                                                                    <>
+                                                                        {
+                                                                            sub.subservicename
+                                                                        }{" "}
+                                                                    </>
+                                                                );
+                                                            }
+                                                        )} */}
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        <div className="flex justify-end gap-2">
+                                                            <Dialog
+                                                                open={
+                                                                    isServiceDialogOpen
+                                                                }
+                                                                onOpenChange={(
+                                                                    open
+                                                                ) => {
+                                                                    setIsServiceDialogOpen(
+                                                                        open
+                                                                    );
+                                                                    if (open) {
+                                                                        setData(
+                                                                            "serviceid",
+                                                                            service.id
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {/* <DialogOverlay className="bg-white/30" />{" "} */}
+                                                                {/* Semi-transparent black */}
+                                                                <DialogTrigger
+                                                                    asChild
+                                                                >
+                                                                    <Button
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                    >
                                                                         Add
                                                                         Sub-service
-                                                                        to{" "}
-                                                                        {
-                                                                            service.name
-                                                                        }
-                                                                    </DialogTitle>
-                                                                    <DialogDescription>
-                                                                        Create a
-                                                                        new
-                                                                        sub-service
-                                                                        for this
-                                                                        service
-                                                                        category.
-                                                                    </DialogDescription>
-                                                                </DialogHeader>
-                                                                <div className="grid gap-4 py-4">
-                                                                    <div className="grid grid-cols-4 items-center gap-4">
-                                                                        <Label
-                                                                            htmlFor="subName"
-                                                                            className="text-right"
-                                                                        >
-                                                                            Name
-                                                                        </Label>
-                                                                        <Input
-                                                                            id="subName"
-                                                                            name="name"
-                                                                            value={
-                                                                                newSubService.name
+                                                                    </Button>
+                                                                </DialogTrigger>
+                                                                <DialogContent>
+                                                                    <DialogHeader>
+                                                                        <DialogTitle>
+                                                                            Add
+                                                                            Sub-service
+                                                                            to{" "}
+                                                                            {
+                                                                                service.servicename
                                                                             }
-                                                                            onChange={
-                                                                                handleSubServiceInputChange
-                                                                            }
-                                                                            className="col-span-3"
-                                                                        />
+                                                                        </DialogTitle>
+                                                                        <DialogDescription>
+                                                                            Create
+                                                                            a
+                                                                            new
+                                                                            sub-service
+                                                                            for
+                                                                            this
+                                                                            service
+                                                                            category.
+                                                                        </DialogDescription>
+                                                                    </DialogHeader>
+                                                                    <div className="grid gap-4 py-4">
+                                                                        <div className="grid grid-cols-4 items-center gap-4">
+                                                                            <Label
+                                                                                htmlFor="subName"
+                                                                                className="text-right"
+                                                                            >
+                                                                                Sub
+                                                                                Service
+                                                                            </Label>
+                                                                            <Input
+                                                                                id="subName"
+                                                                                name="name"
+                                                                                value={
+                                                                                    data.subservicename
+                                                                                }
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    setData(
+                                                                                        "subservicename",
+                                                                                        e
+                                                                                            .target
+                                                                                            .value
+                                                                                    );
+                                                                                }}
+                                                                                className="col-span-3"
+                                                                            />
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="grid grid-cols-4 items-center gap-4">
-                                                                        <Label
-                                                                            htmlFor="subDescription"
-                                                                            className="text-right"
+                                                                    <DialogFooter>
+                                                                        <Button
+                                                                            type="submit"
+                                                                            onClick={
+                                                                                addSubService
+                                                                            }
+                                                                            disabled={
+                                                                                !data.subservicename ||
+                                                                                processing
+                                                                            }
                                                                         >
-                                                                            Description
-                                                                        </Label>
-                                                                        <Textarea
-                                                                            id="subDescription"
-                                                                            name="description"
-                                                                            value={
-                                                                                newSubService.description
-                                                                            }
-                                                                            onChange={
-                                                                                handleSubServiceInputChange
-                                                                            }
-                                                                            className="col-span-3"
-                                                                        />
-                                                                    </div>
-                                                                    <div className="grid grid-cols-4 items-center gap-4">
-                                                                        <Label
-                                                                            htmlFor="duration"
-                                                                            className="text-right"
-                                                                        >
-                                                                            Duration
-                                                                            (min)
-                                                                        </Label>
-                                                                        <Input
-                                                                            id="duration"
-                                                                            name="duration"
-                                                                            type="number"
-                                                                            value={
-                                                                                newSubService.duration
-                                                                            }
-                                                                            onChange={
-                                                                                handleSubServiceInputChange
-                                                                            }
-                                                                            className="col-span-3"
-                                                                        />
-                                                                    </div>
-                                                                    <div className="grid grid-cols-4 items-center gap-4">
-                                                                        <Label
-                                                                            htmlFor="price"
-                                                                            className="text-right"
-                                                                        >
-                                                                            Price
-                                                                            (₱)
-                                                                        </Label>
-                                                                        <Input
-                                                                            id="price"
-                                                                            name="price"
-                                                                            type="number"
-                                                                            value={
-                                                                                newSubService.price
-                                                                            }
-                                                                            onChange={
-                                                                                handleSubServiceInputChange
-                                                                            }
-                                                                            className="col-span-3"
-                                                                        />
-                                                                    </div>
-                                                                    <div className="grid grid-cols-4 items-start gap-4">
-                                                                        <Label className="text-right pt-2">
-                                                                            Available
+                                                                            Save
+                                                                            Sub-service
+                                                                        </Button>
+                                                                    </DialogFooter>
+                                                                </DialogContent>
+                                                            </Dialog>
+
+                                                            <Dialog
+                                                                open={
+                                                                    IsEditDaysOpen
+                                                                }
+                                                                onOpenChange={(
+                                                                    open
+                                                                ) => {
+                                                                    setIsEditDaysOpen(
+                                                                        open
+                                                                    );
+
+                                                                    if (open) {
+                                                                        setDataDays(
+                                                                            "days",
+                                                                            service?.servicedays?.map(
+                                                                                (
+                                                                                    sub
+                                                                                ) =>
+                                                                                    sub.day
+                                                                            ) ||
+                                                                                []
+                                                                        );
+
+                                                                        setDataDays(
+                                                                            "serviceid",
+                                                                            service.id
+                                                                        );
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <DialogTrigger
+                                                                    asChild
+                                                                >
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="sm"
+                                                                    >
+                                                                        <Edit className="h-4 w-4" />
+                                                                    </Button>
+                                                                </DialogTrigger>
+                                                                <DialogContent>
+                                                                    <DialogHeader>
+                                                                        <DialogTitle>
+                                                                            Edit
                                                                             Days
-                                                                        </Label>
-                                                                        <div className="col-span-3 flex flex-wrap gap-2">
-                                                                            {[
-                                                                                "Monday",
-                                                                                "Tuesday",
-                                                                                "Wednesday",
-                                                                                "Thursday",
-                                                                                "Friday",
-                                                                                "Saturday",
-                                                                                "Sunday",
-                                                                            ].map(
+                                                                            to{" "}
+                                                                            {
+                                                                                service.servicename
+                                                                            }
+                                                                        </DialogTitle>
+                                                                        <DialogDescription>
+                                                                            Edit
+                                                                            days
+                                                                            for
+                                                                            this
+                                                                            service
+                                                                            category.
+                                                                        </DialogDescription>
+                                                                    </DialogHeader>
+                                                                    <div className="grid gap-4 py-4">
+                                                                        <div className="grid grid-cols-4 items-center gap-4">
+                                                                            <Label className="text-right">
+                                                                                Available
+                                                                                Days
+                                                                            </Label>
+                                                                            {days_.map(
                                                                                 (
                                                                                     day
                                                                                 ) => (
@@ -567,11 +741,11 @@ const Services = ({ services_ }) => {
                                                                                             day
                                                                                         }
                                                                                         className={`cursor-pointer ${
-                                                                                            newSubService.recurrenceDates.includes(
+                                                                                            dataDays.days.includes(
                                                                                                 day
                                                                                             )
                                                                                                 ? "bg-primary"
-                                                                                                : "bg-muted"
+                                                                                                : "bg-muted text-red-500"
                                                                                         }`}
                                                                                         onClick={() =>
                                                                                             handleRecurrenceDateChange(
@@ -586,246 +760,334 @@ const Services = ({ services_ }) => {
                                                                                 )
                                                                             )}
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <DialogFooter>
-                                                                    <Button
-                                                                        type="submit"
-                                                                        onClick={
-                                                                            addSubService
-                                                                        }
-                                                                        disabled={
-                                                                            !newSubService.name
-                                                                        }
-                                                                    >
-                                                                        Save
-                                                                        Sub-service
-                                                                    </Button>
-                                                                </DialogFooter>
-                                                            </DialogContent>
-                                                        </Dialog>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                        >
-                                                            <Edit className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                        >
-                                                            <Trash2 className="h-4 w-4 text-red-500" />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                            {expandedService === service.id && (
-                                                <TableRow>
-                                                    <TableCell
-                                                        colSpan={6}
-                                                        className="p-0"
-                                                    >
-                                                        <div className="bg-muted/20 p-4">
-                                                            <h3 className="font-medium mb-2">
-                                                                Sub-services for{" "}
-                                                                {service.name}
-                                                            </h3>
-                                                            {service.subServices
-                                                                .length > 0 ? (
-                                                                <Table>
-                                                                    <TableHeader>
-                                                                        <TableRow>
-                                                                            <TableHead>
-                                                                                Name
-                                                                            </TableHead>
-                                                                            <TableHead>
-                                                                                Description
-                                                                            </TableHead>
-                                                                            <TableHead>
-                                                                                Duration
-                                                                            </TableHead>
-                                                                            <TableHead>
-                                                                                Price
-                                                                            </TableHead>
-                                                                            <TableHead>
-                                                                                Available
-                                                                                Days
-                                                                            </TableHead>
-                                                                            <TableHead className="text-right">
-                                                                                Actions
-                                                                            </TableHead>
-                                                                        </TableRow>
-                                                                    </TableHeader>
-                                                                    <TableBody>
-                                                                        {service.subServices.map(
-                                                                            (
-                                                                                subService
-                                                                            ) => (
-                                                                                <TableRow
-                                                                                    key={
-                                                                                        subService.id
-                                                                                    }
-                                                                                >
-                                                                                    <TableCell>
-                                                                                        {
-                                                                                            subService.name
-                                                                                        }
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        {
-                                                                                            subService.description
-                                                                                        }
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        {
-                                                                                            subService.duration
-                                                                                        }{" "}
-                                                                                        min
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        ₱
-                                                                                        {
-                                                                                            subService.price
-                                                                                        }
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        <div className="flex flex-wrap gap-1">
-                                                                                            {subService.recurrenceDates.map(
-                                                                                                (
-                                                                                                    day
-                                                                                                ) => (
-                                                                                                    <Badge
+                                                                        {/* Display validation errors */}
+                                                                        {Object.keys(
+                                                                            errorsDays
+                                                                        )
+                                                                            .length >
+                                                                            0 && (
+                                                                            <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+                                                                                <div className="flex items-center">
+                                                                                    <div className="flex-shrink-0">
+                                                                                        <Cross2Icon className="h-5 w-5 text-red-400" />
+                                                                                    </div>
+                                                                                    <div className="ml-3">
+                                                                                        <ul className="text-sm text-red-600">
+                                                                                            {Object.entries(
+                                                                                                errorsDays
+                                                                                            ).map(
+                                                                                                ([
+                                                                                                    key,
+                                                                                                    error,
+                                                                                                ]) => (
+                                                                                                    <li
                                                                                                         key={
-                                                                                                            day
+                                                                                                            key
                                                                                                         }
-                                                                                                        className="bg-primary text-xs"
                                                                                                     >
                                                                                                         {
-                                                                                                            day
+                                                                                                            error
                                                                                                         }
-                                                                                                    </Badge>
+                                                                                                    </li>
                                                                                                 )
                                                                                             )}
-                                                                                        </div>
-                                                                                    </TableCell>
-                                                                                    <TableCell className="text-right">
-                                                                                        <div className="flex justify-end gap-2">
-                                                                                            <Button
-                                                                                                variant="ghost"
-                                                                                                size="sm"
-                                                                                            >
-                                                                                                <Edit className="h-4 w-4" />
-                                                                                            </Button>
-                                                                                            <Button
-                                                                                                variant="ghost"
-                                                                                                size="sm"
-                                                                                            >
-                                                                                                <Trash2 className="h-4 w-4 text-red-500" />
-                                                                                            </Button>
-                                                                                        </div>
-                                                                                    </TableCell>
-                                                                                </TableRow>
-                                                                            )
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         )}
-                                                                    </TableBody>
-                                                                </Table>
-                                                            ) : (
-                                                                <p className="text-muted-foreground">
-                                                                    No
-                                                                    sub-services
-                                                                    found for
-                                                                    this
-                                                                    service.
-                                                                </p>
-                                                            )}
+                                                                    </div>
+                                                                    <DialogFooter>
+                                                                        <Button
+                                                                            // type="submit"
+                                                                            onClick={(
+                                                                                e
+                                                                            ) => {
+                                                                                saveDays();
+                                                                            }}
+                                                                            disabled={
+                                                                                processDays
+                                                                            }
+                                                                        >
+                                                                            Save
+                                                                            Days
+                                                                        </Button>
+                                                                    </DialogFooter>
+                                                                </DialogContent>
+                                                            </Dialog>
+
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                            >
+                                                                <Trash2 className="h-4 w-4 text-red-500" />
+                                                            </Button>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>
-                                            )}
-                                        </React.Fragment>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={6}
-                                            className="text-center h-24 text-muted-foreground"
-                                        >
-                                            No services found
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table> */}
-                        <SortableTable
-                            data={services}
-                            defaultSort={{
-                                key: "user.firstname",
-                                direction: "asc",
-                            }}
-                        >
-                            {({ sortedData }) => (
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <SortableTableHead>
-                                                Service Name
-                                            </SortableTableHead>
-                                            <SortableTableHead>
-                                                Status
-                                            </SortableTableHead>
-                                            <SortableTableHead>
-                                                Sub Services
-                                            </SortableTableHead>
-                                            <SortableTableHead>
-                                                Actions
-                                            </SortableTableHead>
-                                        </TableRow>
-                                    </TableHeader>
-
-                                    <TableBody>
-                                        {sortedData.map((service, i) => (
-                                            <TableRow>
-                                                <TableCell>
-                                                    {service.servicename}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {getStatusBadge(
-                                                        service.status
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {service?.subservices
-                                                        .length <= 0 && (
-                                                        <div>
-                                                            No Sub Services
-                                                        </div>
-                                                    )}
-                                                    {service?.subservices.map(
-                                                        (sub, i) => {
-                                                            return (
-                                                                <>
+                                                {expandedService ===
+                                                    service.id && (
+                                                    <TableRow>
+                                                        <TableCell
+                                                            colSpan={6}
+                                                            className="p-0"
+                                                        >
+                                                            <div className="bg-muted/20 p-4">
+                                                                <h3 className="font-medium mb-2">
+                                                                    Sub-services
+                                                                    for{" "}
                                                                     {
-                                                                        sub.subservicename
-                                                                    }{" "}
-                                                                </>
-                                                            );
-                                                        }
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Dialog>
-                                                        <DialogTrigger>
-                                                            <Button
-                                                                variant="outline"
-                                                                size="sm"
-                                                            >
-                                                                Add Sub-service
-                                                            </Button>
-                                                        </DialogTrigger>
-                                                        <DialogContent></DialogContent>
-                                                    </Dialog>
-                                                </TableCell>
-                                            </TableRow>
+                                                                        service.servicename
+                                                                    }
+                                                                </h3>
+                                                                {service
+                                                                    .subservices
+                                                                    .length >
+                                                                0 ? (
+                                                                    <Table>
+                                                                        <TableHeader>
+                                                                            <TableRow>
+                                                                                <SortableTableHead>
+                                                                                    Sub
+                                                                                    Service
+                                                                                </SortableTableHead>
+                                                                                <SortableTableHead>
+                                                                                    Available
+                                                                                    Time
+                                                                                </SortableTableHead>
+
+                                                                                <SortableTableHead className="text-right">
+                                                                                    Actions
+                                                                                </SortableTableHead>
+                                                                            </TableRow>
+                                                                        </TableHeader>
+                                                                        <TableBody>
+                                                                            {service?.subservices.map(
+                                                                                (
+                                                                                    ttt,
+                                                                                    i
+                                                                                ) => (
+                                                                                    <TableRow
+                                                                                        key={
+                                                                                            i
+                                                                                        }
+                                                                                    >
+                                                                                        <TableCell>
+                                                                                            {
+                                                                                                ttt.subservicename
+                                                                                            }
+                                                                                        </TableCell>
+                                                                                        <TableCell>
+                                                                                            {ttt?.times?.map(
+                                                                                                (
+                                                                                                    t,
+                                                                                                    i
+                                                                                                ) =>
+                                                                                                    moment(
+                                                                                                        t.time,
+                                                                                                        "HH:mm:ss"
+                                                                                                    ).format(
+                                                                                                        "hh:mm A"
+                                                                                                    )
+                                                                                            )}
+                                                                                        </TableCell>
+                                                                                        <TableCell>
+                                                                                            <div>
+                                                                                                <Dialog
+                                                                                                    open={
+                                                                                                        isSubServiceDialogOpen
+                                                                                                    }
+                                                                                                    onOpenChange={(
+                                                                                                        open
+                                                                                                    ) => {
+                                                                                                        setIsSubServiceDialogOpen(
+                                                                                                            open
+                                                                                                        );
+                                                                                                        if (
+                                                                                                            open
+                                                                                                        ) {
+                                                                                                            console.log(
+                                                                                                                "selected: ",
+                                                                                                                ttt.subservicename
+                                                                                                            );
+                                                                                                            setDataTime(
+                                                                                                                "subservice_id",
+                                                                                                                ttt.id
+                                                                                                            );
+                                                                                                            setSelectedSubService(
+                                                                                                                ttt
+                                                                                                            );
+                                                                                                            setDataTime(
+                                                                                                                "times",
+                                                                                                                ttt?.times.map(
+                                                                                                                    (
+                                                                                                                        t
+                                                                                                                    ) =>
+                                                                                                                        moment(
+                                                                                                                            t.time,
+                                                                                                                            "HH:mm:ss"
+                                                                                                                        ).format(
+                                                                                                                            "hh:mm A"
+                                                                                                                        )
+                                                                                                                )
+                                                                                                            );
+                                                                                                            console.log(
+                                                                                                                dataTime
+                                                                                                            );
+                                                                                                            // setTimeArr(
+                                                                                                            //     ttt?.times
+                                                                                                            // );
+                                                                                                        }
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <DialogTrigger
+                                                                                                        asChild
+                                                                                                    >
+                                                                                                        <Button
+                                                                                                            variant="ghost"
+                                                                                                            size="sm"
+                                                                                                        >
+                                                                                                            <Edit className="h-4 w-4" />
+                                                                                                        </Button>
+                                                                                                    </DialogTrigger>
+                                                                                                    <DialogContent>
+                                                                                                        <DialogHeader>
+                                                                                                            <DialogTitle>
+                                                                                                                Edit
+                                                                                                                Time
+                                                                                                                to
+                                                                                                                {
+                                                                                                                    selectedSubService.subservicename
+                                                                                                                }
+                                                                                                            </DialogTitle>
+                                                                                                            <DialogDescription>
+                                                                                                                Edit
+                                                                                                                days
+                                                                                                                for
+                                                                                                                this
+                                                                                                                sub
+                                                                                                                service
+                                                                                                                category.
+                                                                                                            </DialogDescription>
+                                                                                                        </DialogHeader>
+                                                                                                        <div className="grid gap-4 py-4">
+                                                                                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                                                                                <Label className=" text-right">
+                                                                                                                    Available
+                                                                                                                    Time:
+                                                                                                                </Label>
+                                                                                                                {generateTimeArray.map(
+                                                                                                                    (
+                                                                                                                        time,
+                                                                                                                        i
+                                                                                                                    ) => (
+                                                                                                                        <Badge
+                                                                                                                            key={
+                                                                                                                                i
+                                                                                                                            }
+                                                                                                                            className={`cursor-pointer ${
+                                                                                                                                dataTime.times.includes(
+                                                                                                                                    time
+                                                                                                                                )
+                                                                                                                                    ? "bg-primary"
+                                                                                                                                    : "bg-muted text-red-500"
+                                                                                                                            }`}
+                                                                                                                            onClick={() =>
+                                                                                                                                // handleRecurrenceDateChange(
+                                                                                                                                //     day
+                                                                                                                                // )
+                                                                                                                                handleTimeChange(
+                                                                                                                                    time
+                                                                                                                                )
+                                                                                                                            }
+                                                                                                                        >
+                                                                                                                            {
+                                                                                                                                time
+                                                                                                                            }
+                                                                                                                        </Badge>
+                                                                                                                    )
+                                                                                                                )}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <DialogFooter>
+                                                                                                            {/* Display validation errors */}
+                                                                                                            {Object.keys(
+                                                                                                                errorsTime
+                                                                                                            )
+                                                                                                                .length >
+                                                                                                                0 && (
+                                                                                                                <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+                                                                                                                    <div className="flex items-center">
+                                                                                                                        <div className="flex-shrink-0">
+                                                                                                                            <Cross2Icon className="h-5 w-5 text-red-400" />
+                                                                                                                        </div>
+                                                                                                                        <div className="ml-3">
+                                                                                                                            <ul className="text-sm text-red-600">
+                                                                                                                                {Object.entries(
+                                                                                                                                    errorsTime
+                                                                                                                                ).map(
+                                                                                                                                    ([
+                                                                                                                                        key,
+                                                                                                                                        error,
+                                                                                                                                    ]) => (
+                                                                                                                                        <li
+                                                                                                                                            key={
+                                                                                                                                                key
+                                                                                                                                            }
+                                                                                                                                        >
+                                                                                                                                            {
+                                                                                                                                                error
+                                                                                                                                            }
+                                                                                                                                        </li>
+                                                                                                                                    )
+                                                                                                                                )}
+                                                                                                                            </ul>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            )}
+                                                                                                            <Button
+                                                                                                                onClick={
+                                                                                                                    saveTime
+                                                                                                                }
+                                                                                                                disabled={
+                                                                                                                    procTime
+                                                                                                                }
+                                                                                                            >
+                                                                                                                Save
+                                                                                                                Time
+                                                                                                            </Button>
+                                                                                                        </DialogFooter>
+                                                                                                    </DialogContent>
+                                                                                                </Dialog>
+
+                                                                                                <Button
+                                                                                                    variant="ghost"
+                                                                                                    size="sm"
+                                                                                                >
+                                                                                                    <Trash2 className="h-4 w-4 text-red-500" />
+                                                                                                </Button>
+                                                                                            </div>
+                                                                                        </TableCell>
+                                                                                    </TableRow>
+                                                                                )
+                                                                            )}
+                                                                        </TableBody>
+                                                                    </Table>
+                                                                ) : (
+                                                                    <p className="text-muted-foreground">
+                                                                        No
+                                                                        sub-services
+                                                                        found
+                                                                        for this
+                                                                        service.
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )}
+                                            </React.Fragment>
                                         ))}
                                     </TableBody>
                                 </Table>

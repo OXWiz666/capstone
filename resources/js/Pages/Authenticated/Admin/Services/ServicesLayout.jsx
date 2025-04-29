@@ -276,6 +276,9 @@ export default function ServicesLayout({ children }) {
             >
                 {children}
             </motion.div>
+            <Modal2 isOpen={isModalOpen} onClose={CloseModal}>
+                <div>qwe</div>
+            </Modal2>
         </AdminLayout>
     );
 }

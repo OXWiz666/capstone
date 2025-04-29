@@ -110,7 +110,11 @@ Route::middleware(['auth','Admin'])->group(function(){
 
         Route::prefix('services')->group(function(){
             Route::get('/overview',[ServicesController::class,'index'])->name('admin.services.overview');
-            Route::get('/services',[ServicesController::class,'services'])->name('admin.services.services');
+            Route::get('/',[ServicesController::class,'services'])->name('admin.services.services');
+            Route::post('/sub-services/create',[ServicesController::class,'createSubService'])->name('admin.services.subservice.create');
+
+            Route::post('/sub-services/save-time',[ServicesController::class,'saveTime'])->name('admin.services.time.update');
+            Route::post('/sub-services/save-days',[ServicesController::class,'saveDays'])->name('admin.services.days.update');
         });
 
         Route::post('/registerstaff/create',[AuthController::class,'registerStaff'])->name('admin.staff.register');

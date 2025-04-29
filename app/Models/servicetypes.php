@@ -9,6 +9,10 @@ class servicetypes extends Model
     //
     protected $primaryKey = 'id';
     public function subservices(){
-        return $this->hasMany(servicetypes::class,'id','service_id');
+        return $this->hasMany(subservices::class,'service_id','id');
+    }
+
+    public function servicedays(){
+        return $this->hasMany(service_days::class,'service_id','id');
     }
 }
