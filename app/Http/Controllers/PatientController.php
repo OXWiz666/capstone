@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\SendNotification;
 use App\Models\appointments;
 use App\Models\servicetypes;
+use App\Models\subservices;
 use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,11 +72,19 @@ class PatientController extends Controller
 
     public function appointments(){
         $serv = servicetypes::get();
+
+
         return Inertia::render('Authenticated/Patient/Appointments/Appointment',[
             'services' => $serv,
             'ActiveTAB' => 'appointment'
         ]);
     }
+
+    public function GetSubServices(Request $request,$id){
+        $subservices = subservices::where('service_id',$id)->get();
+        return response()->json($subservices);
+    }
+
     public function appointmentshistory(){
         $appointments =
         appointments::with(['service','user'])
@@ -92,6 +101,7 @@ class PatientController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:h:i A',
             'service' => 'required|exists:servicetypes,id',
+            'subservice' => 'required|exists:subservices,id'
             //'notes' => 'required|min:10'
         ]);
         //dd($request);

@@ -882,13 +882,16 @@ const Services = ({ services_ }) => {
                                                                                                 (
                                                                                                     t,
                                                                                                     i
-                                                                                                ) =>
-                                                                                                    moment(
-                                                                                                        t.time,
-                                                                                                        "HH:mm:ss"
-                                                                                                    ).format(
-                                                                                                        "hh:mm A"
-                                                                                                    )
+                                                                                                ) => (
+                                                                                                    <Badge className="cursor-pointer bg-primary">
+                                                                                                        {moment(
+                                                                                                            t.time,
+                                                                                                            "HH:mm:ss"
+                                                                                                        ).format(
+                                                                                                            "hh:mm A"
+                                                                                                        )}
+                                                                                                    </Badge>
+                                                                                                )
                                                                                             )}
                                                                                         </TableCell>
                                                                                         <TableCell>
@@ -931,9 +934,6 @@ const Services = ({ services_ }) => {
                                                                                                                         )
                                                                                                                 )
                                                                                                             );
-                                                                                                            console.log(
-                                                                                                                dataTime
-                                                                                                            );
                                                                                                             // setTimeArr(
                                                                                                             //     ttt?.times
                                                                                                             // );
@@ -955,7 +955,7 @@ const Services = ({ services_ }) => {
                                                                                                             <DialogTitle>
                                                                                                                 Edit
                                                                                                                 Time
-                                                                                                                to
+                                                                                                                to{" "}
                                                                                                                 {
                                                                                                                     selectedSubService.subservicename
                                                                                                                 }

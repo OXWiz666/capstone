@@ -35,11 +35,11 @@ import {
     Shield,
 } from "lucide-react";
 import LandingLayout from "@/Layouts/LandingLayout";
-import { Head, useForm, router } from "@inertiajs/react";
+import { Head, useForm, router, usePage } from "@inertiajs/react";
 
 //import { useAuth } from "../../contexts/AuthContext";
 
-const MedicalRecordsPage = () => {
+const MedicalRecordsPage = ({}) => {
     //const { user: authUser } = useAuth();
     const [activeTab, setActiveTab] = useState("records");
     const [searchQuery, setSearchQuery] = useState("");
@@ -183,6 +183,7 @@ const MedicalRecordsPage = () => {
             result.id.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const { auth } = usePage().props;
     return (
         <LandingLayout className=" p-5">
             <div className="container mx-auto mt-7 py-12 px-4 min-h-screen">
@@ -207,11 +208,12 @@ const MedicalRecordsPage = () => {
                                         </AvatarFallback>
                                     </Avatar>
                                     <CardTitle className="text-xl">
-                                        name
+                                        {auth?.user.firstname}{" "}
+                                        {auth?.user.lastname}
                                     </CardTitle>
                                     <CardDescription className="text-center">
                                         {/* {userData.email} */}
-                                        email
+                                        {auth?.user.email}
                                     </CardDescription>
                                 </div>
                             </CardHeader>
@@ -377,7 +379,7 @@ const MedicalRecordsPage = () => {
                                                     </Button>
                                                 </div>
                                                 <div className="divide-y">
-                                                    {filteredRecords.map(
+                                                    {/* {filteredRecords.map(
                                                         (record) => (
                                                             <div
                                                                 key={record.id}
@@ -448,7 +450,7 @@ const MedicalRecordsPage = () => {
                                                                 )}
                                                             </div>
                                                         )
-                                                    )}
+                                                    )} */}
                                                 </div>
                                             </div>
                                         ) : (

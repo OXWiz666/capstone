@@ -80,6 +80,8 @@ Route::middleware(['auth','Patient'])->group(function(){
         Route::get('/appointments/history',[PatientController::class,'appointmentshistory'])->name('patient.appoint.history');
         ## Appointment
         Route::post('/appointment/create',[PatientController::class,'storeAppointment'])->name('patient.appoint.create');
+
+        Route::get('/get-sub-services/{id}',[PatientController::class,'GetSubServices'])->name('patient.subservices.get');
     });
 });
 
