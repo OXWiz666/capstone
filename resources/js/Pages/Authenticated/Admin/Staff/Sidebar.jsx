@@ -91,24 +91,6 @@ export default function Sidebar({ activeTab }) {
                                 {/* <Pill className="mr-2 h-5 w-5" /> */}
                                 Doctors
                             </Button>
-                            <Button
-                                variant={
-                                    activeTab === "pharmacists"
-                                        ? "secondary"
-                                        : "ghost"
-                                }
-                                className="w-full justify-start"
-                                size="lg"
-                                onClick={(e) =>
-                                    router.visit(
-                                        "/patient/appointments/history"
-                                    )
-                                }
-                            >
-                                <ShieldPlus className="mr-2 h-5 w-5" />
-                                {/* <Pill className="mr-2 h-5 w-5" /> */}
-                                Pharmacists
-                            </Button>
                         </div>
                     </CardContent>
                 </Card>

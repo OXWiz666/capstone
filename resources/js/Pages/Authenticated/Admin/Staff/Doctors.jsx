@@ -71,14 +71,24 @@ import Sidebar from "./Sidebar";
 
 import StaffLayout from "./StaffLayout";
 // Helper function for toast notifications
-const alert_toast = (title, message, type) => {
+const enhanced_toast = (title, message, type) => {
     toast[type](message, {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 5000, // Longer display time
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
+        progress: undefined,
+        className: `custom-toast custom-toast-${type}`,
+        bodyClassName: "custom-toast-body",
+        progressClassName: "custom-toast-progress",
+        icon: type === "success" ? "✅" : type === "error" ? "❌" : "ℹ️",
+        style: {
+            borderRadius: "8px",
+            padding: "12px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+        },
     });
 };
 
@@ -89,7 +99,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
     // Handle flash messages from the server
     useEffect(() => {
         if (flash && flash.message) {
-            alert_toast(flash.title, flash.message, flash.icon);
+            enhanced_toast(flash.title, flash.message, flash.icon);
         }
     }, [flash]);
 
@@ -143,7 +153,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
         post(route("admin.register.doctor"), {
             onSuccess: (r) => {
                 CloseModal();
-                alert_toast(
+                enhanced_toast(
                     "Success!",
                     "Doctor has been registered successfully!",
                     "success"
@@ -194,7 +204,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
             {
                 onSuccess: (res) => {
                     CloseModalView();
-                    alert_toast(
+                    enhanced_toast(
                         "Success!",
                         "Doctor status updated successfully",
                         "success"
@@ -202,6 +212,172 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                 },
             }
         );
+    };
+
+    // State for custom confirmation dialog
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: "",
+        message: "",
+        onConfirm: null,
+        type: "" // 'archive' or 'unarchive'
+    });
+
+    // Function to open the confirmation dialog
+    const openConfirmDialog = (title, message, onConfirm, type) => {
+        setConfirmDialog({
+            isOpen: true,
+            title,
+            message,
+            onConfirm,
+            type
+        });
+    };
+
+    // Function to close the confirmation dialog
+    const closeConfirmDialog = () => {
+        setConfirmDialog({
+            ...confirmDialog,
+            isOpen: false
+        });
+    };
+
+    // Custom Confirmation Dialog Component
+    const ConfirmationDialog = () => {
+        if (!confirmDialog.isOpen) return null;
+        
+        const isArchive = confirmDialog.type === 'archive';
+        
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                {/* Backdrop */}
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+                    onClick={closeConfirmDialog}
+                ></div>
+                
+                {/* Dialog */}
+                <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4 overflow-hidden transform transition-all">
+                    {/* Header */}
+                    <div className={`px-6 py-4 border-b ${isArchive ? 'bg-red-50 dark:bg-red-900/20 border-red-100' : 'bg-blue-50 dark:bg-blue-900/20 border-blue-100'}`}>
+                        <h3 className={`text-lg font-medium ${isArchive ? 'text-red-700 dark:text-red-400' : 'text-blue-700 dark:text-blue-400'} flex items-center`}>
+                            {isArchive ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            )}
+                            {confirmDialog.title}
+                        </h3>
+                    </div>
+                    
+                    {/* Body */}
+                    <div className="px-6 py-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{confirmDialog.message}</p>
+                    </div>
+                    
+                    {/* Footer */}
+                    <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 flex justify-end space-x-2">
+                        <button
+                            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            onClick={closeConfirmDialog}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className={`px-4 py-2 text-sm font-medium text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${isArchive ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'}`}
+                            onClick={() => {
+                                if (confirmDialog.onConfirm) {
+                                    confirmDialog.onConfirm();
+                                }
+                                closeConfirmDialog();
+                            }}
+                        >
+                            {isArchive ? 'Archive' : 'Unarchive'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // Function to archive a doctor account with enhanced feedback
+    const archiveDoctor = (doctor) => {
+        const doctorName = `${doctor.user?.firstname} ${doctor.user?.lastname}`;
+        
+        // Show loading toast
+        const loadingToastId = toast.loading(`Archiving ${doctorName}'s account...`, {
+            position: "top-right",
+        });
+        
+        axios.post(route("doctor.archive", { doctor: doctor.id }))
+            .then(response => {
+                // Dismiss loading toast
+                toast.dismiss(loadingToastId);
+                
+                // Show success toast
+                enhanced_toast(
+                    "Account Archived",
+                    `${doctorName}'s account has been archived successfully.`,
+                    "success"
+                );
+                router.reload({
+                    only: ["auth"],
+                    preserveScroll: true,
+                });
+            })
+            .catch(error => {
+                // Dismiss loading toast
+                toast.dismiss(loadingToastId);
+                
+                // Show error toast
+                enhanced_toast(
+                    "Archive Failed",
+                    `There was a problem archiving ${doctorName}'s account: ${error.response?.data?.message || "Please try again."}`,
+                    "error"
+                );
+            });
+    };
+
+    // Function to unarchive a doctor account with enhanced feedback
+    const unarchiveDoctor = (doctor) => {
+        const doctorName = `${doctor.user?.firstname} ${doctor.user?.lastname}`;
+        
+        // Show loading toast
+        const loadingToastId = toast.loading(`Unarchiving ${doctorName}'s account...`, {
+            position: "top-right",
+        });
+        
+        axios.post(route("doctor.unarchive", { doctor: doctor.id }))
+            .then(response => {
+                // Dismiss loading toast
+                toast.dismiss(loadingToastId);
+                
+                // Show success toast
+                enhanced_toast(
+                    "Account Unarchived",
+                    `${doctorName}'s account has been unarchived successfully.`,
+                    "success"
+                );
+                router.reload({
+                    only: ["auth"],
+                    preserveScroll: true,
+                });
+            })
+            .catch(error => {
+                // Dismiss loading toast
+                toast.dismiss(loadingToastId);
+                
+                // Show error toast
+                enhanced_toast(
+                    "Unarchive Failed",
+                    `There was a problem unarchiving ${doctorName}'s account: ${error.response?.data?.message || "Please try again."}`,
+                    "error"
+                );
+            });
     };
 
     const getStatusBadge = (doctor) => {
@@ -244,6 +420,15 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                         className="text-blue-700 bg-blue-200 border border-blue-300 rounded-full px-4 py-2 text-sm font-semibold"
                     >
                         In Consultation
+                    </Badge>
+                );
+            case 5:
+                return (
+                    <Badge
+                        variant="outline"
+                        className="text-red-700 bg-red-100 border border-red-300 rounded-full px-4 py-2 text-sm font-semibold"
+                    >
+                        Archived
                     </Badge>
                 );
             default:
@@ -398,14 +583,75 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                                                     {getStatusBadge(d)}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <PrimaryButton
-                                                        className=" btn-sm"
-                                                        onClick={() =>
-                                                            openStatusModal(d)
-                                                        }
-                                                    >
-                                                        Edit
-                                                    </PrimaryButton>
+                                                    <div className="flex space-x-2">
+                                                        <PrimaryButton
+                                                            className="btn-sm w-32 text-sm px-5 py-2 shadow-md flex items-center justify-center"
+                                                            onClick={() =>
+                                                                openStatusModal(d)
+                                                            }
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                            </svg>
+                                                            Edit Status
+                                                        </PrimaryButton>
+                                                        
+                                                        {d.status === 5 ? (
+                                                            <PrimaryButton
+                                                                className="btn-sm w-32 bg-green-600 hover:bg-green-700 text-sm px-5 py-2 shadow-md flex items-center justify-center"
+                                                                onClick={() =>
+                                                                    openConfirmDialog(
+                                                                        "Unarchive Doctor",
+                                                                        `Are you sure you want to unarchive ${d.user.firstname} ${d.user.lastname}'s account?`,
+                                                                        () => unarchiveDoctor(d),
+                                                                        'unarchive'
+                                                                    )
+                                                                }
+                                                            >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                                </svg>
+                                                                Unarchive
+                                                            </PrimaryButton>
+                                                        ) : (
+                                                            <>
+                                                                <PrimaryButton
+                                                                    className="btn-sm w-32 bg-blue-600 hover:bg-blue-700 text-sm px-5 py-2 shadow-md flex items-center justify-center"
+                                                                    onClick={() =>
+                                                                        openConfirmDialog(
+                                                                            "Unarchive Doctor",
+                                                                            `Are you sure you want to unarchive ${d.user.firstname} ${d.user.lastname}'s account?`,
+                                                                            () => unarchiveDoctor(d),
+                                                                            'unarchive'
+                                                                        )
+                                                                    }
+                                                                    disabled={d.status !== 5}
+                                                                    title={d.status !== 5 ? "Only archived accounts can be unarchived" : ""}
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                                    </svg>
+                                                                    Unarchive
+                                                                </PrimaryButton>
+                                                                <PrimaryButton
+                                                                    className="btn-sm w-32 bg-red-600 hover:bg-red-700 text-sm px-5 py-2 shadow-md flex items-center justify-center ml-2"
+                                                                    onClick={() =>
+                                                                        openConfirmDialog(
+                                                                            "Archive Doctor",
+                                                                            `Are you sure you want to archive ${d.user.firstname} ${d.user.lastname}'s account?`,
+                                                                            () => archiveDoctor(d),
+                                                                            'archive'
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                                                    </svg>
+                                                                    Archive
+                                                                </PrimaryButton>
+                                                            </>
+                                                        )}
+                                                    </div>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -470,6 +716,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                                         In Consultation
                                     </SelectItem>
                                     <SelectItem value="3">On Leave</SelectItem>
+                                    <SelectItem value="5">Archived</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -492,6 +739,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                     </DialogFooter>
                 </div>
             </Modal2>
+            <ConfirmationDialog />
         </StaffLayout>
     );
 }

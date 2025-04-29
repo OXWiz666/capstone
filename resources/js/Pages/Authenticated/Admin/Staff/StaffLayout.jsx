@@ -121,7 +121,16 @@ export default function StaffLayout({ children }) {
 
             isAdmin: "true",
             role: 7,
+            specialization: "", // Added specialization field
         });
+
+    // Track if Doctor role is selected
+    const [isDoctorSelected, setIsDoctorSelected] = useState(false);
+
+    // Update isDoctorSelected when role changes
+    useEffect(() => {
+        setIsDoctorSelected(data.role === 1);
+    }, [data.role]);
 
     const OpenModal = (e) => {
         setIsModalOpen(true);
@@ -204,6 +213,56 @@ export default function StaffLayout({ children }) {
         );
     };
 
+    // Function to archive a doctor account
+    const archiveDoctor = (doctor) => {
+        if (confirm("Are you sure you want to archive this doctor account?")) {
+            axios.post(route("doctor.archive", { doctor: doctor.id }))
+                .then(response => {
+                    alert_toast(
+                        "Success!",
+                        "Doctor account has been archived",
+                        "success"
+                    );
+                    router.reload({
+                        only: ["auth"],
+                        preserveScroll: true,
+                    });
+                })
+                .catch(error => {
+                    alert_toast(
+                        "Error!",
+                        "Failed to archive doctor account",
+                        "error"
+                    );
+                });
+        }
+    };
+
+    // Function to unarchive a doctor account
+    const unarchiveDoctor = (doctor) => {
+        if (confirm("Are you sure you want to unarchive this doctor account?")) {
+            axios.post(route("doctor.unarchive", { doctor: doctor.id }))
+                .then(response => {
+                    alert_toast(
+                        "Success!",
+                        "Doctor account has been unarchived",
+                        "success"
+                    );
+                    router.reload({
+                        only: ["auth"],
+                        preserveScroll: true,
+                    });
+                })
+                .catch(error => {
+                    alert_toast(
+                        "Error!",
+                        "Failed to unarchive doctor account",
+                        "error"
+                    );
+                });
+        }
+    };
+
     const getStatusBadge = (doctor) => {
         if (!doctor || !doctor.status) return null;
 
@@ -244,6 +303,15 @@ export default function StaffLayout({ children }) {
                         className="text-blue-700 bg-blue-200 border border-blue-300 rounded-full px-4 py-2 text-sm font-semibold"
                     >
                         In Consultation
+                    </Badge>
+                );
+            case 5:
+                return (
+                    <Badge
+                        variant="outline"
+                        className="text-red-700 bg-red-100 border border-red-300 rounded-full px-4 py-2 text-sm font-semibold"
+                    >
+                        Archived
                     </Badge>
                 );
             default:
@@ -682,9 +750,14 @@ export default function StaffLayout({ children }) {
                             <Select
                                 id="roleselect"
                                 value={data.role}
-                                onValueChange={(e) =>
-                                    setData("role", Number(e))
-                                }
+                                onValueChange={(e) => {
+                                    const roleValue = Number(e);
+                                    setData("role", roleValue);
+                                    // Reset specialization when changing roles to non-Doctor
+                                    if (roleValue !== 1) {
+                                        setData("specialization", "");
+                                    }
+                                }}
                             >
                                 <SelectTrigger className=" w-full">
                                     <SelectValue placeholder="Select Role" />
@@ -692,12 +765,33 @@ export default function StaffLayout({ children }) {
                                 <SelectContent>
                                     <SelectItem value={7}>Admin</SelectItem>
                                     <SelectItem value={1}>Doctor</SelectItem>
-                                    <SelectItem value={6}>
-                                        Pharmacist
-                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
+
+                        {/* Specialization - Only shown for Doctor role */}
+                        {isDoctorSelected && (
+                            <div>
+                                <label
+                                    htmlFor="specialization"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Specialization
+                                </label>
+                                <Select
+                                    id="specialization"
+                                    value={data.specialization}
+                                    onValueChange={(value) => setData("specialization", value)}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Specialization" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="General Medicine">General Medicine</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
 
                         {/* Security Question Dropdown */}
 

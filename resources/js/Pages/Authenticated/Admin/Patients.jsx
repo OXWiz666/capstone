@@ -109,53 +109,302 @@ export default function Patients({ patients_ }) {
         direction: "ascending",
     });
 
-    // // Filter patients based on search term and status
-    // const filteredPatients = patients.filter((patient) => {
-    //     const matchesSearch =
-    //         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         patient.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         patient.medicalConditions
-    //             .toLowerCase()
-    //             .includes(searchTerm.toLowerCase());
+    // State for medical record modal
+    const [medicalRecordModal, setMedicalRecordModal] = useState({
+        isOpen: false,
+        patient: null
+    });
 
-    //     const matchesStatus =
-    //         statusFilter === "all" || patient.status === statusFilter;
+    const openMedicalRecordModal = (patient) => {
+        setMedicalRecordModal({
+            isOpen: true,
+            patient
+        });
+    };
 
-    //     return matchesSearch && matchesStatus;
-    // });
+    const closeMedicalRecordModal = () => {
+        setMedicalRecordModal({
+            ...medicalRecordModal,
+            isOpen: false
+        });
+    };
 
-    // // Sort patients
-    // const sortedPatients = [...filteredPatients].sort((a, b) => {
-    //     if (a[sortConfig.key] < b[sortConfig.key]) {
-    //         return sortConfig.direction === "ascending" ? -1 : 1;
-    //     }
-    //     if (a[sortConfig.key] > b[sortConfig.key]) {
-    //         return sortConfig.direction === "ascending" ? 1 : -1;
-    //     }
-    //     return 0;
-    // });
+    // Medical Record Modal Component
+    const MedicalRecordModal = () => {
+        if (!medicalRecordModal.isOpen || !medicalRecordModal.patient) return null;
+        
+        const patient = medicalRecordModal.patient;
+        
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                {/* Backdrop */}
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+                    onClick={closeMedicalRecordModal}
+                ></div>
+                
+                {/* Modal */}
+                <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 overflow-auto max-h-[90vh] transform transition-all">
+                    {/* Header */}
+                    <div className="sticky top-0 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center z-10">
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span className="font-semibold">Medical Record:</span> <span className="ml-2">{patient.firstname} {patient.lastname}</span>
+                        </h3>
+                        <button 
+                            onClick={closeMedicalRecordModal}
+                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    {/* Medical Record Content */}
+                    <div className="p-6">
+                        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
+                            {/* 1. Patient Information */}
+                            <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
+                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    1. Patient Information
+                                </h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <div className="flex">
+                                            <span className="font-medium w-32">Name:</span>
+                                            <span>{patient.firstname} {patient.lastname}</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-32">Address:</span>
+                                            <span>{patient.address || 'Purok ___, Brgy. Calumpang, GenSan'}</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-32">Contact No.:</span>
+                                            <span>{patient.contactno || '___________'}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="flex">
+                                            <span className="font-medium w-32">Age:</span>
+                                            <span>{patient.age || '___'}</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-32">Sex:</span>
+                                            <span>{patient.gender || 'M / F'}</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-32">PhilHealth No.:</span>
+                                            <span>{patient.philhealth_no || '___________'}</span>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <span className="font-medium w-32">4Ps Member:</span>
+                                            <div className="flex items-center space-x-2">
+                                                <input type="checkbox" id="4ps-yes" className="h-4 w-4" checked={patient.is_4ps} />
+                                                <label htmlFor="4ps-yes" className="text-sm">Yes</label>
+                                                <input type="checkbox" id="4ps-no" className="h-4 w-4 ml-2" checked={!patient.is_4ps} />
+                                                <label htmlFor="4ps-no" className="text-sm">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-    // // Request sort
-    // const requestSort = (key) => {
-    //     let direction = "ascending";
-    //     if (sortConfig.key === key && sortConfig.direction === "ascending") {
-    //         direction = "descending";
-    //     }
-    //     setSortConfig({ key, direction });
-    // };
+                            {/* 2. Vital Signs & Initial Assessment */}
+                            <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800">
+                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    2. Vital Signs & Initial Assessment
+                                </h4>
+                                <div className="space-y-2">
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Date:</span>
+                                        <span>{patient.last_visit_date || '__/__/____'}</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="flex">
+                                            <span className="font-medium w-16">BP:</span>
+                                            <span>{patient.bp || '___/__'} mmHg</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-16">Temp:</span>
+                                            <span>{patient.temp || '__'} °C</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-16">Pulse:</span>
+                                            <span>{patient.pulse || '___'} bpm</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-16">RR:</span>
+                                            <span>{patient.rr || '___'} breaths/min</span>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="flex">
+                                            <span className="font-medium w-24">Height:</span>
+                                            <span>{patient.height || '___'} cm</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-24">Weight:</span>
+                                            <span>{patient.weight || '___'} kg</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-24">BMI:</span>
+                                            <span>{patient.bmi || '___'}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Chief Complaint:</span>
+                                        <span>{patient.chief_complaint || '___________________'}</span>
+                                    </div>
+                                </div>
+                            </div>
 
-    // Get status badge color
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case "Active":
-                return <Badge className="bg-green-500">Active</Badge>;
-            case "Inactive":
-                return <Badge className="bg-gray-500">Inactive</Badge>;
-            case "Pregnant":
-                return <Badge className="bg-blue-500">Pregnant</Badge>;
-            default:
-                return <Badge>{status}</Badge>;
-        }
+                            {/* 3. Medical History */}
+                            <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
+                                <h4 className="font-bold text-lg mb-4 text-black dark:text-white flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    3. Medical History
+                                </h4>
+                                <div className="space-y-2">
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Past Illnesses:</span>
+                                        <span>{patient.past_illnesses || '___________________'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Family History:</span>
+                                        <span>{patient.family_history || '___________________'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Allergies:</span>
+                                        <span>{patient.allergies || '___________________'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Current Medications:</span>
+                                        <span>{patient.current_medications || '___________________'}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 4. Consultation Details */}
+                            <div className="p-5 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    4. Consultation Details
+                                </h4>
+                                <div className="space-y-3">
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Diagnosis/Findings:</span>
+                                        <span>{patient.diagnosis || '___________________'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Treatment Given:</span>
+                                        <span>{patient.treatment || '___________________'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Medications Prescribed:</span>
+                                        <span>{patient.medications_prescribed || '___________________'}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <span className="font-medium w-32">Referral Needed?</span>
+                                        <div className="flex items-center space-x-2">
+                                            <input type="checkbox" id="referral-yes" className="h-4 w-4" checked={patient.referral_needed} />
+                                            <label htmlFor="referral-yes" className="text-sm">Yes (Specify: {patient.referral_details || '_______'})</label>
+                                            <input type="checkbox" id="referral-no" className="h-4 w-4 ml-2" checked={!patient.referral_needed} />
+                                            <label htmlFor="referral-no" className="text-sm">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 5. Maternal & Child Health */}
+                            <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800">
+                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                    5. Maternal & Child Health
+                                </h4>
+                                <div className="space-y-2">
+                                    <div className="flex items-center">
+                                        <input type="checkbox" id="prenatal" className="h-4 w-4" checked={patient.prenatal_checkup} />
+                                        <label htmlFor="prenatal" className="ml-2">Prenatal Checkup - LMP: {patient.lmp || '_________'} AOG: {patient.aog || '____'} weeks</label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input type="checkbox" id="postnatal" className="h-4 w-4" checked={patient.postnatal_checkup} />
+                                        <label htmlFor="postnatal" className="ml-2">Postnatal Checkup - Date of Delivery: {patient.delivery_date || '___________'}</label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input type="checkbox" id="immunization" className="h-4 w-4" checked={patient.child_immunization} />
+                                        <label htmlFor="immunization" className="ml-2">Child Immunization - Vaccine Given: {patient.vaccine_given || '___________'}</label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input type="checkbox" id="nutritional" className="h-4 w-4" checked={patient.nutritional_status} />
+                                        <label htmlFor="nutritional" className="ml-2">Nutritional Status - </label>
+                                        <div className="flex items-center space-x-2 ml-2">
+                                            <input type="checkbox" id="normal" className="h-4 w-4" checked={patient.nutritional_status === 'Normal'} />
+                                            <label htmlFor="normal" className="text-sm">Normal</label>
+                                            <input type="checkbox" id="underweight" className="h-4 w-4 ml-2" checked={patient.nutritional_status === 'Underweight'} />
+                                            <label htmlFor="underweight" className="text-sm">Underweight</label>
+                                            <input type="checkbox" id="overweight" className="h-4 w-4 ml-2" checked={patient.nutritional_status === 'Overweight'} />
+                                            <label htmlFor="overweight" className="text-sm">Overweight</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 6. Follow-Up & Health Worker's Notes */}
+                            <div className="p-5 bg-white dark:bg-gray-800">
+                                <h4 className="font-bold text-lg mb-4 text-black dark:text-white flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    6. Follow-Up & Health Worker's Notes
+                                </h4>
+                                <div className="space-y-3">
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Next Visit Date:</span>
+                                        <span>{patient.next_visit_date || '__/__/____'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Health Advice Given:</span>
+                                        <span>{patient.health_advice || '___________________'}</span>
+                                    </div>
+                                    <div className="flex">
+                                        <span className="font-medium w-32">Attending Health Worker:</span>
+                                        <span>{patient.attending_health_worker || '___________________'} (Signature)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Footer */}
+                    <div className="sticky bottom-0 bg-gray-100 dark:bg-gray-800 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700 shadow-inner">
+                        <button 
+                            onClick={closeMedicalRecordModal}
+                            className="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm flex items-center transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -249,10 +498,6 @@ export default function Patients({ patients_ }) {
                                             <SortableTableHead>
                                                 Last Visit
                                             </SortableTableHead>
-
-                                            <SortableTableHead>
-                                                Medical Conditions
-                                            </SortableTableHead>
                                             <SortableTableHead>
                                                 Action
                                             </SortableTableHead>
@@ -299,11 +544,22 @@ export default function Patients({ patients_ }) {
                                                 </TableCell>
                                                 <TableCell>09123</TableCell>
                                                 <TableCell>2023-5-3</TableCell>
-                                                <TableCell>Arthritis</TableCell>
-                                                {/* <TableCell>
-                                                    {getStatusBadge(d.status)}
-                                                </TableCell> */}
-                                                <TableCell>Action</TableCell>
+                                                <TableCell>
+                                                    <div className="flex space-x-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="w-24 text-sm px-4 py-1.5 shadow-sm flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 hover:border-gray-400 rounded-md transition-colors"
+                                                            onClick={() => openMedicalRecordModal(p)}
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                            VIEW
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
 
@@ -337,6 +593,7 @@ export default function Patients({ patients_ }) {
                     </div>
                 </div>
             </motion.div>
+            {MedicalRecordModal()}
         </AdminLayout>
     );
 }
