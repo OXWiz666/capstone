@@ -82,6 +82,9 @@ Route::middleware(['auth','Patient'])->group(function(){
         Route::post('/appointment/create',[PatientController::class,'storeAppointment'])->name('patient.appoint.create');
 
         Route::get('/get-sub-services/{id}',[PatientController::class,'GetSubServices'])->name('patient.subservices.get');
+        
+        // Get latest appointment priority number
+        Route::get('/get-latest-appointment',[PatientController::class,'getLatestAppointment'])->name('patient.latest.appointment');
     });
 });
 

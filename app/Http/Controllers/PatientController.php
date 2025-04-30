@@ -108,12 +108,17 @@ class PatientController extends Controller
         try{
             DB::beginTransaction();
 
+                // Get the latest priority number and increment it, or start from 1 if none exists
+                $latestPriority = appointments::max('priorityNumber') ?? 0;
+                $newPriorityNumber = $latestPriority + 1;
+
                 $appoint = appointments::create([
                     'user_id' => Auth::user()->id,
                     'phone' => $request->phone,
                     'date' => \Carbon\Carbon::parse( $request->date)->format('Y-m-d'),
                     'time' => \Carbon\Carbon::parse($request->time)->format('H:i:s'),
                     'servicetype_id' => $request->service,
+                    'priorityNumber' => $newPriorityNumber,
                     //'notes' => $request->notes,
                 ]);
 
@@ -156,5 +161,33 @@ class PatientController extends Controller
             //Log::error("Appointment creation failed: " . $e->getMessage());
             //return redirect()->back()->with('error', 'Failed to create appointment');
         }
+    }
+    
+    /**
+     * Get the latest appointment for the authenticated user with priority number
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLatestAppointment()
+    {
+        $latestAppointment = appointments::where('user_id', Auth::user()->id)
+            ->whereNotNull('priorityNumber')
+            ->orderBy('created_at', 'desc')
+            ->first();
+            
+        if ($latestAppointment) {
+            return response()->json([
+                'priorityNumber' => $latestAppointment->priorityNumber,
+                'date' => $latestAppointment->date,
+                'time' => $latestAppointment->time,
+                'status' => $latestAppointment->status
+            ]);
+        }
+        
+        // If no appointment with priority number exists, return a generated one
+        return response()->json([
+            'priorityNumber' => mt_rand(1000, 9999),
+            'generated' => true
+        ]);
     }
 }
