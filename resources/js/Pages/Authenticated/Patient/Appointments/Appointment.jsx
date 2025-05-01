@@ -64,6 +64,7 @@ export default function Appointment({ services }) {
             notes: "",
             gender: "",
             birth: "",
+            priorityNumber: "",
         });
     async function handleSubmit(data) {
         // In a real application, you would send this data to your backend
@@ -181,6 +182,16 @@ export default function Appointment({ services }) {
                                         <p className="text-gray-900">
                                             {data.gender}
                                         </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-500">
+                                            Priority Number
+                                        </p>
+                                        <div className="flex items-center">
+                                            <div className="bg-blue-100 text-blue-800 font-semibold px-3 py-1 rounded-md text-center w-24 shadow-sm border border-blue-200">
+                                                {data.priorityNumber || "N/A"}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 {data.notes && (

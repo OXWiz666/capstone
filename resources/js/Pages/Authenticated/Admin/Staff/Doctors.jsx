@@ -332,7 +332,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
             .catch(error => {
                 // Dismiss loading toast
                 toast.dismiss(loadingToastId);
-                
+
                 // Show error toast
                 enhanced_toast(
                     "Archive Failed",
@@ -345,7 +345,7 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
     // Function to unarchive a doctor account with enhanced feedback
     const unarchiveDoctor = (doctor) => {
         const doctorName = `${doctor.user?.firstname} ${doctor.user?.lastname}`;
-        
+
         // Show loading toast
         const loadingToastId = toast.loading(`Unarchiving ${doctorName}'s account...`, {
             position: "top-right",

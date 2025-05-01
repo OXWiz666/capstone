@@ -19,7 +19,7 @@ import {
     SelectValue,
 } from "@/components/tempo/components/ui/select";
 import { format } from "date-fns";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock, Hash } from "lucide-react";
 import { cn } from "@/components/tempo/lib/utils"; //
 // At the top with other imports
 import { addDays } from "date-fns";
@@ -52,6 +52,7 @@ const AppointmentForm = ({
                 service: "",
                 gender: user.gender,
                 birth: user.birth,
+                priorityNumber: Math.floor(1000 + Math.random() * 9000), // Generate random 4-digit priority number
             });
         }
     }, [user]);
