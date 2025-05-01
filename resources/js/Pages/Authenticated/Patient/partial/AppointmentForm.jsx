@@ -24,7 +24,8 @@ import { cn } from "@/components/tempo/lib/utils"; //
 // At the top with other imports
 import { addDays } from "date-fns";
 import { usePage, useForm } from "@inertiajs/react";
-import CustomCalendar from "@/components/CustomCalendar";
+import CustomCalendar from "./CustomCalendar";
+import moment from "moment";
 
 const AppointmentForm = ({
     onSubmit = () => {},
@@ -34,7 +35,7 @@ const AppointmentForm = ({
     processing,
     services = [],
 
-    programs,
+    //programs,
 }) => {
     const user = usePage().props.auth.user;
 
@@ -120,14 +121,30 @@ const AppointmentForm = ({
 
     const [subservices, setSubServices] = useState([]);
 
+    const [timesArr, setTimesArr] = useState([]);
+
     const subServiceLookup = subservices?.reduce((acc, subservice) => {
         acc[subservice.id] = subservice;
         return acc;
     }, {});
 
+    // useEffect(() => {
+    //     //console.log("subservice: ", subservices);
+    // }, [timesArr]);
+
+    const [programs, setPrograms] = useState([]);
     useEffect(() => {
-        console.log(subservices);
-    }, [subservices]);
+        const service = serviceLookup[formData.service]; // id
+
+        setPrograms(service?.servicedays?.map((day) => day.day));
+        //programs = service?.servicedays?.map((day) => day.day);
+        //console.log("programs:: ", programs);
+    }, [formData, serviceLookup]);
+
+    // useEffect(() => {
+    //     console.log("time:", formData.time?.toString().trim(), "wew");
+    // }, [formData.time]);
+
     return (
         <form
             onSubmit={handleSubmit}
@@ -217,10 +234,14 @@ const AppointmentForm = ({
 
                                     handleSelectChange("subservice", "");
                                     handleSelectChange("subservicename", "");
+                                    handleSelectChange("timeid", "");
+                                    handleSelectChange("time", "");
                                     //  handleSelectChange("customAttr", service.customAttribute);
                                 } // handleSelectChange("servicename", selectedService?.servicename || "");
 
-                                fetch(`/patient/get-sub-services/${selectedId}`)
+                                fetch(
+                                    `/services/get-sub-services/${selectedId}`
+                                )
                                     .then((resp) => resp.json())
                                     .then((data) => {
                                         setSubServices(data);
@@ -257,6 +278,8 @@ const AppointmentForm = ({
                             value={formData.subservice?.toString()} // Ensure string value
                             onValueChange={(selectedId) => {
                                 const subservice = subServiceLookup[selectedId];
+
+                                setTimesArr(subservice?.times);
                                 console.log(subservice);
                                 // handleSelectChange({
                                 //     subservice: subservice.id,
@@ -271,6 +294,9 @@ const AppointmentForm = ({
                                     "subservicename",
                                     subservice.subservicename ?? null
                                 );
+
+                                handleSelectChange("timeid", "");
+                                handleSelectChange("time", "");
                             }}
                         >
                             <SelectTrigger className="w-full">
@@ -301,7 +327,18 @@ const AppointmentForm = ({
                         <CustomCalendar
                             selectedDate={formData.date}
                             onDateSelect={handleDateChange}
-                            //hasPrograms={}
+                            // hasPrograms={services?.map(
+                            //     (serv, i) => serv?.servicedays.map(days) // return days
+                            // )}
+                            // hasPrograms={services?.flatMap(
+                            //     (
+                            //         service //console.log("serv:: ", service)
+                            //     ) =>
+                            //         service.servicedays?.map(
+                            //             (day) => day.day
+                            //         ) || []
+                            // )}
+                            hasPrograms={programs}
                         />
                         {/* <Popover>
                             <PopoverTrigger asChild>
@@ -346,18 +383,31 @@ const AppointmentForm = ({
                     <div>
                         <Label>Appointment Time</Label>
                         <Select
-                            value={formData.time}
-                            onValueChange={(value) =>
-                                handleSelectChange("time", value)
-                            }
-                            required
+                            value={formData.timeid}
+                            onValueChange={(value) => {
+                                const subserv =
+                                    subServiceLookup[formData.subservice];
+                                handleSelectChange("timeid", value ?? null);
+                                handleSelectChange(
+                                    "time",
+                                    moment(
+                                        subserv?.times?.find(
+                                            (t) => t.id == value
+                                        )?.time,
+                                        "HH:mm:ss"
+                                    ).format("hh:mm A") ?? null
+                                );
+                            }}
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select time">
-                                    {formData.time ? (
+                                    {formData.timeid ? (
                                         <div className="flex items-center">
                                             <Clock className="mr-2 h-4 w-4" />
-                                            {formData.time}
+                                            {moment(
+                                                formData.time,
+                                                "HH:mm:ss"
+                                            ).format("h:mm A")}
                                         </div>
                                     ) : (
                                         "Select time"
@@ -365,11 +415,18 @@ const AppointmentForm = ({
                                 </SelectValue>
                             </SelectTrigger>
                             <SelectContent>
-                                {timeSlots.map((time) => (
+                                {timesArr.map((time, i) => (
+                                    <SelectItem key={time.id} value={time.id}>
+                                        {moment(time.time, "HH:mm:ss").format(
+                                            "h:mm A"
+                                        )}
+                                    </SelectItem>
+                                ))}
+                                {/* {timeSlots.map((time) => (
                                     <SelectItem key={time} value={time}>
                                         {time}
                                     </SelectItem>
-                                ))}
+                                ))} */}
                             </SelectContent>
                         </Select>
                         <InputError message={errors.time} />
