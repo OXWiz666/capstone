@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { usePage } from "@inertiajs/react";
 import {
     Card,
     CardContent,
@@ -38,8 +39,92 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 const SeasonalProgramDashboard = () => {
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const { auth } = usePage().props;
+    const isAuthenticated = auth && auth.user;
+    
+    // State for program registration modal
+    const [registrationModal, setRegistrationModal] = useState({
+        isOpen: false,
+        program: null
+    });
+    
+    // Helper function to handle program registration
+    const handleProgramJoin = (program) => {
+        if (isAuthenticated) {
+            // Show registration modal with the selected program
+            setRegistrationModal({
+                isOpen: true,
+                program: program
+            });
+        } else {
+            window.location.href = "/login";
+        }
+    };
+    
+    // Close registration modal
+    const closeRegistrationModal = () => {
+        setRegistrationModal({
+            ...registrationModal,
+            isOpen: false
+        });
+    };
+    
+    // Handle registration form submission
+    const handleRegistrationSubmit = (e) => {
+        e.preventDefault();
+        // Here you would typically send the form data to your backend
+        // For now, we'll just show a success message and close the modal
+        alert("Registration successful! You have joined the program.");
+        closeRegistrationModal();
+    };
+    const [selectedDate, setSelectedDate] = useState(null);
     const [activeTab, setActiveTab] = useState("schedules");
+    
+    // Ensure guests can't access the records tab
+    useEffect(() => {
+        if (!isAuthenticated && activeTab === "records") {
+            setActiveTab("schedules");
+        }
+        
+        // Add global click handler to intercept appointment links
+        const handleClick = (e) => {
+            // Find if the click is on or inside a button that leads to /appointments
+            const button = e.target.closest('button');
+            if (button) {
+                const onClick = button.onclick;
+                if (onClick && onClick.toString().includes('/appointments')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Find the closest program card to get program details
+                    const programCard = button.closest('.program-card');
+                    let program = null;
+                    
+                    if (programCard && programCard.dataset.programId) {
+                        // Find the program in our data
+                        program = programSchedules.find(p => p.id === programCard.dataset.programId);
+                    } else {
+                        // Default program info if we can't find the specific one
+                        program = {
+                            name: "Health Program",
+                            date: new Date(),
+                            time: "TBD",
+                            location: "Barangay Calumpang Health Center"
+                        };
+                    }
+                    
+                    handleProgramJoin(program);
+                    return false;
+                }
+            }
+        };
+        
+        document.addEventListener('click', handleClick, true);
+        
+        return () => {
+            document.removeEventListener('click', handleClick, true);
+        };
+    }, [isAuthenticated, activeTab]);
     const [programFilter, setProgramFilter] = useState(null);
 
     // Sample data for program schedules
@@ -260,6 +345,209 @@ const SeasonalProgramDashboard = () => {
             });
     };
 
+    // Program Registration Modal Component
+    const ProgramRegistrationModal = () => {
+        if (!registrationModal.isOpen) return null;
+        
+        const program = registrationModal.program;
+        
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                {/* Backdrop */}
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+                    onClick={closeRegistrationModal}
+                ></div>
+                
+                {/* Modal */}
+                <div className="relative bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-auto max-h-[90vh] transform transition-all animate-fadeIn">
+                    {/* Header */}
+                    <div className="bg-gray-900 border-b border-gray-800 px-6 py-5 flex justify-between items-center rounded-t-lg">
+                        <h3 className="text-xl font-semibold text-white flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            <span>Register for {program?.name || 'Health Program'}</span>
+                        </h3>
+                        <button 
+                            onClick={closeRegistrationModal}
+                            className="text-white hover:text-gray-200 rounded-full p-1.5 hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900"
+                            aria-label="Close"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    {/* Form Content */}
+                    <form onSubmit={handleRegistrationSubmit} className="p-8">
+                        <div className="mb-8 p-5 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+                            <h4 className="font-semibold text-lg mb-2">{program?.name || 'Health Program'}</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                <div className="flex items-center">
+                                    <CalendarIcon className="h-4 w-4 mr-2 text-gray-700" />
+                                    <span>{program?.date ? format(program.date, 'MMMM d, yyyy') : 'Date TBD'}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Clock className="h-4 w-4 mr-2 text-gray-700" />
+                                    <span>{program?.time || 'Time TBD'}</span>
+                                </div>
+                                <div className="flex items-center col-span-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span>{program?.location || 'Location TBD'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="firstname" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="firstname" 
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.firstname || ''}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="middlename" className="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="middlename" 
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.middlename || ''}
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="md:col-span-2">
+                                    <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="lastname" 
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.lastname || ''}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="suffix" className="block text-sm font-medium text-gray-700 mb-1">Suffix</label>
+                                    <input 
+                                        type="text" 
+                                        id="suffix" 
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.suffix || ''}
+                                        placeholder="Jr., Sr., III, etc."
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Sex</label>
+                                    <select 
+                                        id="gender" 
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.gender || ''}
+                                        required
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                                    <input 
+                                        type="number" 
+                                        id="age" 
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.age || ''}
+                                        min="0"
+                                        max="120"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label htmlFor="contact" className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                                <input 
+                                    type="text" 
+                                    id="contact" 
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    defaultValue={auth?.user?.contactno || ''}
+                                    placeholder="e.g., 09123456789"
+                                    required
+                                />
+                            </div>
+                            
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    defaultValue={auth?.user?.email || ''}
+                                    required
+                                />
+                            </div>
+                            
+                            <div>
+                                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                <textarea 
+                                    id="address" 
+                                    rows="2"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Your complete address"
+                                    required
+                                ></textarea>
+                            </div>
+                                 
+                            <div className="flex items-center">
+                                <input 
+                                    type="checkbox" 
+                                    id="terms" 
+                                    className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                    required
+                                />
+                                <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
+                                    I agree to the program terms and conditions
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-8 flex justify-end space-x-4">
+                            <button
+                                type="button"
+                                onClick={closeRegistrationModal}
+                                className="px-5 py-2.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="px-5 py-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-200 flex items-center"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                Register Now
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <LandingLayout>
             <div className="container mx-auto max-w-7xl">
@@ -279,13 +567,15 @@ const SeasonalProgramDashboard = () => {
                     value={activeTab}
                     onValueChange={setActiveTab}
                 >
-                    <TabsList className="grid w-full md:w-auto grid-cols-2 mb-8">
+                    <TabsList className={`grid w-full md:w-auto ${isAuthenticated ? 'grid-cols-2' : 'grid-cols-1'} mb-8`}>
                         <TabsTrigger value="schedules">
                             Program Schedules
                         </TabsTrigger>
-                        <TabsTrigger value="records">
-                            My Program Records
-                        </TabsTrigger>
+                        {isAuthenticated && (
+                            <TabsTrigger value="records">
+                                My Program Records
+                            </TabsTrigger>
+                        )}
                     </TabsList>
 
                     <TabsContent value="schedules" className="space-y-6">
@@ -444,7 +734,8 @@ const SeasonalProgramDashboard = () => {
                                         filteredSchedules.map((schedule) => (
                                             <Card
                                                 key={schedule.id}
-                                                className="overflow-hidden"
+                                                className="overflow-hidden program-card"
+                                                data-program-id={schedule.id}
                                             >
                                                 <div
                                                     className={`h-1 ${
@@ -561,10 +852,7 @@ const SeasonalProgramDashboard = () => {
                                                                         : "default"
                                                                 }
                                                                 size="sm"
-                                                                onClick={() =>
-                                                                    (window.location.href =
-                                                                        "/appointments")
-                                                                }
+                                                                onClick={handleProgramJoin}
                                                             >
                                                                 {schedule.status ===
                                                                 "completed"
@@ -572,7 +860,7 @@ const SeasonalProgramDashboard = () => {
                                                                     : schedule.availableSlots ===
                                                                       0
                                                                     ? "No Slots Available"
-                                                                    : "Book Appointment"}
+                                                                    : "Join the Program"}
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -606,7 +894,8 @@ const SeasonalProgramDashboard = () => {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="records" className="space-y-6">
+                    {isAuthenticated && (
+                        <TabsContent value="records" className="space-y-6">
                         <Card ref={cardRef}>
                             <CardHeader>
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -621,12 +910,9 @@ const SeasonalProgramDashboard = () => {
                                     </div>
                                     <Button
                                         variant="outline"
-                                        onClick={() =>
-                                            (window.location.href =
-                                                "/appointments")
-                                        }
+                                        onClick={handleProgramJoin}
                                     >
-                                        Schedule New Appointment
+                                        Join the Program
                                     </Button>
                                 </div>
                             </CardHeader>
@@ -750,14 +1036,6 @@ const SeasonalProgramDashboard = () => {
                                     </span>{" "}
                                     {programRecords.length}
                                 </div>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={downloadRec}
-                                    disabled={downloading}
-                                >
-                                    Download Records
-                                </Button>
                             </CardFooter>
                         </Card>
 
@@ -773,9 +1051,12 @@ const SeasonalProgramDashboard = () => {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    <div className="p-4 border rounded-lg">
+                                    <div className="p-4 border rounded-lg program-card" data-program-id="mh2">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <Brain className="h-5 w-5 text-blue-600" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                                                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path>
+                                                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path>
+                                            </svg>
                                             <h3 className="font-medium text-lg">
                                                 Stress Management Workshop
                                             </h3>
@@ -787,17 +1068,17 @@ const SeasonalProgramDashboard = () => {
                                         </p>
                                         <Button
                                             size="sm"
-                                            onClick={() =>
-                                                (window.location.href =
-                                                    "/appointments")
-                                            }
+                                            onClick={handleProgramJoin}
                                         >
-                                            Schedule Now
+                                            Join the Program
                                         </Button>
                                     </div>
-                                    <div className="p-4 border rounded-lg">
+                                    <div className="p-4 border rounded-lg program-card" data-program-id="vs2">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <Syringe className="h-5 w-5 text-blue-600" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                                                <path d="m14.5 4-3-1-2 .5V6l-2 .5L6 5v.5L4.5 7v5.5a4 4 0 0 0 1.8 3.5l2.7 2V22h6v-4l2.7-2a4 4 0 0 0 1.8-3.5V7L18 5.5V5l-1.5 1.5-2-.5V4Z"></path>
+                                                <path d="M5 7.5v-1L6.5 8 8 7.5l1.5.5 2-1 1.5.5 2 1 1.5-.5 1 1v-1l1-1"></path>
+                                            </svg>
                                             <h3 className="font-medium text-lg">
                                                 Annual Flu Vaccine
                                             </h3>
@@ -809,17 +1090,16 @@ const SeasonalProgramDashboard = () => {
                                         </p>
                                         <Button
                                             size="sm"
-                                            onClick={() =>
-                                                (window.location.href =
-                                                    "/appointments")
-                                            }
+                                            onClick={handleProgramJoin}
                                         >
-                                            Schedule Now
+                                            Join the Program
                                         </Button>
                                     </div>
-                                    <div className="p-4 border rounded-lg">
+                                    <div className="p-4 border rounded-lg program-card" data-program-id="gen1">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <Activity className="h-5 w-5 text-blue-600" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                            </svg>
                                             <h3 className="font-medium text-lg">
                                                 Health Screening
                                             </h3>
@@ -831,20 +1111,21 @@ const SeasonalProgramDashboard = () => {
                                         </p>
                                         <Button
                                             size="sm"
-                                            onClick={() =>
-                                                (window.location.href =
-                                                    "/appointments")
-                                            }
+                                            onClick={handleProgramJoin}
                                         >
-                                            Schedule Now
+                                            Join the Program
                                         </Button>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </TabsContent>
+                    )}
                 </Tabs>
             </div>
+            
+            {/* Render the registration modal */}
+            {ProgramRegistrationModal()}
         </LandingLayout>
     );
 };

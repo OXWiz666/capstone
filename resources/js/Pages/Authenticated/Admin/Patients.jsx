@@ -147,7 +147,7 @@ export default function Patients({ patients_ }) {
                 <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 overflow-auto max-h-[90vh] transform transition-all">
                     {/* Header */}
                     <div className="sticky top-0 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center z-10">
-                        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                        <h3 className="text-lg font-medium text-white flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
@@ -155,7 +155,7 @@ export default function Patients({ patients_ }) {
                         </h3>
                         <button 
                             onClick={closeMedicalRecordModal}
-                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                            className="text-white hover:text-gray-200 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -168,7 +168,7 @@ export default function Patients({ patients_ }) {
                         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
                             {/* 1. Patient Information */}
                             <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
-                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                <h4 className="font-bold text-white flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
@@ -177,38 +177,42 @@ export default function Patients({ patients_ }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <div className="flex">
-                                            <span className="font-medium w-32">Name:</span>
-                                            <span>{patient.firstname} {patient.lastname}</span>
+                                            <span className="font-medium w-32 text-white">Name:</span>
+                                            <span className="text-white">{patient.firstname} {patient.lastname}</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-32">Address:</span>
-                                            <span>{patient.address || 'Purok ___, Brgy. Calumpang, GenSan'}</span>
+                                            <span className="font-medium w-32 text-white">Address:</span>
+                                            <span className="text-white">{patient.address || 'Purok ___, Brgy. Calumpang, GenSan'}</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-32">Contact No.:</span>
-                                            <span>{patient.contactno || '___________'}</span>
+                                            <span className="font-medium w-32 text-white">Contact No.:</span>
+                                            <span className="text-white">{patient.contactno || '___________'}</span>
                                         </div>
                                     </div>
                                     <div className="space-y-2">
                                         <div className="flex">
-                                            <span className="font-medium w-32">Age:</span>
-                                            <span>{patient.age || '___'}</span>
+                                            <span className="font-medium w-32 text-white">Age:</span>
+                                            <span className="text-white">{patient.age || '___'}</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-32">Sex:</span>
-                                            <span>{patient.gender || 'M / F'}</span>
+                                            <span className="font-medium w-32 text-white">Sex:</span>
+                                            <span className="text-white">{patient.gender || 'M / F'}</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-32">PhilHealth No.:</span>
-                                            <span>{patient.philhealth_no || '___________'}</span>
+                                            <span className="font-medium w-32 text-white">PhilHealth No.:</span>
+                                            <span className="text-white">{patient.philhealth_no || '___________'}</span>
+                                        </div>
+                                        <div className="flex">
+                                            <span className="font-medium w-32 text-white">Created At:</span>
+                                            <span className="text-white">{patient.created_at ? new Date(patient.created_at).toLocaleString() : 'Not available'}</span>
                                         </div>
                                         <div className="flex items-center">
-                                            <span className="font-medium w-32">4Ps Member:</span>
+                                            <span className="font-medium w-32 text-white">4Ps Member:</span>
                                             <div className="flex items-center space-x-2">
                                                 <input type="checkbox" id="4ps-yes" className="h-4 w-4" checked={patient.is_4ps} />
-                                                <label htmlFor="4ps-yes" className="text-sm">Yes</label>
+                                                <label htmlFor="4ps-yes" className="text-sm text-white">Yes</label>
                                                 <input type="checkbox" id="4ps-no" className="h-4 w-4 ml-2" checked={!patient.is_4ps} />
-                                                <label htmlFor="4ps-no" className="text-sm">No</label>
+                                                <label htmlFor="4ps-no" className="text-sm text-white">No</label>
                                             </div>
                                         </div>
                                     </div>
@@ -217,7 +221,7 @@ export default function Patients({ patients_ }) {
 
                             {/* 2. Vital Signs & Initial Assessment */}
                             <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800">
-                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                <h4 className="font-bold text-white flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
@@ -225,51 +229,51 @@ export default function Patients({ patients_ }) {
                                 </h4>
                                 <div className="space-y-2">
                                     <div className="flex">
-                                        <span className="font-medium w-32">Date:</span>
-                                        <span>{patient.last_visit_date || '__/__/____'}</span>
+                                        <span className="font-medium w-32 text-white">Date:</span>
+                                        <span className="text-white">{patient.last_visit_date || '__/__/____'}</span>
                                     </div>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div className="flex">
-                                            <span className="font-medium w-16">BP:</span>
-                                            <span>{patient.bp || '___/__'} mmHg</span>
+                                            <span className="font-medium w-16 text-white">BP:</span>
+                                            <span className="text-white">{patient.bp || '___/__'} mmHg</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-16">Temp:</span>
-                                            <span>{patient.temp || '__'} °C</span>
+                                            <span className="font-medium w-16 text-white">Temp:</span>
+                                            <span className="text-white">{patient.temp || '__'} °C</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-16">Pulse:</span>
-                                            <span>{patient.pulse || '___'} bpm</span>
+                                            <span className="font-medium w-16 text-white">Pulse:</span>
+                                            <span className="text-white">{patient.pulse || '___'} bpm</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-16">RR:</span>
-                                            <span>{patient.rr || '___'} breaths/min</span>
+                                            <span className="font-medium w-16 text-white">RR:</span>
+                                            <span className="text-white">{patient.rr || '___'} breaths/min</span>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="flex">
-                                            <span className="font-medium w-24">Height:</span>
-                                            <span>{patient.height || '___'} cm</span>
+                                            <span className="font-medium w-24 text-white">Height:</span>
+                                            <span className="text-white">{patient.height || '___'} cm</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-24">Weight:</span>
-                                            <span>{patient.weight || '___'} kg</span>
+                                            <span className="font-medium w-24 text-white">Weight:</span>
+                                            <span className="text-white">{patient.weight || '___'} kg</span>
                                         </div>
                                         <div className="flex">
-                                            <span className="font-medium w-24">BMI:</span>
-                                            <span>{patient.bmi || '___'}</span>
+                                            <span className="font-medium w-24 text-white">BMI:</span>
+                                            <span className="text-white">{patient.bmi || '___'}</span>
                                         </div>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Chief Complaint:</span>
-                                        <span>{patient.chief_complaint || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Chief Complaint:</span>
+                                        <span className="text-white">{patient.chief_complaint || '___________________'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* 3. Medical History */}
                             <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-800">
-                                <h4 className="font-bold text-lg mb-4 text-black dark:text-white flex items-center">
+                                <h4 className="font-bold text-white flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
@@ -277,27 +281,27 @@ export default function Patients({ patients_ }) {
                                 </h4>
                                 <div className="space-y-2">
                                     <div className="flex">
-                                        <span className="font-medium w-32">Past Illnesses:</span>
-                                        <span>{patient.past_illnesses || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Past Illnesses:</span>
+                                        <span className="text-white">{patient.past_illnesses || '___________________'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Family History:</span>
-                                        <span>{patient.family_history || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Family History:</span>
+                                        <span className="text-white">{patient.family_history || '___________________'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Allergies:</span>
-                                        <span>{patient.allergies || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Allergies:</span>
+                                        <span className="text-white">{patient.allergies || '___________________'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Current Medications:</span>
-                                        <span>{patient.current_medications || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Current Medications:</span>
+                                        <span className="text-white">{patient.current_medications || '___________________'}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* 4. Consultation Details */}
                             <div className="p-5 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                <h4 className="font-bold text-white flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -305,24 +309,24 @@ export default function Patients({ patients_ }) {
                                 </h4>
                                 <div className="space-y-3">
                                     <div className="flex">
-                                        <span className="font-medium w-32">Diagnosis/Findings:</span>
-                                        <span>{patient.diagnosis || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Diagnosis/Findings:</span>
+                                        <span className="text-white">{patient.diagnosis || '___________________'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Treatment Given:</span>
-                                        <span>{patient.treatment || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Treatment Given:</span>
+                                        <span className="text-white">{patient.treatment || '___________________'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Medications Prescribed:</span>
-                                        <span>{patient.medications_prescribed || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Medications Prescribed:</span>
+                                        <span className="text-white">{patient.medications_prescribed || '___________________'}</span>
                                     </div>
                                     <div className="flex items-center">
-                                        <span className="font-medium w-32">Referral Needed?</span>
+                                        <span className="font-medium w-32 text-white">Referral Needed?</span>
                                         <div className="flex items-center space-x-2">
                                             <input type="checkbox" id="referral-yes" className="h-4 w-4" checked={patient.referral_needed} />
-                                            <label htmlFor="referral-yes" className="text-sm">Yes (Specify: {patient.referral_details || '_______'})</label>
+                                            <label htmlFor="referral-yes" className="text-sm text-white">Yes (Specify: {patient.referral_details || '_______'})</label>
                                             <input type="checkbox" id="referral-no" className="h-4 w-4 ml-2" checked={!patient.referral_needed} />
-                                            <label htmlFor="referral-no" className="text-sm">No</label>
+                                            <label htmlFor="referral-no" className="text-sm text-white">No</label>
                                         </div>
                                     </div>
                                 </div>
@@ -330,7 +334,7 @@ export default function Patients({ patients_ }) {
 
                             {/* 5. Maternal & Child Health */}
                             <div className="border-b border-gray-200 dark:border-gray-700 p-5 bg-white dark:bg-gray-800">
-                                <h4 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-200 flex items-center">
+                                <h4 className="font-bold text-white flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
@@ -339,26 +343,26 @@ export default function Patients({ patients_ }) {
                                 <div className="space-y-2">
                                     <div className="flex items-center">
                                         <input type="checkbox" id="prenatal" className="h-4 w-4" checked={patient.prenatal_checkup} />
-                                        <label htmlFor="prenatal" className="ml-2">Prenatal Checkup - LMP: {patient.lmp || '_________'} AOG: {patient.aog || '____'} weeks</label>
+                                        <label htmlFor="prenatal" className="ml-2 text-white">Prenatal Checkup - LMP: {patient.lmp || '_________'} AOG: {patient.aog || '____'} weeks</label>
                                     </div>
                                     <div className="flex items-center">
                                         <input type="checkbox" id="postnatal" className="h-4 w-4" checked={patient.postnatal_checkup} />
-                                        <label htmlFor="postnatal" className="ml-2">Postnatal Checkup - Date of Delivery: {patient.delivery_date || '___________'}</label>
+                                        <label htmlFor="postnatal" className="ml-2 text-white">Postnatal Checkup - Date of Delivery: {patient.delivery_date || '___________'}</label>
                                     </div>
                                     <div className="flex items-center">
                                         <input type="checkbox" id="immunization" className="h-4 w-4" checked={patient.child_immunization} />
-                                        <label htmlFor="immunization" className="ml-2">Child Immunization - Vaccine Given: {patient.vaccine_given || '___________'}</label>
+                                        <label htmlFor="immunization" className="ml-2 text-white">Child Immunization - Vaccine Given: {patient.vaccine_given || '___________'}</label>
                                     </div>
                                     <div className="flex items-center">
                                         <input type="checkbox" id="nutritional" className="h-4 w-4" checked={patient.nutritional_status} />
-                                        <label htmlFor="nutritional" className="ml-2">Nutritional Status - </label>
+                                        <label htmlFor="nutritional" className="ml-2 text-white">Nutritional Status - </label>
                                         <div className="flex items-center space-x-2 ml-2">
                                             <input type="checkbox" id="normal" className="h-4 w-4" checked={patient.nutritional_status === 'Normal'} />
-                                            <label htmlFor="normal" className="text-sm">Normal</label>
+                                            <label htmlFor="normal" className="text-sm text-white">Normal</label>
                                             <input type="checkbox" id="underweight" className="h-4 w-4 ml-2" checked={patient.nutritional_status === 'Underweight'} />
-                                            <label htmlFor="underweight" className="text-sm">Underweight</label>
+                                            <label htmlFor="underweight" className="text-sm text-white">Underweight</label>
                                             <input type="checkbox" id="overweight" className="h-4 w-4 ml-2" checked={patient.nutritional_status === 'Overweight'} />
-                                            <label htmlFor="overweight" className="text-sm">Overweight</label>
+                                            <label htmlFor="overweight" className="text-sm text-white">Overweight</label>
                                         </div>
                                     </div>
                                 </div>
@@ -366,7 +370,7 @@ export default function Patients({ patients_ }) {
 
                             {/* 6. Follow-Up & Health Worker's Notes */}
                             <div className="p-5 bg-white dark:bg-gray-800">
-                                <h4 className="font-bold text-lg mb-4 text-black dark:text-white flex items-center">
+                                <h4 className="font-bold text-white flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
@@ -374,16 +378,16 @@ export default function Patients({ patients_ }) {
                                 </h4>
                                 <div className="space-y-3">
                                     <div className="flex">
-                                        <span className="font-medium w-32">Next Visit Date:</span>
-                                        <span>{patient.next_visit_date || '__/__/____'}</span>
+                                        <span className="font-medium w-32 text-white">Next Visit Date:</span>
+                                        <span className="text-white">{patient.next_visit_date || '__/__/____'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Health Advice Given:</span>
-                                        <span>{patient.health_advice || '___________________'}</span>
+                                        <span className="font-medium w-32 text-white">Health Advice Given:</span>
+                                        <span className="text-white">{patient.health_advice || '___________________'}</span>
                                     </div>
                                     <div className="flex">
-                                        <span className="font-medium w-32">Attending Health Worker:</span>
-                                        <span>{patient.attending_health_worker || '___________________'} (Signature)</span>
+                                        <span className="font-medium w-32 text-white">Attending Health Worker:</span>
+                                        <span className="text-white">{patient.attending_health_worker || '___________________'} (Signature)</span>
                                     </div>
                                 </div>
                             </div>
@@ -498,6 +502,12 @@ export default function Patients({ patients_ }) {
                                             <SortableTableHead>
                                                 Last Visit
                                             </SortableTableHead>
+                                            <SortableTableHead
+                                                sortKey="created_at"
+                                                sortable
+                                            >
+                                                Created At
+                                            </SortableTableHead>
                                             <SortableTableHead>
                                                 Action
                                             </SortableTableHead>
@@ -544,6 +554,9 @@ export default function Patients({ patients_ }) {
                                                 </TableCell>
                                                 <TableCell>09123</TableCell>
                                                 <TableCell>2023-5-3</TableCell>
+                                                <TableCell>
+                                                    {p.created_at ? new Date(p.created_at).toLocaleString() : 'Not available'}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="flex space-x-2">
                                                         <Button
