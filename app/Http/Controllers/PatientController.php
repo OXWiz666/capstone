@@ -71,7 +71,7 @@ class PatientController extends Controller
     }
 
     public function appointments(){
-        $serv = servicetypes::get();
+        $serv = servicetypes::with(['servicedays'])->get();
 
 
         return Inertia::render('Authenticated/Patient/Appointments/Appointment',[
@@ -81,7 +81,7 @@ class PatientController extends Controller
     }
 
     public function GetSubServices(Request $request,$id){
-        $subservices = subservices::where('service_id',$id)->get();
+        $subservices = subservices::with(['times'])->where('service_id',$id)->get();
         return response()->json($subservices);
     }
 
@@ -101,8 +101,14 @@ class PatientController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:h:i A',
             'service' => 'required|exists:servicetypes,id',
-            'subservice' => 'required|exists:subservices,id'
-            //'notes' => 'required|min:10'
+            'subservice' => 'required|exists:subservices,id',
+            'timeid' => [
+                'required',
+                Rule::exists('subservice_time','id')
+                ->where(function($query) use ($request){
+                    $query->where('subservice_id',$request->subservice);
+                })
+            ]
         ]);
         //dd($request);
         try{
@@ -121,6 +127,10 @@ class PatientController extends Controller
                     $appoint->load(['service','user','user.role']);
                     $time = \Carbon\Carbon::parse($appoint->time)->format('H:m A');
                     $message = "Scheduled {$appoint->service->servicename} at {$appoint->date} {$time}.";
+
+
+
+
 
                     //dd($message);
 

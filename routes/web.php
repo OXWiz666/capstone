@@ -67,6 +67,12 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/appointments',[PatientController::class,'appointments'])->name('patient.appoint');
     //Route::get('/dashboard/test', [TestDbControllerrr::class, 'index'])->name('dashboard.test');
 
+
+
+    Route::get('services/get-sub-services/{id}',[PatientController::class,'GetSubServices'])->name('patient.subservices.get');
+
+
+
     // Contact Routes
     //Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 });
@@ -81,7 +87,7 @@ Route::middleware(['auth','Patient'])->group(function(){
         ## Appointment
         Route::post('/appointment/create',[PatientController::class,'storeAppointment'])->name('patient.appoint.create');
 
-        Route::get('/get-sub-services/{id}',[PatientController::class,'GetSubServices'])->name('patient.subservices.get');
+
     });
 });
 
