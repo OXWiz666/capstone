@@ -280,7 +280,7 @@ const AppointmentForm = ({
                                 const subservice = subServiceLookup[selectedId];
 
                                 setTimesArr(subservice?.times);
-                                console.log(subservice);
+                                //console.log(subservice);
                                 // handleSelectChange({
                                 //     subservice: subservice.id,
                                 //     subservicename: subservice.subservicename,

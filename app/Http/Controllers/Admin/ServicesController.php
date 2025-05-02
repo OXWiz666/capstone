@@ -79,7 +79,9 @@ class ServicesController extends Controller
         $request->validate([
             'times' => 'array',
             'times.*' => 'date_format:h:i A',
-            'subservice_id' => 'required|exists:subservices,id'
+            'subservice_id' => 'required|exists:subservices,id',
+
+            'subservicename' => 'required|min:3'
         ]);
 
         try{
@@ -87,6 +89,9 @@ class ServicesController extends Controller
 
             subservice_time::where('subservice_id',$request->subservice_id)->delete();
 
+            subservices::where('id',$request->subservice_id)->update([
+                'subservicename' => $request->subservicename
+            ]);
 
             foreach ($request->times as $timeStr) {
             // Convert "11:30 AM" to "11:30:00"
