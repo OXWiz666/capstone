@@ -10,6 +10,7 @@ use App\Notifications\SystemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
 use App\Services\ActivityLogger;
@@ -20,8 +21,37 @@ class PatientController extends Controller
 {
     //
     public function profile(){
-        return Inertia::render("Authenticated/Patient/ProfilePage",[]);
-        //return view('patient.profie');
+        // Get recent appointments for the current user
+        $recentAppointments = appointments::with(['service','user', 'doctor', 'subservice'])
+            ->where('user_id', Auth::user()->id)
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get()
+            ->map(function($appointment) {
+                // Get service name from the relationship
+                $serviceName = $appointment->service ? $appointment->service->servicename : 'General Checkup';
+                
+                // Get doctor name if available
+                $doctorName = $appointment->doctor 
+                    ? $appointment->doctor->firstname . ' ' . $appointment->doctor->lastname
+                    : 'Not Assigned';
+                
+                return [
+                    'id' => $appointment->id,
+                    'date' => $appointment->date,
+                    'time' => $appointment->time,
+                    'doctor' => $doctorName,
+                    'purpose' => $serviceName,
+                    'status' => $appointment->status,
+                    'status_code' => is_numeric($appointment->status) ? (int)$appointment->status : 1,
+                    'created_at' => $appointment->created_at->format('Y-m-d H:i:s'),
+                    'service' => $appointment->service
+                ];
+            });
+
+        return Inertia::render("Authenticated/Patient/ProfilePage",[
+            'recentAppointments' => $recentAppointments
+        ]);
     }
 
 
@@ -62,12 +92,52 @@ class PatientController extends Controller
             ]);
         }
 
+        if($request->hasFile('avatar')){
+            $this->uploadAvatar($request);
+        }
+
         ActivityLogger::log("User updated profile information.",$user,['ip',request()->ip()]);
     }
 
-    public function medicalrecords(){
+    /**
+     * Upload and update user avatar
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        return Inertia::render("Authenticated/Patient/MedicalRecordsPage",[]);
+        $user = Auth::user();
+
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if it exists
+            if ($user->avatar && $user->avatar !== 'default-avatar.png' && Storage::disk('public')->exists('avatars/' . $user->avatar)) {
+                Storage::disk('public')->delete('avatars/' . $user->avatar);
+            }
+
+            // Store new avatar
+            $avatarName = 'avatar_' . $user->id . '_' . time() . '.' . $request->avatar->extension();
+            $request->avatar->storeAs('avatars', $avatarName, 'public');
+
+            // Update user record
+            $user->update(['avatar' => $avatarName]);
+
+            ActivityLogger::log("User updated profile avatar", $user, ['ip' => $request->ip()]);
+
+            return redirect()->back()->with('success', 'Avatar updated successfully');
+        }
+
+        return redirect()->back()->with('error', 'Failed to upload avatar');
+    }
+
+    public function medicalrecords(){
+        $user = Auth::user();
+        return Inertia::render("Authenticated/Patient/MedicalRecordsPage",[
+            'userData' => [
+                'avatar' => $user->avatar
+            ]
+        ]);
     }
 
     public function appointments(){
@@ -87,7 +157,7 @@ class PatientController extends Controller
 
     public function appointmentshistory(){
         $appointments =
-        appointments::with(['service','user'])
+        appointments::with(['service','user', 'doctor', 'subservice'])
         ->where('user_id',Auth::user()->id)->orderByDesc('created_at')->paginate(5);
 
         return Inertia::render('Authenticated/Patient/Appointments/AppointmentHistory',[
@@ -95,115 +165,55 @@ class PatientController extends Controller
             'ActiveTAB' => 'History'
         ]);
     }
+    
     public function storeAppointment(Request $request){
         $request->validate([
             'phone' => 'required|min:10',
             'date' => 'required|date',
-            'time' => 'required|date_format:h:i A',
-            'service' => 'required|exists:servicetypes,id',
-            'subservice' => 'required|exists:subservices,id',
-            'timeid' => [
-                'required',
-                Rule::exists('subservice_time','id')
-                ->where(function($query) use ($request){
-                    $query->where('subservice_id',$request->subservice);
-                })
-            ]
+            'time' => 'required',
+            'service' => 'required|exists:servicetypes,id'
         ]);
-        //dd($request);
-        try{
-            DB::beginTransaction();
 
-                // Get the latest priority number and increment it, or start from 1 if none exists
-                $latestPriority = appointments::max('priorityNumber') ?? 0;
-                $newPriorityNumber = $latestPriority + 1;
+        $user = Auth::user();
+        $service = servicetypes::find($request->service);
 
-                $appoint = appointments::create([
-                    'user_id' => Auth::user()->id,
-                    'phone' => $request->phone,
-                    'date' => \Carbon\Carbon::parse( $request->date)->format('Y-m-d'),
-                    'time' => \Carbon\Carbon::parse($request->time)->format('H:i:s'),
-                    'servicetype_id' => $request->service,
-                    'priorityNumber' => $newPriorityNumber,
-                    //'notes' => $request->notes,
-                ]);
+        $appointment = appointments::create([
+            'user_id' => $user->id,
+            'phone' => $request->phone,
+            'date' => $request->date,
+            'time' => $request->time,
+            'servicetype_id' => $request->service,
+            'subservice_id' => $request->subservice ?? null,
+            'notes' => $request->notes,
+            'status' => 'Pending'
+        ]);
 
-                if($appoint){
-                    $appoint->load(['service','user','user.role']);
-                    $time = \Carbon\Carbon::parse($appoint->time)->format('H:m A');
-                    $message = "Scheduled {$appoint->service->servicename} at {$appoint->date} {$time}.";
+        $user->notify(new SystemNotification(
+            'Appointment Scheduled',
+            'Your appointment for '.$service->name.' has been scheduled for '.$request->date.' at '.$request->time.'.',
+            'appointment'
+        ));
 
+        // Trigger notification event
+        event(new SendNotification($user->id, [
+            'title' => 'New Appointment',
+            'message' => 'A new appointment has been scheduled by '.$user->firstname.' '.$user->lastname,
+            'type' => 'appointment'
+        ]));
 
+        ActivityLogger::log('User scheduled an appointment', $user, ['appointment_id' => $appointment->id]);
 
-
-
-                    //dd($message);
-
-                    ActivityLogger::log($message . " ({$appoint->user->firstname} {$appoint->user->lastname})",$appoint,
-                    ['ip' => $request->ip()]);
-
-                    $recipients = User::whereIn('roleID', ['7','1'])->get();
-
-                    foreach($recipients as $recipient){
-                        $recipient->notify(new SystemNotification(
-                            $message,
-                                "{$appoint->user->firstname} {$appoint->user->lastname} ({$appoint->user->role->roletype})",
-                            "new_appointment",
-                            "#",
-                            $appoint->id
-                        ));
-
-                        event(new SendNotification($recipient->id));
-                    }
-
-
-                }
-
-            DB::commit();
-
-            //return response()->noContent();
-        }
-        catch(\Exception $er){
-
-            //dd($er);
-            DB::rollBack();
-
-            //Log::error("Appointment creation failed: " . $e->getMessage());
-            //return redirect()->back()->with('error', 'Failed to create appointment');
-        }
+        return redirect()->back()->with('success', 'Appointment scheduled successfully');
     }
 
-    /**
-     * Get the latest appointment for the authenticated user with priority number
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getLatestAppointment()
-    {
-        $latestAppointment = appointments::where('user_id', Auth::user()->id)
-            ->whereNotNull('priorityNumber')
+    public function getLatestAppointment(Request $request) {
+        $latestAppointment = appointments::where('date', $request->date)
+            ->where('servicetype_id', $request->service)
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if ($latestAppointment) {
-            return response()->json([
-                'priorityNumber' => $latestAppointment->priorityNumber,
-                'date' => $latestAppointment->date,
-                'time' => $latestAppointment->time,
-                'status' => $latestAppointment->status
-            ]);
-        }
-
-        // If no appointment with priority number exists, return a generated one
-        
-        // If no appointment with priority number exists, generate a sequential one
-        // Get the highest priority number in the system and add 1
-        $highestPriority = appointments::max('priorityNumber') ?? 1000;
-        $newPriorityNumber = $highestPriority + 1;
-        
         return response()->json([
-            'priorityNumber' => $newPriorityNumber,
-            'generated' => true
+            'priority_number' => $latestAppointment ? $latestAppointment->priority_number + 1 : 1
         ]);
     }
 }

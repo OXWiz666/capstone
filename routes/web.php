@@ -81,6 +81,7 @@ Route::middleware(['auth','Patient'])->group(function(){
     Route::prefix('patient')->group(function(){
         Route::get('/profile',[PatientController::class,'profile'])->name('patient.profile');
         Route::post('/profile/update',[PatientController::class,'update'])->name('patient.profile.update');
+        Route::post('/profile/avatar',[PatientController::class,'uploadAvatar'])->name('patient.avatar.upload');
         Route::get('/medical-records',[PatientController::class,'medicalrecords'])->name('patient.medrecords');
 
         Route::get('/appointments/history',[PatientController::class,'appointmentshistory'])->name('patient.appoint.history');

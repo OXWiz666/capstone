@@ -26,18 +26,19 @@ class User extends Authenticatable
         'password',
 
         'firstname' ,
-                'middlename' ,
-                'lastname' ,
-                'email' ,
-                'password' ,
-                'contactno' ,
-                'roleID' ,
-                'questionID' ,
-                'answer' ,
-                'gender' ,
-                'birth',
-                'suffix',
-                'bloodtype'
+        'middlename' ,
+        'lastname' ,
+        'email' ,
+        'password' ,
+        'contactno' ,
+        'roleID' ,
+        'questionID' ,
+        'answer' ,
+        'gender' ,
+        'birth',
+        'suffix',
+        'bloodtype',
+        'avatar'
     ];
 
     /**
