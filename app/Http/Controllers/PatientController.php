@@ -141,8 +141,10 @@ class PatientController extends Controller
     }
 
     public function appointments(){
-        $serv = servicetypes::with(['servicedays'])->get();
-
+        // Only get active services (status = 1, not archived)
+        $serv = servicetypes::with(['servicedays'])
+            ->where('status', 1) // Only show active services, not archived ones
+            ->get();
 
         return Inertia::render('Authenticated/Patient/Appointments/Appointment',[
             'services' => $serv,

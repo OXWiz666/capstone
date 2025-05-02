@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/tempo/components/ui/button";
 import { Input } from "@/components/tempo/components/ui/input";
+import { Textarea } from "@/components/tempo/components/ui/textarea";
 import {
     Avatar,
     AvatarFallback,
@@ -83,6 +84,12 @@ const alert_toast = (title, message, type) => {
 export default function ServicesLayout({ children }) {
     const { flash } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    // Form state for creating a new service
+    const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
+        servicename: "",
+        status: 1, // Active by default
+    });
 
     // Handle flash messages from the server
     useEffect(() => {
@@ -101,14 +108,6 @@ export default function ServicesLayout({ children }) {
                 >
                     <PlusCircle className="h-4 w-4" />
                     <span>Add Service</span>
-                </Button>
-                <Button
-                    variant="outline"
-                    onClick={OpenModal}
-                    className="flex items-center gap-2"
-                >
-                    <PlusCircle className="h-4 w-4" />
-                    <span>Add Sub Service</span>
                 </Button>
             </>
         );
@@ -147,22 +146,36 @@ export default function ServicesLayout({ children }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        //alert("wew");
-        post(route("admin.staff.register"), {
-            onSuccess: (r) => {
-                CloseModal();
+        
+        // Add an empty description field to the data to satisfy the backend
+        const formData = {
+            ...data,
+            description: '' // Add empty description
+        };
+        
+        axios.post('/admin/services/create', formData)
+            .then(response => {
+                setIsModalOpen(false);
+                clearErrors();
+                reset();
                 alert_toast(
-                    "Success!",
-                    "Staff has been registered successfully!",
+                    "Success",
+                    "Service created successfully!",
                     "success"
                 );
-                router.reload({
-                    only: ["auth"],
-                    preserveScroll: true,
-                });
-            },
-        });
+                // Force reload to show the updated services
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error creating service:', error);
+                alert_toast(
+                    "Error",
+                    error.response?.data?.message || 'An error occurred while creating the service',
+                    "error"
+                );
+            });
     };
+
     // State for the selected doctor and status
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(1);
@@ -277,7 +290,32 @@ export default function ServicesLayout({ children }) {
                 {children}
             </motion.div>
             <Modal2 isOpen={isModalOpen} onClose={CloseModal}>
-                <div>qwe</div>
+                <div className="p-6">
+                    <h2 className="text-xl font-bold mb-4">Add New Service</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <Label htmlFor="servicename" className="block mb-1">Service Name</Label>
+                            <Input 
+                                id="servicename" 
+                                type="text" 
+                                value={data.servicename}
+                                onChange={(e) => setData('servicename', e.target.value)}
+                                className="w-full"
+                                required
+                            />
+                            {errors.servicename && (
+                                <p className="text-red-500 text-sm mt-1">{errors.servicename}</p>
+                            )}
+                        </div>
+                        
+
+                        
+                        <div className="flex justify-end gap-2 mt-6">
+                            <Button type="button" variant="outline" onClick={CloseModal}>Cancel</Button>
+                            <Button type="submit" disabled={processing}>Add Service</Button>
+                        </div>
+                    </form>
+                </div>
             </Modal2>
         </AdminLayout>
     );

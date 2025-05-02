@@ -94,8 +94,34 @@ const enhanced_toast = (title, message, type) => {
 
 export default function Doctors({ doctorsitems, doctors, questions }) {
     const { flash } = usePage().props;
+    const [isLoading, setIsLoading] = useState(false);
+    const [isArchiveLoading, setIsArchiveLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Enhanced toast notification function
+    const enhanced_toast = (title, message, icon) => {
+        toast(
+            <div className="flex">
+                <div className="ml-4">
+                    <p className="font-bold">{title}</p>
+                    <p>{message}</p>
+                </div>
+            </div>,
+            {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            }
+        );
+    };
+    
+    // This section was removed to fix duplicate declarations
+    
     // Handle flash messages from the server
     useEffect(() => {
         if (flash && flash.message) {
@@ -313,7 +339,10 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
             position: "top-right",
         });
         
-        axios.post(route("doctor.archive", { doctor: doctor.id }))
+        // Set loading state
+        setIsArchiveLoading(true);
+        
+        axios.post(route("admin.staff.archive"), { staff_id: doctor.id })
             .then(response => {
                 // Dismiss loading toast
                 toast.dismiss(loadingToastId);
@@ -324,10 +353,9 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                     `${doctorName}'s account has been archived successfully.`,
                     "success"
                 );
-                router.reload({
-                    only: ["auth"],
-                    preserveScroll: true,
-                });
+                
+                // Reload the page to show updated data
+                window.location.reload();
             })
             .catch(error => {
                 // Dismiss loading toast
@@ -339,19 +367,28 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                     `There was a problem archiving ${doctorName}'s account: ${error.response?.data?.message || "Please try again."}`,
                     "error"
                 );
+                
+                console.error('Error archiving staff:', error);
+            })
+            .finally(() => {
+                // Reset loading state
+                setIsArchiveLoading(false);
             });
     };
 
     // Function to unarchive a doctor account with enhanced feedback
     const unarchiveDoctor = (doctor) => {
         const doctorName = `${doctor.user?.firstname} ${doctor.user?.lastname}`;
-
+        
         // Show loading toast
         const loadingToastId = toast.loading(`Unarchiving ${doctorName}'s account...`, {
             position: "top-right",
         });
         
-        axios.post(route("doctor.unarchive", { doctor: doctor.id }))
+        // Set loading state
+        setIsArchiveLoading(true);
+        
+        axios.post(route("admin.staff.unarchive"), { staff_id: doctor.id })
             .then(response => {
                 // Dismiss loading toast
                 toast.dismiss(loadingToastId);
@@ -362,27 +399,32 @@ export default function Doctors({ doctorsitems, doctors, questions }) {
                     `${doctorName}'s account has been unarchived successfully.`,
                     "success"
                 );
-                router.reload({
-                    only: ["auth"],
-                    preserveScroll: true,
-                });
+                
+                // Reload the page to show updated data
+                window.location.reload();
             })
             .catch(error => {
                 // Dismiss loading toast
                 toast.dismiss(loadingToastId);
-                
+
                 // Show error toast
                 enhanced_toast(
                     "Unarchive Failed",
                     `There was a problem unarchiving ${doctorName}'s account: ${error.response?.data?.message || "Please try again."}`,
                     "error"
                 );
+                
+                console.error('Error unarchiving staff:', error);
+            })
+            .finally(() => {
+                // Reset loading state
+                setIsArchiveLoading(false);
             });
     };
-
+    
     const getStatusBadge = (doctor) => {
         if (!doctor || !doctor.status) return null;
-
+        
         const status = doctor.status;
 
         switch (status) {

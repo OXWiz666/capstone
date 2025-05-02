@@ -173,7 +173,7 @@ const Header = ({
                                 {servicesOpen && (
                                     <div className="pl-10 pr-3 py-1 space-y-1">
                                         <Link
-                                            href="#"
+                                            href="/appointments"
                                             className="flex items-center py-2 px-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-100 hover:to-transparent rounded-md transition-all duration-300 transform hover:translate-x-1 hover:shadow-sm"
                                         >
                                             <svg
@@ -191,6 +191,7 @@ const Header = ({
                                             </svg>
                                             Appointments
                                         </Link>
+
                                         <Link
                                             href="#"
                                             className="flex items-center py-2 px-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-100 hover:to-transparent rounded-md transition-all duration-300 transform hover:translate-x-1 hover:shadow-sm"

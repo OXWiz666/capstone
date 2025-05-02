@@ -8,6 +8,8 @@ class servicetypes extends Model
 {
     //
     protected $primaryKey = 'id';
+    protected $fillable = ['servicename', 'description', 'status'];
+    public $timestamps = true;
     public function subservices(){
         return $this->hasMany(subservices::class,'service_id','id');
     }

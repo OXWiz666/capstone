@@ -73,19 +73,6 @@ export default function Sidebar({ activeTab }) {
                                 <Layers className="mr-2 h-5 w-5" />
                                 Services
                             </Button>
-                            <Button
-                                variant={
-                                    activeTab === "subservices"
-                                        ? "secondary"
-                                        : "ghost"
-                                }
-                                className="w-full justify-start"
-                                size="lg"
-                                onClick={(e) => router.visit("")}
-                            >
-                                <Layers2 className="mr-2 h-5 w-5" />
-                                Sub Services
-                            </Button>
                         </div>
                     </CardContent>
                 </Card>

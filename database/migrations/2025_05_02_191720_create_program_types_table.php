@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_types', function (Blueprint $table) {
-            $table->integer('id',true,true);
-            $table->string('programname');
-            $table->text('description');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('program_types')) {
+            Schema::create('program_types', function (Blueprint $table) {
+                $table->id();
+                $table->string('programname');
+                $table->text('description');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

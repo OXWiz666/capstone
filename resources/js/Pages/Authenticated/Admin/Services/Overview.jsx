@@ -1,13 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/tempo/components/ui/card";
-import {
-    ArrowUpIcon,
-    ArrowDownIcon,
-    Users,
-    Calendar,
-    Activity,
-    AlertTriangle,
-} from "lucide-react";
 import ServicesLayout from "./ServicesLayout";
 import SideBar from "./Sidebar";
 // interface StatisticCardProps {
@@ -42,9 +34,15 @@ const StatisticCard = ({
                         {change && (
                             <div className="flex items-center mt-2">
                                 {change.isPositive ? (
-                                    <ArrowUpIcon className="h-4 w-4 text-green-500 mr-1" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-green-500 mr-1">
+                                        <path d="m5 12 7-7 7 7"></path>
+                                        <path d="M12 19V5"></path>
+                                    </svg>
                                 ) : (
-                                    <ArrowDownIcon className="h-4 w-4 text-red-500 mr-1" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-red-500 mr-1">
+                                        <path d="m5 12 7 7 7-7"></path>
+                                        <path d="M12 5v14"></path>
+                                    </svg>
                                 )}
                                 <span
                                     className={`text-xs font-medium ${
@@ -53,7 +51,7 @@ const StatisticCard = ({
                                             : "text-red-500"
                                     }`}
                                 >
-                                    {change.value}% from last month
+                                    {change.value} total
                                 </span>
                             </div>
                         )}
@@ -99,34 +97,54 @@ const Overview = ({
                     <StatisticCard
                         title="Total Services"
                         value={staffcount}
-                        icon={<Users className="h-5 w-5 text-primary" />}
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-primary">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        }
                         change={{
                             value: staffcount,
-                            isPositive: staffcount >= 0 ? true : false,
+                            isPositive: true,
                         }}
                     />
 
                     <StatisticCard
                         title="Total Sub-Services"
                         value={admincount}
-                        icon={<Users className="h-5 w-5 text-primary" />}
-                        change={{ value: 8, isPositive: true }}
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-primary">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                        }
+                        change={{ value: admincount, isPositive: true }}
                     />
 
                     <StatisticCard
                         title="Active Services"
                         value={pharmacistcount}
-                        icon={<Users className="h-5 w-5 text-primary" />}
-                        change={{ value: 0, isPositive: true }}
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-primary">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                        }
+                        change={{ value: pharmacistcount, isPositive: true }}
                     />
 
                     <StatisticCard
                         title="Inactive Services"
                         value={inventoryAlerts}
                         icon={
-                            <AlertTriangle className="h-5 w-5 text-primary" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-primary">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                                <path d="M12 9v4"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
                         }
-                        change={{ value: 2, isPositive: false }}
+                        change={{ value: inventoryAlerts, isPositive: false }}
                         bgColor={inventoryAlerts > 0 ? "bg-red-50" : "bg-white"}
                     />
                 </div>

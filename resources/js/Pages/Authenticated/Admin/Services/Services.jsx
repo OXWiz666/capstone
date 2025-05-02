@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 import { motion } from "framer-motion";
 
@@ -142,8 +143,9 @@ const Services = ({ services_ }) => {
     const [services, setServices] = useState(services_);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
+    const [isLoading, setIsLoading] = useState(false);
     const [sortConfig, setSortConfig] = useState({
-        key: "name",
+        key: "servicename",
         direction: "ascending",
     });
 
@@ -173,8 +175,7 @@ const Services = ({ services_ }) => {
 
     // New service form state
     const [newService, setNewService] = useState({
-        name: "",
-        description: "",
+        servicename: "",
         status: "Active",
     });
 
@@ -276,16 +277,22 @@ const Services = ({ services_ }) => {
     };
 
     // Add new service
-    const addService = () => {
-        const newServiceObj = {
-            id: `SRV${String(services.length + 1).padStart(3, "0")}`,
-            ...newService,
-            subServices: [],
-        };
-
-        setServices([...services, newServiceObj]);
-        setNewService({ name: "", description: "", status: "Active" });
-        setIsServiceDialogOpen(false);
+    const addService = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.post('/admin/services/create', newService);
+            if (response.data.services) {
+                // Update services with the new data
+                setServices(response.data.services);
+                setIsServiceDialogOpen(false);
+                alert_toast("Success", "Service added successfully!");
+            }
+        } catch (error) {
+            console.error('Error creating service:', error);
+            alert_toast("Error", error.response?.data?.message || 'An error occurred while creating the service');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const addSubService = () => {
@@ -302,6 +309,28 @@ const Services = ({ services_ }) => {
                 // });
             },
         });
+    };
+
+    // Handle archive/unarchive service - similar to Health Programs implementation
+    const handleArchiveService = async (serviceId, isArchived) => {
+        setIsLoading(true);
+        try {
+            const endpoint = isArchived ? '/admin/services/unarchive' : '/admin/services/archive';
+            const response = await axios.post(endpoint, {
+                service_id: serviceId
+            });
+            
+            if (response.data.services) {
+                // Update the services with the new data
+                setServices(response.data.services);
+                alert_toast("Success", response.data.message);
+            }
+        } catch (error) {
+            console.error('Error archiving/unarchiving service:', error);
+            alert_toast("Error", error.response?.data?.message || 'An error occurred while updating the service');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // Get status badge color
@@ -448,6 +477,63 @@ const Services = ({ services_ }) => {
                             All Services
                         </h2>
                         <div className="flex items-center gap-4">
+                            <Dialog
+                                open={isServiceDialogOpen}
+                                onOpenChange={(open) => {
+                                    setIsServiceDialogOpen(open);
+                                    if (!open) {
+                                        setNewService({ servicename: "", status: "Active" });
+                                    }
+                                }}
+                            >
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Add New Service</DialogTitle>
+                                        <DialogDescription>
+                                            Create a new service for appointments.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                        <div className="grid grid-cols-4 items-center gap-4">
+                                            <Label htmlFor="servicename" className="text-right">
+                                                Service Name
+                                            </Label>
+                                            <Input
+                                                id="servicename"
+                                                name="servicename"
+                                                className="col-span-3"
+                                                value={newService.servicename}
+                                                onChange={(e) => setNewService({ ...newService, servicename: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button
+                                            type="submit"
+                                            onClick={async () => {
+                                                try {
+                                                    setIsLoading(true);
+                                                    const response = await axios.post('/admin/services/create', newService);
+                                                    if (response.data.services) {
+                                                        // Update services with the new data
+                                                        setServices(response.data.services);
+                                                        setIsServiceDialogOpen(false);
+                                                        alert_toast("Success", "Service added successfully!");
+                                                    }
+                                                } catch (error) {
+                                                    console.error('Error creating service:', error);
+                                                    alert_toast("Error", error.response?.data?.message || 'An error occurred while creating the service');
+                                                } finally {
+                                                    setIsLoading(false);
+                                                }
+                                            }}
+                                            disabled={!newService.servicename || isLoading}
+                                        >
+                                            Save Service
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                             <div className="flex items-center gap-2">
                                 <Filter className="h-4 w-4 text-muted-foreground" />
                                 <span className="text-sm font-medium">
@@ -594,6 +680,39 @@ const Services = ({ services_ }) => {
                                                     </TableCell>
                                                     <TableCell className="text-right">
                                                         <div className="flex justify-end gap-2">
+                                                            {service.status === 0 ? (
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="text-green-600 hover:text-green-700 hover:bg-green-50 flex items-center gap-1"
+                                                                    onClick={() => handleArchiveService(service.id, true)}
+                                                                    disabled={isLoading}
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                        <path d="M21 8v13H3V8"></path>
+                                                                        <path d="M1 3h22v5H1z"></path>
+                                                                        <path d="M12 12v7"></path>
+                                                                        <path d="M8 12l4-4 4 4"></path>
+                                                                    </svg>
+                                                                    Unarchive
+                                                                </Button>
+                                                            ) : (
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center gap-1"
+                                                                    onClick={() => handleArchiveService(service.id, false)}
+                                                                    disabled={isLoading}
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                        <path d="M21 8v13H3V8"></path>
+                                                                        <path d="M1 3h22v5H1z"></path>
+                                                                        <path d="M12 19V12"></path>
+                                                                        <path d="M8 15l4 4 4-4"></path>
+                                                                    </svg>
+                                                                    Archive
+                                                                </Button>
+                                                            )}
                                                             <Dialog
                                                                 open={
                                                                     isServiceDialogOpen
@@ -859,34 +978,6 @@ const Services = ({ services_ }) => {
                                                             >
                                                                 <Trash2 className="h-4 w-4 text-red-500" />
                                                             </Button>
-
-                                                            <Modal
-                                                                isOpen={
-                                                                    isServiceDeleteModalOpen
-                                                                }
-                                                                onClose={() =>
-                                                                    serviceDeleteModalHandler(
-                                                                        false
-                                                                    )
-                                                                }
-                                                                title={
-                                                                    "Deleting " +
-                                                                    data.subservicename
-                                                                }
-                                                                maxWidth="md"
-                                                            >
-                                                                <div>
-                                                                    Are you sure
-                                                                    you want to
-                                                                    delete this
-                                                                    service?
-                                                                </div>
-                                                                <form action="#">
-                                                                    <DangerButton className=" float-right">
-                                                                        Delete
-                                                                    </DangerButton>
-                                                                </form>
-                                                            </Modal>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>

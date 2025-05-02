@@ -62,6 +62,8 @@ Route::middleware(['GuestOrPatient'])->group(function () {
     Route::get('/appointments', [LandingPageController::class, 'appointments'])->name('appointments');
     Route::get('/services/records', [LandingPageController::class, 'records'])->name('services.records');
     Route::get('/services/vaccinations', [VaccineController::class, 'index'])->name('services.vaccinations');
+    Route::get('/services/vaccinations/registration', [VaccineController::class, 'showRegistrationForm'])->name('services.vaccinations.registration');
+    Route::post('/services/vaccinations/register', [VaccineController::class, 'register'])->name('services.vaccinations.register');
     Route::get('/faq', [LandingPageController::class, 'faq'])->name('faq');
 
     Route::get('/appointments',[PatientController::class,'appointments'])->name('patient.appoint');
@@ -119,22 +121,29 @@ Route::middleware(['auth','Admin'])->group(function(){
         Route::prefix('programs')->group(function(){
             Route::get('/',[HealthProgramsController::class,'index'])->name('admin.programs');
             Route::post('create',[HealthProgramsController::class,'CreateProgram'])->name('admin.programs.create');
+            Route::post('archive',[HealthProgramsController::class,'archiveProgram'])->name('admin.programs.archive');
+            Route::post('unarchive',[HealthProgramsController::class,'unarchiveProgram'])->name('admin.programs.unarchive');
         });
 
 
         Route::prefix('staff')->group(function(){
             Route::get('/overview',[StaffController::class,'index'])->name('admin.staff.overview');
             Route::get('/doctors',[StaffController::class,'doctors'])->name('admin.staff.doctors');
+            Route::post('/archive',[StaffController::class,'archiveStaff'])->name('admin.staff.archive');
+            Route::post('/unarchive',[StaffController::class,'unarchiveStaff'])->name('admin.staff.unarchive');
         });
         Route::post('/doctors/update-status/{doctor}',[StaffController::class,'updateStatus'])->name('doctor.update.status');
 
         Route::prefix('services')->group(function(){
             Route::get('/overview',[ServicesController::class,'index'])->name('admin.services.overview');
             Route::get('/',[ServicesController::class,'services'])->name('admin.services.services');
+            Route::post('/create',[ServicesController::class,'create'])->name('admin.services.create');
             Route::post('/sub-services/create',[ServicesController::class,'createSubService'])->name('admin.services.subservice.create');
 
             Route::post('/sub-services/save-time',[ServicesController::class,'saveTime'])->name('admin.services.time.update');
             Route::post('/sub-services/save-days',[ServicesController::class,'saveDays'])->name('admin.services.days.update');
+            Route::post('/archive',[ServicesController::class,'archiveService'])->name('admin.services.archive');
+            Route::post('/unarchive',[ServicesController::class,'unarchiveService'])->name('admin.services.unarchive');
         });
 
         Route::post('/registerstaff/create',[AuthController::class,'registerStaff'])->name('admin.staff.register');
@@ -147,6 +156,8 @@ Route::middleware(['auth','AdminDoctor'])->group(function() {
     Route::prefix('auth')->group(function(){
         Route::post('/appointments/resched/{appointment}',[AppointmentsController::class,'reschedule'])->name('admin.resched');
         Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
+        Route::post('/appointments/archive',[AppointmentsController::class,'archiveAppointment'])->name('admin.appointments.archive');
+        Route::post('/appointments/unarchive',[AppointmentsController::class,'unarchiveAppointment'])->name('admin.appointments.unarchive');
         Route::get('/appointment/get/{appointment}', [AppointmentsController::class,'GetAppointment'])->name('admin.appointment.get');
         //Route::get('/appointments',[AppointmentsController::class,'index'])->name('admin.appointments');
         Route::get('/patients',[PatientsController::class,'index'])->name('admin.patients');

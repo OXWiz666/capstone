@@ -113,13 +113,6 @@ const Overview = ({
                         change={{ value: 8, isPositive: true }}
                     />
 
-                    <StatisticCard
-                        title="Total Pharmacists"
-                        value={pharmacistcount}
-                        icon={<Users className="h-5 w-5 text-primary" />}
-                        change={{ value: 0, isPositive: true }}
-                    />
-
                     {/* <StatisticCard
                         title="Inventory Alerts"
                         value={inventoryAlerts}

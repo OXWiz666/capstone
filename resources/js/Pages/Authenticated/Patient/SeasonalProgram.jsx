@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
 import {
     Card,
     CardContent,
@@ -39,7 +39,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 const SeasonalProgramDashboard = () => {
-    const { auth } = usePage().props;
+    const { auth, programs = [], userPrograms = [] } = usePage().props;
     const isAuthenticated = auth && auth.user;
     
     // State for program registration modal
@@ -50,15 +50,8 @@ const SeasonalProgramDashboard = () => {
     
     // Helper function to handle program registration
     const handleProgramJoin = (program) => {
-        if (isAuthenticated) {
-            // Show registration modal with the selected program
-            setRegistrationModal({
-                isOpen: true,
-                program: program
-            });
-        } else {
-            window.location.href = "/login";
-        }
+        // Redirect to the dedicated registration page with the program ID
+        window.location.href = `/services/vaccinations/registration?program_id=${program.id}`;
     };
     
     // Close registration modal
@@ -72,10 +65,80 @@ const SeasonalProgramDashboard = () => {
     // Handle registration form submission
     const handleRegistrationSubmit = (e) => {
         e.preventDefault();
-        // Here you would typically send the form data to your backend
-        // For now, we'll just show a success message and close the modal
-        alert("Registration successful! You have joined the program.");
-        closeRegistrationModal();
+        
+        if (!registrationModal.program) {
+            alert("Please select a program.");
+            return;
+        }
+        
+        // Get form data
+        const formData = new FormData(e.target);
+        const formValues = Object.fromEntries(formData.entries());
+        
+        // Show loading state
+        const btn = e.target.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Registering...';
+        }
+        
+        // Prepare registration data
+        const registrationData = {
+            program_id: registrationModal.program.id,
+            first_name: formValues.first_name,
+            middle_name: formValues.middle_name || '',
+            last_name: formValues.last_name,
+            suffix: formValues.suffix || '',
+            sex: formValues.sex,
+            age: formValues.age,
+            contact_number: formValues.contact_number,
+            email: formValues.email,
+        };
+        
+        // Send registration data to the server
+        router.post('/services/vaccinations/register', registrationData, {
+            onSuccess: () => {
+                // Show success message using alert for now (can be replaced with a toast library)
+                alert("Successfully registered for the program!");
+                
+                closeRegistrationModal();
+                
+                // Update the available slots for the registered program
+                setProgramSchedules(prevPrograms => {
+                    return prevPrograms.map(program => {
+                        if (program.id === registrationModal.program.id) {
+                            return {
+                                ...program,
+                                availableSlots: Math.max(0, program.availableSlots - 1)
+                            };
+                        }
+                        return program;
+                    });
+                });
+                
+                // Refresh the page to update the user's programs list
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            },
+            onError: (errors) => {
+                // Reset button state
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Register';
+                }
+                
+                // Show error message
+                let errorMessage = "Registration failed. Please try again later.";
+                if (errors.message) {
+                    errorMessage = errors.message;
+                }
+                
+                alert("Registration Failed: " + errorMessage);
+                
+                console.error("Registration errors:", errors);
+            }
+        });
     };
     const [selectedDate, setSelectedDate] = useState(null);
     const [activeTab, setActiveTab] = useState("schedules");
@@ -127,146 +190,68 @@ const SeasonalProgramDashboard = () => {
     }, [isAuthenticated, activeTab]);
     const [programFilter, setProgramFilter] = useState(null);
 
-    // Sample data for program schedules
-    const programSchedules = [
-        {
-            id: "vs1",
-            name: "COVID-19 Vaccination",
-            date: new Date(2023, 6, 15),
-            time: "9:00 AM - 12:00 PM",
-            location: "Barangay Calumpang Health Center - Main Hall",
-            ageGroup: "18+ years",
-            availableSlots: 45,
-            totalSlots: 100,
-            status: "upcoming",
-            type: "vaccination",
-        },
-        {
-            id: "vs2",
-            name: "Flu Vaccination",
-            date: new Date(2023, 6, 18),
-            time: "1:00 PM - 4:00 PM",
-            location: "Barangay Calumpang Health Center - Room 2",
-            ageGroup: "All ages",
-            availableSlots: 30,
-            totalSlots: 50,
-            status: "upcoming",
-            type: "vaccination",
-        },
-        {
-            id: "mh1",
-            name: "Mental Health Awareness Workshop",
-            date: new Date(2023, 6, 20),
-            time: "2:00 PM - 4:00 PM",
-            location: "Barangay Calumpang Health Center - Conference Room",
-            ageGroup: "16+ years",
-            availableSlots: 25,
-            totalSlots: 30,
-            status: "upcoming",
-            type: "mental-health",
-        },
-        {
-            id: "mh2",
-            name: "Stress Management Session",
-            date: new Date(2023, 6, 22),
-            time: "10:00 AM - 12:00 PM",
-            location: "Barangay Calumpang Health Center - Activity Area",
-            ageGroup: "18+ years",
-            availableSlots: 15,
-            totalSlots: 25,
-            status: "upcoming",
-            type: "mental-health",
-        },
-        {
-            id: "mt1",
-            name: "Prenatal Care Seminar",
-            date: new Date(2023, 6, 17),
-            time: "9:00 AM - 11:00 AM",
-            location: "Barangay Calumpang Health Center - Maternal Care Room",
-            ageGroup: "Expectant Mothers",
-            availableSlots: 20,
-            totalSlots: 30,
-            status: "upcoming",
-            type: "maternal",
-        },
-        {
-            id: "vs4",
-            name: "Hepatitis B Vaccination",
-            date: new Date(2023, 6, 10),
-            time: "9:00 AM - 12:00 PM",
-            location: "Barangay Calumpang Health Center - Main Hall",
-            ageGroup: "All ages",
-            availableSlots: 0,
-            totalSlots: 40,
-            status: "completed",
-            type: "vaccination",
-        },
-        {
-            id: "gen1",
-            name: "Blood Pressure Screening",
-            date: new Date(2023, 6, 16),
-            time: "8:00 AM - 4:00 PM",
-            location: "Barangay Calumpang Health Center - Screening Area",
-            ageGroup: "40+ years",
-            availableSlots: 50,
-            totalSlots: 100,
-            status: "upcoming",
-            type: "general",
-        },
-    ];
+    // Transform program data from the server to the format we need
+    const [programSchedules, setProgramSchedules] = useState([]);
+    
+    useEffect(() => {
+        if (programs && Array.isArray(programs)) {
+            // Transform the programs data from the server
+            const formattedPrograms = programs.map(program => ({
+                id: program.id.toString(),
+                name: program.name,
+                date: new Date(program.date),
+                time: `${program.startTime} - ${program.endTime}`,
+                location: program.location,
+                ageGroup: "All ages", // Default value, can be customized if data is available
+                availableSlots: program.availableSlots,
+                totalSlots: program.totalSlots,
+                status: program.status.toLowerCase(),
+                type: mapProgramTypeToCategory(program.programType || ""),
+                coordinator: program.coordinator,
+                description: program.description
+            }));
+            
+            setProgramSchedules(formattedPrograms);
+        }
+    }, [programs]);
+    
+    // Helper function to map program types to categories
+    const mapProgramTypeToCategory = (programType) => {
+        const type = programType.toLowerCase();
+        if (type.includes('vaccine') || type.includes('vaccination') || type.includes('immunization')) {
+            return 'healthprograms';
+        } else if (type.includes('mental') || type.includes('counseling') || type.includes('psychology')) {
+            return 'mental-health';
+        } else if (type.includes('maternal') || type.includes('prenatal') || type.includes('postnatal')) {
+            return 'maternal';
+        } else if (type.includes('health') || type.includes('program') || type.includes('checkup')) {
+            return 'healthprograms';
+        } else {
+            return 'general';
+        }
+    };
 
-    // Sample data for personal program records
-    const programRecords = [
-        {
-            id: "vr1",
-            name: "COVID-19 Vaccine (Pfizer)",
-            date: new Date(2023, 3, 15),
-            programType: "Pfizer-BioNTech Vaccination",
-            sessionNumber: 1,
-            nextSessionDate: new Date(2023, 4, 6),
-            conductedBy: "Dr. Maria Santos",
-            status: "completed",
-            type: "vaccination",
-        },
-        {
-            id: "vr2",
-            name: "COVID-19 Vaccine (Pfizer)",
-            date: new Date(2023, 4, 6),
-            programType: "Pfizer-BioNTech Vaccination",
-            sessionNumber: 2,
-            conductedBy: "Dr. Juan Reyes",
-            status: "completed",
-            type: "vaccination",
-        },
-        {
-            id: "mhr1",
-            name: "Mental Health Consultation",
-            date: new Date(2023, 5, 10),
-            programType: "Initial Assessment",
-            conductedBy: "Dr. Elena Cruz, Psychologist",
-            status: "completed",
-            type: "mental-health",
-        },
-        {
-            id: "mhr2",
-            name: "Stress Management Workshop",
-            date: new Date(2023, 6, 22),
-            programType: "Group Therapy Session",
-            conductedBy: "Dr. Elena Cruz, Psychologist",
-            status: "scheduled",
-            type: "mental-health",
-        },
-        {
-            id: "vr3",
-            name: "Flu Vaccine",
-            date: new Date(2023, 6, 18),
-            programType: "Seasonal Influenza Vaccination",
-            sessionNumber: 1,
-            conductedBy: "Nurse Ana Lim",
-            status: "scheduled",
-            type: "vaccination",
-        },
-    ];
+    // Transform user program records from the server
+    const [programRecords, setProgramRecords] = useState([]);
+    
+    useEffect(() => {
+        if (userPrograms && Array.isArray(userPrograms)) {
+            // Transform the user programs data from the server
+            const formattedRecords = userPrograms.map(record => ({
+                id: record.id.toString(),
+                name: record.name,
+                date: new Date(record.date),
+                programType: record.programType || record.name,
+                sessionNumber: record.sessionNumber,
+                nextSessionDate: record.nextSessionDate ? new Date(record.nextSessionDate) : null,
+                conductedBy: record.conductedBy || 'Health Center Staff',
+                status: record.status.toLowerCase(),
+                type: mapProgramTypeToCategory(record.name)
+            }));
+            
+            setProgramRecords(formattedRecords);
+        }
+    }, [userPrograms]);
 
     // Filter schedules based on selected date and program type
     const filteredSchedules = programSchedules.filter((schedule) => {
@@ -282,15 +267,24 @@ const SeasonalProgramDashboard = () => {
     });
 
     // Get dates with schedules for calendar highlighting
-    const scheduleDates = programSchedules.map((schedule) => schedule.date);
+    const scheduleDates = programSchedules.map((schedule) => {
+        // Ensure we're working with Date objects
+        const date = new Date(schedule.date);
+        // Return a new Date object with just the year, month, and day (no time)
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    });
 
-    useEffect(() => {
-        console.log("scheds: ", scheduleDates[0]);
-    }, [scheduleDates]);
+    // Filter programs based on selected date
+    const selectedDatePrograms = selectedDate ? programSchedules.filter(program => {
+        const programDate = new Date(program.date);
+        return programDate.getFullYear() === selectedDate.getFullYear() &&
+               programDate.getMonth() === selectedDate.getMonth() &&
+               programDate.getDate() === selectedDate.getDate();
+    }) : [];
     // Get program type icon
     const getProgramTypeIcon = (type, className = "h-4 w-4 mr-1") => {
         switch (type) {
-            case "vaccination":
+            case "healthprograms":
                 return <Syringe className={className} />;
             case "mental-health":
                 return <Brain className={className} />;
@@ -306,8 +300,8 @@ const SeasonalProgramDashboard = () => {
     // Get program type label
     const getProgramTypeLabel = (type) => {
         switch (type) {
-            case "vaccination":
-                return "Vaccination";
+            case "healthprograms":
+                return "Health Programs";
             case "mental-health":
                 return "Mental Health";
             case "maternal":
@@ -367,7 +361,7 @@ const SeasonalProgramDashboard = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m0 0V5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
-                            <span>Register for {program?.name || 'Health Program'}</span>
+                            <span>Register for Health Program</span>
                         </h3>
                         <button 
                             onClick={closeRegistrationModal}
@@ -383,43 +377,50 @@ const SeasonalProgramDashboard = () => {
                     {/* Form Content */}
                     <form onSubmit={handleRegistrationSubmit} className="p-8">
                         <div className="mb-8 p-5 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
-                            <h4 className="font-semibold text-lg mb-2">{program?.name || 'Health Program'}</h4>
+                            <h4 className="font-semibold text-lg mb-2">{registrationModal.program?.name || 'Health Program'}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                                 <div className="flex items-center">
                                     <CalendarIcon className="h-4 w-4 mr-2 text-gray-700" />
-                                    <span>{program?.date ? format(program.date, 'MMMM d, yyyy') : 'Date TBD'}</span>
+                                    <span>{registrationModal.program?.date ? format(new Date(registrationModal.program.date), 'MMMM d, yyyy') : 'Date TBD'}</span>
+                                    <input type="hidden" name="date" value={registrationModal.program?.date ? format(new Date(registrationModal.program.date), 'MMMM d, yyyy') : 'Date TBD'} />
                                 </div>
                                 <div className="flex items-center">
                                     <Clock className="h-4 w-4 mr-2 text-gray-700" />
-                                    <span>{program?.time || 'Time TBD'}</span>
+                                    <span>{`${registrationModal.program?.startTime || ''} - ${registrationModal.program?.endTime || ''}`}</span>
+                                    <input type="hidden" name="time" value={`${registrationModal.program?.startTime || ''} - ${registrationModal.program?.endTime || ''}`} />
                                 </div>
-                                <div className="flex items-center col-span-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span>{program?.location || 'Location TBD'}</span>
+                                <div className="flex items-center">
+                                    <MapPin className="h-4 w-4 mr-2 text-gray-700" />
+                                    <span>{registrationModal.program?.location || 'Location TBD'}</span>
+                                    <input type="hidden" name="location" value={registrationModal.program?.location || 'Location TBD'} />
                                 </div>
+                                <div className="flex items-center">
+                                    <Users className="h-4 w-4 mr-2 text-gray-700" />
+                                    <span>{registrationModal.program?.availableSlots || 0} slots available</span>
+                                </div>
+                                <input type="hidden" name="program_name" value={registrationModal.program?.name || 'Health Program'} />
                             </div>
                         </div>
                         
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label htmlFor="firstname" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                    <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
                                     <input 
                                         type="text" 
-                                        id="firstname" 
+                                        id="first_name" 
+                                        name="first_name"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         defaultValue={auth?.user?.firstname || ''}
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="middlename" className="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
+                                    <label htmlFor="middle_name" className="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
                                     <input 
                                         type="text" 
-                                        id="middlename" 
+                                        id="middle_name" 
+                                        name="middle_name"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         defaultValue={auth?.user?.middlename || ''}
                                     />
@@ -428,10 +429,11 @@ const SeasonalProgramDashboard = () => {
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="md:col-span-2">
-                                    <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                    <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
                                     <input 
                                         type="text" 
-                                        id="lastname" 
+                                        id="last_name" 
+                                        name="last_name"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         defaultValue={auth?.user?.lastname || ''}
                                         required
@@ -442,6 +444,7 @@ const SeasonalProgramDashboard = () => {
                                     <input 
                                         type="text" 
                                         id="suffix" 
+                                        name="suffix"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                         defaultValue={auth?.user?.suffix || ''}
                                         placeholder="Jr., Sr., III, etc."
@@ -451,16 +454,17 @@ const SeasonalProgramDashboard = () => {
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Sex</label>
+                                    <label htmlFor="sex" className="block text-sm font-medium text-gray-700 mb-1">Sex</label>
                                     <select 
-                                        id="gender" 
+                                        id="sex" 
+                                        name="sex"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        defaultValue={auth?.user?.gender || ''}
+                                        defaultValue={auth?.user?.gender || 'Male'}
                                         required
                                     >
-                                        <option value="">Select</option>
-                                        <option value="M">Male</option>
-                                        <option value="F">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                 </div>
                                 <div>
@@ -468,54 +472,59 @@ const SeasonalProgramDashboard = () => {
                                     <input 
                                         type="number" 
                                         id="age" 
+                                        name="age"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        defaultValue={auth?.user?.age || ''}
                                         min="0"
-                                        max="120"
+                                        defaultValue={auth?.user?.age || ''}
                                         required
                                     />
                                 </div>
                             </div>
                             
-                            <div>
-                                <label htmlFor="contact" className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
-                                <input 
-                                    type="text" 
-                                    id="contact" 
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    defaultValue={auth?.user?.contactno || ''}
-                                    placeholder="e.g., 09123456789"
-                                    required
-                                />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="contact_number" className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                                    <input 
+                                        type="tel" 
+                                        id="contact_number" 
+                                        name="contact_number"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.contact || ''}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        defaultValue={auth?.user?.email || ''}
+                                        required
+                                    />
+                                </div>
+                            </div>    
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4">
+                                <div className="flex items-start">
+                                    <svg className="h-5 w-5 text-blue-600 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div>
+                                        <h5 className="text-sm font-medium text-blue-800">Program Registration Information</h5>
+                                        <p className="text-xs text-blue-700 mt-1">
+                                            By registering for this program, you confirm that the information provided is accurate. You agree to participate in the program on the scheduled date at the specified time.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    defaultValue={auth?.user?.email || ''}
-                                    required
-                                />
-                            </div>
-                            
-                            <div>
-                                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                                <textarea 
-                                    id="address" 
-                                    rows="2"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Your complete address"
-                                    required
-                                ></textarea>
-                            </div>
-                                 
-                            <div className="flex items-center">
+                            <div className="flex items-center mb-4">
                                 <input 
                                     type="checkbox" 
                                     id="terms" 
-                                    className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                    name="terms"
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                     required
                                 />
                                 <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
@@ -534,12 +543,12 @@ const SeasonalProgramDashboard = () => {
                             </button>
                             <button
                                 type="submit"
-                                className="px-5 py-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-200 flex items-center"
+                                className="px-5 py-2.5 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 flex items-center"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Register Now
+                                Register for Program
                             </button>
                         </div>
                     </form>
@@ -635,18 +644,18 @@ const SeasonalProgramDashboard = () => {
                                             <Badge
                                                 variant={
                                                     programFilter ===
-                                                    "vaccination"
+                                                    "healthprograms"
                                                         ? "default"
                                                         : "outline"
                                                 }
                                                 className="cursor-pointer"
                                                 onClick={() =>
                                                     setProgramFilter(
-                                                        "vaccination"
+                                                        "healthprograms"
                                                     )
                                                 }
                                             >
-                                                Vaccination
+                                                Health Programs
                                             </Badge>
                                             <Badge
                                                 variant={
@@ -917,8 +926,21 @@ const SeasonalProgramDashboard = () => {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-6">
-                                    {programRecords.map((record) => (
+                                <div>
+                                    {programRecords.length === 0 ? (
+                                        <div className="p-8 text-center border rounded-lg">
+                                            <AlertCircle className="h-10 w-10 mx-auto text-gray-400 mb-2" />
+                                            <h3 className="text-lg font-medium text-gray-900 mb-1">No program records found</h3>
+                                            <p className="text-gray-500">You haven't participated in any health programs yet.</p>
+                                            <Button 
+                                                className="mt-4 px-5 py-2 text-sm shadow-md"
+                                                onClick={() => setActiveTab("schedules")}
+                                            >
+                                                Browse Available Programs
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        programRecords.map((record) => (
                                         <div
                                             key={record.id}
                                             className="border rounded-lg overflow-hidden"
@@ -1026,7 +1048,7 @@ const SeasonalProgramDashboard = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                    )))}
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-between border-t p-4">
@@ -1036,6 +1058,22 @@ const SeasonalProgramDashboard = () => {
                                     </span>{" "}
                                     {programRecords.length}
                                 </div>
+                                {isAuthenticated && (
+                                    <Button 
+                                        variant="outline" 
+                                        size="sm"
+                                        onClick={() => router.get('/health-programs')}
+                                        className="px-5 py-2 text-sm shadow-md flex items-center gap-2"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-refresh-cw">
+                                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                                            <path d="M21 3v5h-5"/>
+                                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                                            <path d="M3 21v-5h5"/>
+                                        </svg>
+                                        Refresh Records
+                                    </Button>
+                                )}
                             </CardFooter>
                         </Card>
 
@@ -1050,72 +1088,50 @@ const SeasonalProgramDashboard = () => {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-4">
-                                    <div className="p-4 border rounded-lg program-card" data-program-id="mh2">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                                                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path>
-                                                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path>
-                                            </svg>
-                                            <h3 className="font-medium text-lg">
-                                                Stress Management Workshop
-                                            </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {programSchedules.length === 0 ? (
+                                        <div className="col-span-3 p-8 text-center">
+                                            <AlertCircle className="h-10 w-10 mx-auto text-gray-400 mb-2" />
+                                            <h3 className="text-lg font-medium text-gray-900 mb-1">No programs available</h3>
+                                            <p className="text-gray-500">There are currently no health programs scheduled. Please check back later.</p>
                                         </div>
-                                        <p className="text-gray-600 mb-4">
-                                            Learn effective techniques to manage
-                                            stress and improve your mental
-                                            wellbeing.
-                                        </p>
-                                        <Button
-                                            size="sm"
-                                            onClick={handleProgramJoin}
-                                        >
-                                            Join the Program
-                                        </Button>
-                                    </div>
-                                    <div className="p-4 border rounded-lg program-card" data-program-id="vs2">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                                                <path d="m14.5 4-3-1-2 .5V6l-2 .5L6 5v.5L4.5 7v5.5a4 4 0 0 0 1.8 3.5l2.7 2V22h6v-4l2.7-2a4 4 0 0 0 1.8-3.5V7L18 5.5V5l-1.5 1.5-2-.5V4Z"></path>
-                                                <path d="M5 7.5v-1L6.5 8 8 7.5l1.5.5 2-1 1.5.5 2 1 1.5-.5 1 1v-1l1-1"></path>
-                                            </svg>
-                                            <h3 className="font-medium text-lg">
-                                                Annual Flu Vaccine
-                                            </h3>
-                                        </div>
-                                        <p className="text-gray-600 mb-4">
-                                            It's recommended to get your annual
-                                            flu shot to protect against seasonal
-                                            influenza.
-                                        </p>
-                                        <Button
-                                            size="sm"
-                                            onClick={handleProgramJoin}
-                                        >
-                                            Join the Program
-                                        </Button>
-                                    </div>
-                                    <div className="p-4 border rounded-lg program-card" data-program-id="gen1">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                                            </svg>
-                                            <h3 className="font-medium text-lg">
-                                                Health Screening
-                                            </h3>
-                                        </div>
-                                        <p className="text-gray-600 mb-4">
-                                            Regular health screenings are
-                                            important for preventive care.
-                                            Schedule your annual check-up.
-                                        </p>
-                                        <Button
-                                            size="sm"
-                                            onClick={handleProgramJoin}
-                                        >
-                                            Join the Program
-                                        </Button>
-                                    </div>
+                                    ) : (
+                                        programSchedules.map((program) => (
+                                            <div key={program.id} className="p-4 border rounded-lg program-card" data-program-id={program.id}>
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    {getProgramTypeIcon(program.type, "h-5 w-5 text-blue-600")}
+                                                    <h3 className="font-medium text-lg">
+                                                        {program.name}
+                                                    </h3>
+                                                </div>
+                                                <p className="text-gray-600 mb-2">
+                                                    {program.description || "Join this health program to improve your well-being."}
+                                                </p>
+                                                <div className="text-sm text-gray-500 mb-4">
+                                                    <div className="flex items-center mb-1">
+                                                        <CalendarIcon className="h-4 w-4 mr-2" />
+                                                        <span>{format(program.date, "MMMM d, yyyy")}</span>
+                                                    </div>
+                                                    <div className="flex items-center mb-1">
+                                                        <Clock className="h-4 w-4 mr-2" />
+                                                        <span>{program.time}</span>
+                                                    </div>
+                                                    <div className="flex items-center mb-1">
+                                                        <Users className="h-4 w-4 mr-2" />
+                                                        <span>{program.availableSlots}/{program.totalSlots} slots available</span>
+                                                    </div>
+                                                </div>
+                                                <Button
+                                                    size="sm"
+                                                    onClick={() => handleProgramJoin(program)}
+                                                    disabled={program.availableSlots <= 0 || program.status === "completed"}
+                                                    className="w-full justify-center px-5 py-2 text-sm shadow-md"
+                                                >
+                                                    {program.availableSlots <= 0 ? "Fully Booked" : program.status === "completed" ? "Completed" : "Join the Program"}
+                                                </Button>
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>

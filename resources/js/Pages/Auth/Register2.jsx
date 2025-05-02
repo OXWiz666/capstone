@@ -26,6 +26,7 @@ export default function Register({ roles, questions, errors }) {
         gender: "",
         birth: "",
         isAdmin: "false",
+        address: "",
     });
 
     const [showPositionDropdown, setShowPositionDropdown] = useState(false);
@@ -275,6 +276,42 @@ export default function Register({ roles, questions, errors }) {
                                         onChange={(e) =>
                                             setData(
                                                 "contactNumber",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Address */}
+                            <div>
+                                <label
+                                    htmlFor="address"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Address
+                                </label>
+                                <div className="mt-1 relative rounded-md shadow-sm">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg
+                                            className="h-5 w-5 text-gray-400"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="address"
+                                        name="address"
+                                        placeholder="Enter your complete address"
+                                        className="pl-10 block w-full rounded-lg border-gray-300 bg-gray-50 py-3 text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent"
+                                        value={data.address}
+                                        onChange={(e) =>
+                                            setData(
+                                                "address",
                                                 e.target.value
                                             )
                                         }

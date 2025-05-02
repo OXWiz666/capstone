@@ -198,17 +198,13 @@ export default function appointments({ appointments_ }) {
             case 5:
                 return <Badge className="bg-green-500">Confirmed</Badge>;
             default:
-                return <Badge>{status} ew</Badge>;
+                return <Badge>{status} ew</Badge>;  
         }
     };
 
     const tools = () => {
         return (
             <>
-                <Button variant="outline" className="flex items-center gap-2">
-                    {/* <Calendar className="h-4 w-4" /> */}
-                    <span>Schedule New</span>
-                </Button>
             </>
         );
     };
@@ -240,6 +236,42 @@ export default function appointments({ appointments_ }) {
         setIsModalOpen(false);
     };
     const { inertia } = usePage();
+    
+    // Function to handle archive appointment
+    const handleArchiveAppointment = async (appointmentId) => {
+        try {
+            const response = await axios.post('/auth/appointments/archive', {
+                appointment_id: appointmentId
+            });
+            
+            if (response.data.appointments) {
+                // Update the appointments with the new data
+                setAppointments(response.data.appointments.data);
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error archiving appointment:', error);
+            alert(error.response?.data?.message || 'An error occurred while archiving the appointment');
+        }
+    };
+    
+    // Function to handle unarchive appointment
+    const handleUnarchiveAppointment = async (appointmentId) => {
+        try {
+            const response = await axios.post('/auth/appointments/unarchive', {
+                appointment_id: appointmentId
+            });
+            
+            if (response.data.appointments) {
+                // Update the appointments with the new data
+                setAppointments(response.data.appointments.data);
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error unarchiving appointment:', error);
+            alert(error.response?.data?.message || 'An error occurred while unarchiving the appointment');
+        }
+    };
 
     useEffect(() => {
         setAppointments(appointments_.data);
@@ -419,12 +451,6 @@ export default function appointments({ appointments_ }) {
                                                     >
                                                         <Eye />
                                                     </PrimaryButton>
-                                                    <PrimaryButton className=" m-1">
-                                                        <Pencil />
-                                                    </PrimaryButton>
-                                                    <DangerButton className=" m-1">
-                                                        <Trash2 />
-                                                    </DangerButton>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
