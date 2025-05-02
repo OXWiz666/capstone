@@ -56,6 +56,10 @@ import SideBar from "./Sidebar";
 import ServicesLayout from "./ServicesLayout";
 import { useForm, router } from "@inertiajs/react";
 import moment from "moment";
+
+import Modal from "@/components/CustomModal";
+import DangerButton from "@/components/DangerButton";
+
 // Mock data for services
 const mockServices = [
     {
@@ -140,6 +144,19 @@ const Services = ({ services_ }) => {
         key: "name",
         direction: "ascending",
     });
+
+    const [isServiceDeleteModalOpen, setIsServiceDeleteModalOpen] =
+        useState(false);
+
+    const serviceDeleteModalHandler = (condition = false) => {
+        setIsServiceDeleteModalOpen(condition);
+    };
+    // const openServiceDeleteModal = () => {
+    //     setIsServiceDeleteModalOpen(true);
+    // };
+    // const closeServiceDeleteModal = () => {
+    //     setIsServiceDeleteModalOpen(false);
+    // };
 
     useEffect(() => {
         setServices(services_);
@@ -368,7 +385,14 @@ const Services = ({ services_ }) => {
     } = useForm({
         times: timeArr,
         subservice_id: selectedSubService,
+        subservicename: "",
     });
+
+    // useEffect(() => {
+    //     //console.log("sel sub serv:", selectedSubService);
+
+    //     setDataTime("subservicename", selectedSubService?.subservicename);
+    // }, [selectedSubService]);
 
     const handleTimeChange = (time) => {
         setDataTime((prev) => ({
@@ -493,7 +517,7 @@ const Services = ({ services_ }) => {
 
                                     <TableBody>
                                         {sortedData.map((service, i) => (
-                                            <React.Fragment>
+                                            <React.Fragment key={i}>
                                                 <TableRow>
                                                     <TableCell>
                                                         <Button
@@ -819,9 +843,48 @@ const Services = ({ services_ }) => {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="sm"
+                                                                onClick={() => {
+                                                                    {
+                                                                        serviceDeleteModalHandler(
+                                                                            true
+                                                                        );
+                                                                        setData(
+                                                                            "subservicename",
+                                                                            service.servicename
+                                                                        );
+                                                                    }
+                                                                }}
                                                             >
                                                                 <Trash2 className="h-4 w-4 text-red-500" />
                                                             </Button>
+
+                                                            <Modal
+                                                                isOpen={
+                                                                    isServiceDeleteModalOpen
+                                                                }
+                                                                onClose={() =>
+                                                                    serviceDeleteModalHandler(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                title={
+                                                                    "Deleting " +
+                                                                    data.subservicename
+                                                                }
+                                                                maxWidth="md"
+                                                            >
+                                                                <div>
+                                                                    Are you sure
+                                                                    you want to
+                                                                    delete this
+                                                                    service?
+                                                                </div>
+                                                                <form action="#">
+                                                                    <DangerButton className=" float-right">
+                                                                        Delete
+                                                                    </DangerButton>
+                                                                </form>
+                                                            </Modal>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>
@@ -883,7 +946,12 @@ const Services = ({ services_ }) => {
                                                                                                     t,
                                                                                                     i
                                                                                                 ) => (
-                                                                                                    <Badge className="cursor-pointer bg-primary">
+                                                                                                    <Badge
+                                                                                                        key={
+                                                                                                            i
+                                                                                                        }
+                                                                                                        className="cursor-pointer bg-primary"
+                                                                                                    >
                                                                                                         {moment(
                                                                                                             t.time,
                                                                                                             "HH:mm:ss"
@@ -920,6 +988,12 @@ const Services = ({ services_ }) => {
                                                                                                             setSelectedSubService(
                                                                                                                 ttt
                                                                                                             );
+
+                                                                                                            setDataTime(
+                                                                                                                "subservicename",
+                                                                                                                ttt.subservicename
+                                                                                                            );
+
                                                                                                             setDataTime(
                                                                                                                 "times",
                                                                                                                 ttt?.times.map(
@@ -971,6 +1045,25 @@ const Services = ({ services_ }) => {
                                                                                                             </DialogDescription>
                                                                                                         </DialogHeader>
                                                                                                         <div className="grid gap-4 py-4">
+                                                                                                            <Label>
+                                                                                                                Sub-Service:
+                                                                                                            </Label>
+                                                                                                            <Input
+                                                                                                                className=" w-full"
+                                                                                                                value={
+                                                                                                                    dataTime.subservicename
+                                                                                                                }
+                                                                                                                onChange={(
+                                                                                                                    e
+                                                                                                                ) => {
+                                                                                                                    setDataTime(
+                                                                                                                        "subservicename",
+                                                                                                                        e
+                                                                                                                            .target
+                                                                                                                            .value
+                                                                                                                    );
+                                                                                                                }}
+                                                                                                            />
                                                                                                             <div className="grid grid-cols-4 items-center gap-4">
                                                                                                                 <Label className=" text-right">
                                                                                                                     Available
