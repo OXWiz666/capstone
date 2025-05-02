@@ -91,6 +91,8 @@ Route::middleware(['auth','Patient'])->group(function(){
 
         // Get latest appointment priority number
         Route::get('/get-latest-appointment',[PatientController::class,'getLatestAppointment'])->name('patient.latest.appointment');
+
+
     });
 });
 
@@ -109,9 +111,15 @@ Route::middleware(['auth','Admin'])->group(function(){
         Route::get('/',[AdminDashboardController::class,'index'])->name('admin');
 
 
-        Route::get('/programs',[HealthProgramsController::class,'index'])->name('admin.programs');
+
 
         Route::get('/reports',[ReportsController::class,'index'])->name('admin.reports');
+
+        Route::prefix('programs')->group(function(){
+            Route::get('/',[HealthProgramsController::class,'index'])->name('admin.programs');
+            Route::post('create',[HealthProgramsController::class,'CreateProgram'])->name('admin.programs.create');
+        });
+
 
         Route::prefix('staff')->group(function(){
             Route::get('/overview',[StaffController::class,'index'])->name('admin.staff.overview');
