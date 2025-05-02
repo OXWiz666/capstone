@@ -195,8 +195,14 @@ class PatientController extends Controller
         }
 
         // If no appointment with priority number exists, return a generated one
+        
+        // If no appointment with priority number exists, generate a sequential one
+        // Get the highest priority number in the system and add 1
+        $highestPriority = appointments::max('priorityNumber') ?? 1000;
+        $newPriorityNumber = $highestPriority + 1;
+        
         return response()->json([
-            'priorityNumber' => mt_rand(1000, 9999),
+            'priorityNumber' => $newPriorityNumber,
             'generated' => true
         ]);
     }

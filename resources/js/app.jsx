@@ -35,12 +35,12 @@ window.Echo = new Echo({
     //             .content,
     //         Authorization: `Bearer ${localStorage.getItem("auth_token")}`, // For API
     //         Accept: "application/json",
-    //     },
+    //     },   
     // },
 });
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `Calumpang Rural Health Unit`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.jsx`,
