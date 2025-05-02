@@ -7,6 +7,7 @@ import ActivityFeed from "@/components/tempo/admin/include/ActivityFeed";
 import DoctorLayout from "@/Layouts/DoctorLayout";
 import { usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import { Users, Calendar } from "lucide-react";
 export default function Dashboard({}) {
     const notifs = usePage().props.auth.notifications;
 
@@ -41,12 +42,27 @@ export default function Dashboard({}) {
                     <StatisticsOverview />
                 </section>
 
-                {/* Module Cards */}
+                {/* Module Cards - Filtered for Doctor */}
                 <section className="mb-8">
                     <h3 className="text-xl font-semibold mb-4 text-primary">
                         {/* Quick Access */}
                     </h3>
-                    <ModuleCards />
+                    <ModuleCards 
+                        modules={[
+                            {
+                                title: "Patient Records",
+                                description: "Manage patient profiles, medical histories, and health records",
+                                icon: <Users className="h-5 w-5 text-primary" />,
+                                href: "/auth/patients",
+                            },
+                            {
+                                title: "Appointments",
+                                description: "Schedule, view, and manage patient appointments",
+                                icon: <Calendar className="h-5 w-5 text-primary" />,
+                                href: "/auth/appointments",
+                            }
+                        ]}
+                    />
                 </section>
 
                 {/* Activity Feed */}

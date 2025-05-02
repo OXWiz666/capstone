@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { usePage } from "@inertiajs/react";
 import Sidebar from "@/components/tempo/admin/include/Sidebar";
 import {
     Search,
@@ -101,6 +102,17 @@ const mockPatients = [
 ];
 
 export default function Patients({ patients_ }) {
+    // Get authentication information
+    const { auth } = usePage().props;
+    // Log auth object to console for debugging
+    console.log("Auth object:", auth);
+    
+    // Check for doctor role in multiple ways to ensure we catch it
+    const isDoctor = auth?.user?.role === "doctor" || 
+                    auth?.user?.role === "Doctor" || 
+                    auth?.user?.type === "doctor" || 
+                    auth?.user?.type === "Doctor";
+    
     const [patients, setPatients] = useState(patients_);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -113,6 +125,13 @@ export default function Patients({ patients_ }) {
     const [medicalRecordModal, setMedicalRecordModal] = useState({
         isOpen: false,
         patient: null
+    });
+    
+    // State for diagnosis notes modal
+    const [diagnosisModal, setDiagnosisModal] = useState({
+        isOpen: false,
+        patient: null,
+        notes: ""
     });
 
     const openMedicalRecordModal = (patient) => {
@@ -127,6 +146,38 @@ export default function Patients({ patients_ }) {
             ...medicalRecordModal,
             isOpen: false
         });
+    };
+    
+    const openDiagnosisModal = (patient) => {
+        setDiagnosisModal({
+            isOpen: true,
+            patient,
+            notes: patient.diagnosis_notes || ""
+        });
+    };
+    
+    const closeDiagnosisModal = () => {
+        setDiagnosisModal({
+            ...diagnosisModal,
+            isOpen: false
+        });
+    };
+    
+    const updateDiagnosisNotes = (notes) => {
+        setDiagnosisModal({
+            ...diagnosisModal,
+            notes
+        });
+    };
+    
+    const saveDiagnosisNotes = () => {
+        // Here you would typically save the notes to your backend
+        // For now, we'll just update the local state and close the modal
+        if (diagnosisModal.patient) {
+            // In a real app, you would make an API call here
+            console.log("Saving diagnosis notes:", diagnosisModal.notes);
+        }
+        closeDiagnosisModal();
     };
 
     // Medical Record Modal Component
@@ -395,7 +446,16 @@ export default function Patients({ patients_ }) {
                     </div>
                     
                     {/* Footer */}
-                    <div className="sticky bottom-0 bg-gray-100 dark:bg-gray-800 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700 shadow-inner">
+                    <div className="sticky bottom-0 bg-gray-100 dark:bg-gray-800 px-6 py-3 flex justify-between border-t border-gray-200 dark:border-gray-700 shadow-inner">
+                        <button 
+                            onClick={() => openDiagnosisModal(patient)}
+                            className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-md text-sm font-medium shadow-md flex items-center justify-center w-32 transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Diagnosis Notes
+                        </button>
                         <button 
                             onClick={closeMedicalRecordModal}
                             className="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm flex items-center transition-colors"
@@ -411,6 +471,82 @@ export default function Patients({ patients_ }) {
         );
     };
 
+    // Diagnosis Notes Modal Component
+    const DiagnosisNotesModal = () => {
+        if (!diagnosisModal.isOpen || !diagnosisModal.patient) return null;
+        
+        const patient = diagnosisModal.patient;
+        
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+                {/* Backdrop */}
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+                    onClick={closeDiagnosisModal}
+                ></div>
+                
+                {/* Modal */}
+                <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-2xl mx-4 overflow-auto max-h-[90vh] transform transition-all">
+                    {/* Header */}
+                    <div className="sticky top-0 bg-primary border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center z-10">
+                        <h3 className="text-lg font-medium text-white flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            <span className="font-semibold">Diagnosis Notes:</span> <span className="ml-2">{patient.firstname} {patient.lastname}</span>
+                        </h3>
+                        <button 
+                            onClick={closeDiagnosisModal}
+                            className="text-white hover:text-gray-200 rounded-full p-1 hover:bg-gray-700 transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                        <div className="space-y-4">
+                            <div>
+                                <label htmlFor="diagnosis-notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Doctor's Diagnosis Notes
+                                </label>
+                                <textarea
+                                    id="diagnosis-notes"
+                                    rows={10}
+                                    className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-gray-100 focus:border-primary focus:ring-primary"
+                                    placeholder="Enter detailed diagnosis notes here..."
+                                    value={diagnosisModal.notes}
+                                    onChange={(e) => updateDiagnosisNotes(e.target.value)}
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Footer */}
+                    <div className="sticky bottom-0 bg-gray-100 dark:bg-gray-800 px-6 py-3 flex justify-end space-x-3 border-t border-gray-200 dark:border-gray-700 shadow-inner">
+                        <button 
+                            onClick={closeDiagnosisModal}
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium shadow-sm flex items-center transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            onClick={saveDiagnosisNotes}
+                            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm font-medium shadow-md flex items-center transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Save Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    
     return (
         <AdminLayout header="Patients">
             <motion.div
@@ -575,30 +711,6 @@ export default function Patients({ patients_ }) {
                                                 </TableCell>
                                             </TableRow>
                                         ))}
-
-                                        {/* {sortedData.map((d) => (
-                                            <TableRow key={d.id}>
-                                                <TableCell>
-                                                    DOC - {d.id}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {d.user?.firstname}{" "}
-                                                    {d.user?.lastname}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {d.specialty?.specialty ??
-                                                        "Not Set"}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {d.user?.contactno} |{" "}
-                                                    {d.user?.email}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {getStatusBadge(d.status)}
-                                                </TableCell>
-                                                <TableCell>Action</TableCell>
-                                            </TableRow>
-                                        ))} */}
                                     </TableBody>
                                 </Table>
                             )}
@@ -607,6 +719,7 @@ export default function Patients({ patients_ }) {
                 </div>
             </motion.div>
             {MedicalRecordModal()}
+            {DiagnosisNotesModal()}
         </AdminLayout>
     );
 }
